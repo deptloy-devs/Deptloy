@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="deptloyGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="50%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+  </defs>
+  <!-- Background rect -->
+  <rect width="64" height="64" rx="14" fill="#080B14"/>
+  <rect width="64" height="64" rx="14" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+
+  <!-- Speed lines on left -->
+  <rect x="10" y="22" width="10" height="4" rx="2" fill="url(#deptloyGrad)"/>
+  <rect x="6" y="30" width="16" height="4" rx="2" fill="url(#deptloyGrad)"/>
+  <rect x="12" y="38" width="10" height="4" rx="2" fill="url(#deptloyGrad)"/>
+
+  <!-- Dynamic arrow / D shape -->
+  <path d="M26 18C26 15.7909 27.7909 14 30 14H36C44.8366 14 52 21.1634 52 30C52 38.8366 44.8366 46 36 46H30C27.7909 46 26 44.2091 26 42V36C26 34.8954 26.8954 34 28 34H36C38.2091 34 40 32.2091 40 30C40 27.7909 38.2091 26 36 26H28C26.8954 26 26 25.1046 26 24V18Z" fill="url(#deptloyGrad)"/>
+</svg>

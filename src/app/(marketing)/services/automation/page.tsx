@@ -18,6 +18,7 @@ export function generateMetadata() {
   return {
     title: "Business Automation & Workflow Engineering",
     description: "Eliminate repetitive manual tasks. We map, connect, and automate business workflows between your tools, staff, and customers.",
+    alternates: { canonical: "/services/automation" },
   };
 }
 
@@ -105,9 +106,9 @@ export default function AutomationServicePage() {
               <span className="text-xs font-bold uppercase tracking-wider text-brand-400">
                 Architecture Blueprint
               </span>
-              <h3 className="text-xl font-bold text-fg mt-1">
+              <h2 className="text-xl font-bold text-fg mt-1">
                 Real-Time Multi-Branch Operational Pipeline
-              </h3>
+              </h2>
             </div>
 
             {/* Workflow Step Nodes */}

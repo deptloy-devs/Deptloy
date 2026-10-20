@@ -14,6 +14,7 @@ export function generateMetadata() {
   return {
     title: "Custom Web & App Development Services",
     description: "Bespoke digital platforms, high-conversion marketing websites, customer booking portals, and custom SaaS dashboards built with Next.js, React, and TypeScript.",
+    alternates: { canonical: "/services/development" },
   };
 }
 

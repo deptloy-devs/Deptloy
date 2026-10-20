@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <defs>
     <linearGradient id="deptloyGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#8B5CF6"/>
-      <stop offset="50%" stop-color="#3B82F6"/>
-      <stop offset="100%" stop-color="#38BDF8"/>
+      <stop offset="0%" stop-color="#4840F5"/>
+      <stop offset="50%" stop-color="#376FF8"/>
+      <stop offset="100%" stop-color="#1EBBFE"/>
     </linearGradient>
   </defs>
   <!-- Background rect -->
-  <rect width="64" height="64" rx="14" fill="#080B14"/>
+  <rect width="64" height="64" rx="14" fill="#070A12"/>
   <rect width="64" height="64" rx="14" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
 
   <!-- Speed lines on left -->

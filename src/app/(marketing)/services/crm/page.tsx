@@ -15,6 +15,7 @@ export function generateMetadata() {
   return {
     title: "Tailored CRM Architectures & Lead Pipelines",
     description: "Organize every lead, automate sales follow-ups, and track your revenue pipeline with custom CRM implementations engineered around your business.",
+    alternates: { canonical: "/services/crm" },
   };
 }
 
@@ -115,9 +116,9 @@ export default function CrmServicePage() {
                 <span className="text-xs font-bold uppercase tracking-wider text-brand-400">
                   Interactive Pipeline Stage Simulation
                 </span>
-                <h3 className="text-xl font-bold text-fg mt-1">
+                <h2 className="text-xl font-bold text-fg mt-1">
                   Active Deal Flow & Automated Routing
-                </h3>
+                </h2>
               </div>
               <div className="flex items-center gap-3">
                 <Badge variant="accent" size="sm">

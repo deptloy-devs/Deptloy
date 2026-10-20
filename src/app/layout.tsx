@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Outfit } from "next/font/google";
 import "./globals.css";
 
@@ -34,26 +34,31 @@ export const metadata: Metadata = {
     "workflow automation",
   ],
   authors: [{ name: "Deptloy AI Solutions" }],
+  // favicon.ico, apple-icon.png, opengraph-image.png and twitter-image.png live in
+  // src/app and are picked up automatically; the SVG is the sharp version for modern browsers.
   icons: {
-    icon: "/favicon.svg",
-    apple: "/logo.jpg",
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    // Declared explicitly: setting `icons` here stops Next from auto-linking app/apple-icon.png.
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
     title: "Deptloy — Premium AI Automation Agency",
     description: "Let AI Handle the Busywork. You Build the Business.",
     url: "https://deptloy.com",
     siteName: "Deptloy",
-    images: [
-      {
-        url: "/logo.jpg",
-        width: 640,
-        height: 640,
-        alt: "Deptloy AI Logo",
-      },
-    ],
     locale: "en_US",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Deptloy — Premium AI Automation Agency",
+    description: "Let AI Handle the Busywork. You Build the Business.",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#070a12",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({

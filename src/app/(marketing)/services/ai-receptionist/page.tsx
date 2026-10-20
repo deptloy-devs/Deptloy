@@ -103,7 +103,7 @@ export default function AiReceptionistPage() {
                     <Volume2 className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-fg">Neural Voice Engine Simulation</h3>
+                    <h2 className="text-base font-bold text-fg">Neural Voice Engine Simulation</h2>
                     <p className="text-xs text-fg-muted">Low-latency acoustic turn-taking (240ms)</p>
                   </div>
                 </div>

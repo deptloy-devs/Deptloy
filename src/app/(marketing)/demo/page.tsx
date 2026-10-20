@@ -338,7 +338,7 @@ export default function DemoPage() {
                     {currentStep === 1 && (
                       <div className="space-y-5">
                         <div>
-                          <h3 className="text-xl font-bold text-fg">Select Sample Business Vertical</h3>
+                          <h2 className="text-xl font-bold text-fg">Select Sample Business Vertical</h2>
                           <p className="text-xs text-fg-muted mt-1">
                             Choose an industry to simulate its specialized booking rules and assistant tone.
                           </p>

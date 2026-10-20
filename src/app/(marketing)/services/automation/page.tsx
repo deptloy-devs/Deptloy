@@ -77,7 +77,7 @@ export default function AutomationServicePage() {
         
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center flex flex-col items-center">
-            <Badge variant="violet" dot className="mb-4">
+            <Badge variant="brand" dot className="mb-4">
               Enterprise Workflow Engineering
             </Badge>
 

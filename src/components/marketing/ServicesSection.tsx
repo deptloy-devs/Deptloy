@@ -195,7 +195,7 @@ export function ServicesSection() {
         >
           <div
             key={activeService.slug}
-            className={`relative rounded-3xl bg-gradient-to-br ${currentTheme.glow} bg-card border ${currentTheme.border} p-6 sm:p-10 lg:p-12 shadow-2xl transition-all duration-300 animate-in fade-in slide-in-from-right-4`}
+            className={`relative rounded-3xl bg-gradient-to-br ${currentTheme.glow} bg-card border ${currentTheme.border} p-6 sm:p-10 lg:p-12 shadow-2xl transition-all duration-300 animate-fade-in`}
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               
@@ -301,7 +301,7 @@ export function ServicesSection() {
                           <Zap className="h-4 w-4 text-blue-400" />
                           Automated Workflow Pipeline
                         </span>
-                        <Badge variant="cyan" size="sm">Active</Badge>
+                        <Badge variant="accent" size="sm">Active</Badge>
                       </div>
 
                       <div className="space-y-2">
@@ -357,7 +357,7 @@ export function ServicesSection() {
                           <Code2 className="h-4 w-4 text-cyan-400" />
                           Next.js & React Full-Stack
                         </span>
-                        <Badge variant="cyan" size="sm">TypeScript</Badge>
+                        <Badge variant="accent" size="sm">TypeScript</Badge>
                       </div>
 
                       <div className="p-3 rounded-xl bg-black/60 font-mono text-[11px] text-fg-soft space-y-1">

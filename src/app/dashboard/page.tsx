@@ -304,7 +304,7 @@ export default function DashboardPage() {
       
       {/* Toast Notification Banner */}
       {toastMessage && (
-        <div className="fixed top-5 right-5 z-50 rounded-xl bg-brand-600 text-white px-4 py-2.5 text-xs font-semibold shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+        <div className="fixed top-5 right-5 z-50 rounded-xl bg-brand-600 text-white px-4 py-2.5 text-xs font-semibold shadow-2xl flex items-center gap-2 animate-fade-in">
           <CheckCircle2 className="h-4 w-4" />
           <span>{toastMessage}</span>
         </div>
@@ -365,7 +365,7 @@ export default function DashboardPage() {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="cyan" size="sm">
+                  <Badge variant="accent" size="sm">
                     Simulated Sandbox
                   </Badge>
                 </div>
@@ -1104,7 +1104,7 @@ export default function DashboardPage() {
                     <h4 className="text-sm font-bold text-white">Active Plan: Enterprise Automation</h4>
                     <p className="text-xs text-fg-muted">Unlimited telephony hours & 5 calendar connections.</p>
                   </div>
-                  <Badge variant="violet">Active Subscription</Badge>
+                  <Badge variant="brand">Active Subscription</Badge>
                 </div>
 
                 <div className="space-y-2 text-xs">

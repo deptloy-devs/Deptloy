@@ -202,6 +202,11 @@
   background-image: linear-gradient(100deg, var(--primary) 0%, var(--primary-end) 100%);
 }
 
+/* Hover/pressed state of the brand gradient — darker, so white text stays >= 6:1 */
+@utility bg-gradient-brand-strong {
+  background-image: linear-gradient(100deg, var(--color-brand-700) 0%, #2a57d1 100%);
+}
+
 /* Soft decorative glows behind hero areas */
 @layer components {
   .glow-brand,

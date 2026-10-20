@@ -86,7 +86,7 @@ export default function CrmServicePage() {
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center flex flex-col items-center">
-            <Badge variant="violet" dot className="mb-4">
+            <Badge variant="brand" dot className="mb-4">
               Revenue & Pipeline Infrastructure
             </Badge>
 
@@ -120,7 +120,7 @@ export default function CrmServicePage() {
                 </h3>
               </div>
               <div className="flex items-center gap-3">
-                <Badge variant="cyan" size="sm">
+                <Badge variant="accent" size="sm">
                   Live Syncing
                 </Badge>
                 <span className="text-xs text-fg-muted font-mono">Total Pipeline: $139,100</span>

@@ -102,7 +102,7 @@ export function Navbar() {
             {isServicesOpen && (
               <div
                 onMouseLeave={() => setIsServicesOpen(false)}
-                className="absolute left-0 mt-2 w-[480px] rounded-2xl bg-card border border-line p-3 shadow-2xl shadow-brand-950/60 backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-150 z-50"
+                className="absolute left-0 mt-2 w-[480px] rounded-2xl bg-card border border-line p-3 shadow-2xl shadow-brand-950/60 backdrop-blur-2xl animate-fade-in z-50"
               >
                 <div className="grid grid-cols-1 gap-1">
                   {services.map((srv) => (
@@ -225,7 +225,7 @@ export function Navbar() {
 
       {/* Mobile Menu Drawer */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-b border-line bg-canvas/98 backdrop-blur-2xl px-5 pt-3 pb-8 animate-in slide-in-from-top-4 duration-200 shadow-2xl">
+        <div className="md:hidden border-b border-line bg-canvas/98 backdrop-blur-2xl px-5 pt-3 pb-8 animate-fade-in shadow-2xl">
           <div className="flex flex-col gap-2">
             
             <Link

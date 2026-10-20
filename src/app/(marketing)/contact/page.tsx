@@ -102,7 +102,7 @@ export default function ContactPage() {
         <div className="glow-accent" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
-          <Badge variant="violet" dot className="mb-4">
+          <Badge variant="brand" dot className="mb-4">
             Technical Consultation
           </Badge>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">

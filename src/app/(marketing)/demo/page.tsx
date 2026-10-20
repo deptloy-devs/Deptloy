@@ -216,7 +216,7 @@ export default function DemoPage() {
       {/* Header */}
       <section className="relative pt-12 pb-8 lg:pt-16 lg:pb-10 border-b border-line bg-canvas">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
-          <Badge variant="violet" dot className="mb-3">
+          <Badge variant="brand" dot className="mb-3">
             Interactive Frontend Prototype
           </Badge>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-3">

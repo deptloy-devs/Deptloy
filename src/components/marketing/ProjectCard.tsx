@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Briefcase, Building2, Sparkles, Stethoscope, type LucideIcon } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import type { CaseStudyItem } from "@/types";
 
@@ -109,16 +110,24 @@ export function ProjectDetail({ project }: { project: CaseStudyItem }) {
         </div>
         <div className="grid gap-6 sm:grid-cols-2">
           <div>
-            <h3 className="font-sans text-eyebrow font-semibold uppercase text-fg-subtle">The challenge</h3>
+            <h3 className="font-sans text-eyebrow font-semibold uppercase text-fg-subtle">The Problem We Solved</h3>
             <p className="mt-2 text-sm leading-relaxed text-fg-soft">{project.challenge}</p>
           </div>
           <div>
-            <h3 className="font-sans text-eyebrow font-semibold uppercase text-brand-300">Deptloy solution</h3>
+            <h3 className="font-sans text-eyebrow font-semibold uppercase text-brand-300">The Implemented Solution</h3>
             <p className="mt-2 text-sm leading-relaxed text-fg-soft">{project.solution}</p>
           </div>
         </div>
-        <Metrics metrics={project.metrics} />
-        <p className="rounded-card border border-line bg-raised/40 p-4 text-sm text-fg-muted">{project.outcome}</p>
+        <div>
+          <h3 className="mb-3 font-sans text-eyebrow font-semibold uppercase text-fg-subtle">Measured Impact</h3>
+          <Metrics metrics={project.metrics} />
+          <p className="mt-3 text-sm text-fg-muted">{project.outcome}</p>
+        </div>
+        <div className="mt-auto">
+          <Button href="/contact" variant="outline" size="md" className="w-full sm:w-auto">
+            Discuss This Project
+          </Button>
+        </div>
       </div>
     </article>
   );

@@ -94,7 +94,7 @@ export function BenefitsSection() {
             </dl>
           </Card>
 
-          <Card className="border-brand-400/20 bg-gradient-to-br from-brand-950/40 to-card">
+          <Card tone="highlight">
             <div className="flex items-start gap-3">
               <span className="grid h-9 w-9 shrink-0 place-items-center rounded-control border border-success/30 bg-success/10 text-success">
                 <TrendingUp className="h-4 w-4" aria-hidden="true" />

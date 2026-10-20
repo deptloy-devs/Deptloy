@@ -1,63 +1,42 @@
-import { Sparkles, ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { Section } from "@/components/ui/Section";
 
 export function FinalCta() {
   return (
-    <section className="relative py-24 bg-canvas border-t border-line overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[600px] h-[350px] bg-gradient-to-r from-brand-600/20 via-blue-600/15 to-brand-600/20 blur-[130px] rounded-full" />
-      </div>
+    <Section divider container="narrow" className="overflow-hidden">
+      <div className="relative isolate overflow-hidden rounded-panel border border-brand-400/20 bg-card px-6 py-12 text-center shadow-raised sm:px-12 sm:py-16">
+        <div
+          className="absolute left-1/2 top-0 -z-10 h-72 w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-600/30 blur-[100px]"
+          aria-hidden="true"
+        />
+        <div className="bg-grid absolute inset-0 -z-10 opacity-50 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" aria-hidden="true" />
 
-      <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
-        <div className="rounded-3xl bg-card border border-line p-8 sm:p-14 lg:p-16 shadow-2xl relative overflow-hidden">
-          
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-300 text-xs font-semibold mb-6">
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>Launch Your Custom AI Infrastructure</span>
-          </div>
+        <p className="text-eyebrow font-semibold uppercase text-brand-300">Launch Your Custom AI Infrastructure</p>
+        <h2 className="mx-auto mt-4 max-w-2xl text-h2 font-semibold">Ready to Make Your Business Work Smarter?</h2>
+        <p className="mx-auto mt-5 max-w-2xl text-lead text-fg-soft">
+          Stop losing leads to voicemail and hours to manual administrative busywork. Connect with our technical team to
+          design an AI receptionist and automation suite tailored to your business.
+        </p>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-6 leading-tight">
-            Ready to Make Your Business Work Smarter?
-          </h2>
-
-          <p className="text-base sm:text-lg text-fg-soft max-w-2xl mx-auto mb-10 leading-relaxed">
-            Stop losing leads to voicemail and hours to manual administrative busywork. Connect with our technical team to design an AI receptionist and automation suite tailored to your business.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button
-              href="/contact"
-              variant="glow"
-              size="lg"
-              className="w-full sm:w-auto font-semibold"
-              rightIcon={<ArrowRight className="h-4 w-4" />}
-            >
-              Book a Consultation
-            </Button>
-            <Button
-              href="/demo"
-              variant="outline"
-              size="lg"
-              className="w-full sm:w-auto"
-            >
-              Explore AI Receptionist
-            </Button>
-          </div>
-
-          <div className="mt-8 pt-8 border-t border-line flex flex-wrap items-center justify-center gap-6 text-xs text-fg-muted">
-            <span className="flex items-center gap-1.5">
-              <ShieldCheck className="h-4 w-4 text-emerald-400" />
-              Custom Business Scoping
-            </span>
-            <span>•</span>
-            <span>No Complex Migration</span>
-            <span>•</span>
-            <span>Deploy in 3–7 Days</span>
-          </div>
-
+        <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+          <Button href="/contact" size="lg" rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}>
+            Book a Consultation
+          </Button>
+          <Button href="/demo" variant="outline" size="lg">
+            Explore AI Receptionist
+          </Button>
         </div>
+
+        <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-t border-line pt-8 text-sm text-fg-muted">
+          <li className="flex items-center gap-1.5">
+            <ShieldCheck className="h-4 w-4 text-success" aria-hidden="true" />
+            Custom Business Scoping
+          </li>
+          <li>No Complex Migration</li>
+          <li>Deploy in 3–7 Days</li>
+        </ul>
       </div>
-    </section>
+    </Section>
   );
 }

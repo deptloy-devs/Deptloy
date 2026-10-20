@@ -25,7 +25,7 @@ export default function CrmServicePage() {
       title: "New Inbound Lead",
       count: "18 Active",
       value: "$14,200",
-      color: "border-purple-500/30 text-purple-400",
+      color: "border-brand-500/30 text-brand-400",
       items: ["Dr. Sarah Mitchell", "Apex Design Studio", "Elena Rostova"],
     },
     {
@@ -58,7 +58,7 @@ export default function CrmServicePage() {
     {
       title: "Complete Interaction Timeline",
       desc: "Every AI receptionist phone call, website booking, SMS reminder, and email interaction is automatically logged into the customer's permanent record.",
-      icon: <PhoneCall className="h-5 w-5 text-purple-400" />,
+      icon: <PhoneCall className="h-5 w-5 text-brand-400" />,
     },
     {
       title: "Automated Lead Scoring",
@@ -94,7 +94,7 @@ export default function CrmServicePage() {
               A Cleaner Picture of Every Customer Relationship
             </h1>
 
-            <p className="text-lg text-slate-300 leading-relaxed mb-8">
+            <p className="text-lg text-fg-soft leading-relaxed mb-8">
               Generic CRMs are bloated and cluttered with fields your team never uses. Deptloy designs streamlined, purpose-built CRM architectures with automated lead capture, contact timelines, and automated follow-ups.
             </p>
 
@@ -109,10 +109,10 @@ export default function CrmServicePage() {
           </div>
 
           {/* Lead Pipeline Visualizer Card */}
-          <div className="mt-16 rounded-3xl bg-[#101522] border border-white/10 p-6 sm:p-10 shadow-2xl">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-white/[0.08] gap-4 mb-6">
+          <div className="mt-16 rounded-3xl bg-card border border-line p-6 sm:p-10 shadow-2xl">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-line gap-4 mb-6">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-purple-400">
+                <span className="text-xs font-bold uppercase tracking-wider text-brand-400">
                   Interactive Pipeline Stage Simulation
                 </span>
                 <h3 className="text-xl font-bold text-white mt-1">
@@ -123,34 +123,34 @@ export default function CrmServicePage() {
                 <Badge variant="cyan" size="sm">
                   Live Syncing
                 </Badge>
-                <span className="text-xs text-slate-400 font-mono">Total Pipeline: $139,100</span>
+                <span className="text-xs text-fg-muted font-mono">Total Pipeline: $139,100</span>
               </div>
             </div>
 
             {/* Pipeline Stage Columns */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {pipelineStages.map((stage, idx) => (
-                <div key={idx} className={`rounded-2xl bg-[#111827] border ${stage.color} p-4 flex flex-col justify-between`}>
+                <div key={idx} className={`rounded-2xl bg-raised border ${stage.color} p-4 flex flex-col justify-between`}>
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-mono uppercase text-slate-400">{stage.stage}</span>
+                      <span className="text-[10px] font-mono uppercase text-fg-muted">{stage.stage}</span>
                       <span className="text-xs font-bold text-white font-mono">{stage.value}</span>
                     </div>
                     <h4 className="text-sm font-bold text-white mb-1">{stage.title}</h4>
-                    <span className="text-[11px] text-slate-400 block mb-4">{stage.count}</span>
+                    <span className="text-[11px] text-fg-muted block mb-4">{stage.count}</span>
 
                     <div className="space-y-2">
                       {stage.items.map((item, iIdx) => (
-                        <div key={iIdx} className="p-2.5 rounded-xl bg-black/40 border border-white/5 text-xs text-slate-200">
+                        <div key={iIdx} className="p-2.5 rounded-xl bg-black/40 border border-line text-xs text-fg-soft">
                           {item}
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="pt-3 mt-4 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
+                  <div className="pt-3 mt-4 border-t border-line flex items-center justify-between text-[11px] text-fg-muted">
                     <span>Automated Trigger</span>
-                    <span className="text-purple-400 font-medium">Active</span>
+                    <span className="text-brand-400 font-medium">Active</span>
                   </div>
                 </div>
               ))}
@@ -161,7 +161,7 @@ export default function CrmServicePage() {
       </section>
 
       {/* CRM Features */}
-      <section className="py-20 bg-[#090D18] border-t border-white/[0.06]">
+      <section className="py-20 bg-surface border-t border-line">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="Core Architecture"
@@ -172,15 +172,15 @@ export default function CrmServicePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {crmFeatures.map((feat, idx) => (
-              <div key={idx} className="p-7 rounded-2xl bg-[#101522] border border-white/10 flex flex-col justify-between">
+              <div key={idx} className="p-7 rounded-2xl bg-card border border-line flex flex-col justify-between">
                 <div>
-                  <div className="rounded-xl bg-[#111827] p-3 w-fit border border-white/10 mb-4">
+                  <div className="rounded-xl bg-raised p-3 w-fit border border-line mb-4">
                     {feat.icon}
                   </div>
                   <h4 className="text-lg font-bold text-white mb-2">{feat.title}</h4>
-                  <p className="text-sm text-slate-400 leading-relaxed">{feat.desc}</p>
+                  <p className="text-sm text-fg-muted leading-relaxed">{feat.desc}</p>
                 </div>
-                <div className="pt-4 mt-4 border-t border-white/[0.08] flex items-center gap-2 text-xs text-emerald-400 font-medium">
+                <div className="pt-4 mt-4 border-t border-line flex items-center gap-2 text-xs text-emerald-400 font-medium">
                   <CheckCircle2 className="h-4 w-4" />
                   <span>Fully configured & tested prior to rollout</span>
                 </div>

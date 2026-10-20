@@ -24,7 +24,7 @@ export function generateMetadata() {
 
 export default function ServicesOverviewPage() {
   const iconMap: Record<ServiceSlug, React.ReactNode> = {
-    "ai-receptionist": <Bot className="h-6 w-6 text-purple-400" />,
+    "ai-receptionist": <Bot className="h-6 w-6 text-brand-400" />,
     automation: <Zap className="h-6 w-6 text-blue-400" />,
     crm: <BarChart3 className="h-6 w-6 text-emerald-400" />,
     development: <Code2 className="h-6 w-6 text-cyan-400" />,
@@ -47,7 +47,7 @@ export default function ServicesOverviewPage() {
               AI Services Built for Real Business Operations
             </h1>
 
-            <p className="text-lg text-slate-300 leading-relaxed mb-8">
+            <p className="text-lg text-fg-soft leading-relaxed mb-8">
               We eliminate administrative friction across your customer communication, scheduling, and software pipelines. Explore each service below.
             </p>
 
@@ -64,7 +64,7 @@ export default function ServicesOverviewPage() {
       </section>
 
       {/* Services Grid */}
-      <section className="py-16 bg-[#090D18] border-t border-white/[0.06]">
+      <section className="py-16 bg-surface border-t border-line">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="All Services"
@@ -78,29 +78,29 @@ export default function ServicesOverviewPage() {
             {services.map((srv) => (
               <div
                 key={srv.slug}
-                className="rounded-3xl bg-[#101522] border border-white/10 p-8 flex flex-col justify-between hover:border-purple-500/40 transition-all duration-300 group shadow-xl"
+                className="rounded-3xl bg-card border border-line p-8 flex flex-col justify-between hover:border-brand-500/40 transition-all duration-300 group shadow-xl"
               >
                 <div>
                   <div className="flex items-center justify-between mb-6">
-                    <div className="rounded-2xl bg-[#111827] p-3.5 border border-white/10 group-hover:scale-105 transition-transform">
+                    <div className="rounded-2xl bg-raised p-3.5 border border-line group-hover:scale-105 transition-transform">
                       {iconMap[srv.slug]}
                     </div>
                     {srv.badge && (
-                      <span className="text-xs font-semibold px-3 py-1 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30">
+                      <span className="text-xs font-semibold px-3 py-1 rounded-full bg-brand-500/15 text-brand-300 border border-brand-500/30">
                         {srv.badge}
                       </span>
                     )}
                   </div>
 
-                  <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">
+                  <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-brand-300 transition-colors">
                     {srv.title}
                   </h3>
-                  <p className="text-sm font-semibold text-purple-400 mb-4">{srv.short}</p>
-                  <p className="text-sm text-slate-300 leading-relaxed mb-6">{srv.description}</p>
+                  <p className="text-sm font-semibold text-brand-400 mb-4">{srv.short}</p>
+                  <p className="text-sm text-fg-soft leading-relaxed mb-6">{srv.description}</p>
 
-                  <div className="space-y-2 pt-4 border-t border-white/[0.08] mb-8">
+                  <div className="space-y-2 pt-4 border-t border-line mb-8">
                     {srv.points.map((pt, idx) => (
-                      <div key={idx} className="flex items-center gap-2.5 text-xs text-slate-200">
+                      <div key={idx} className="flex items-center gap-2.5 text-xs text-fg-soft">
                         <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
                         <span>{pt}</span>
                       </div>
@@ -108,17 +108,17 @@ export default function ServicesOverviewPage() {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between">
+                <div className="pt-4 border-t border-line flex items-center justify-between">
                   {srv.metrics && (
                     <div className="flex flex-col">
-                      <span className="text-[11px] text-slate-400">{srv.metrics.label}</span>
+                      <span className="text-[11px] text-fg-muted">{srv.metrics.label}</span>
                       <span className="text-sm font-bold text-white font-mono">{srv.metrics.value}</span>
                     </div>
                   )}
 
                   <Link
                     href={srv.href}
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-purple-400 group-hover:text-purple-300 group-hover:translate-x-1 transition-all ml-auto"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-400 group-hover:text-brand-300 group-hover:translate-x-1 transition-all ml-auto"
                   >
                     <span>View Service Details</span>
                     <ArrowRight className="h-4 w-4" />

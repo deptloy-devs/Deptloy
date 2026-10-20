@@ -33,7 +33,7 @@ export function SectionHeading({
         {title}
       </h2>
       {description && (
-        <p className="text-base sm:text-lg text-[#94A3B8] leading-relaxed">
+        <p className="text-base sm:text-lg text-fg-muted leading-relaxed">
           {description}
         </p>
       )}

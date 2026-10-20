@@ -21,18 +21,18 @@ export function Badge({
   }[size];
 
   const variantClasses = {
-    default: "bg-[#1E293B]/80 text-slate-300 border border-white/10",
-    violet: "bg-[#8B5CF6]/15 text-[#A78BFA] border border-[#8B5CF6]/30 shadow-[0_0_12px_rgba(139,92,246,0.15)]",
-    cyan: "bg-[#38BDF8]/15 text-[#38BDF8] border border-[#38BDF8]/30",
+    default: "bg-raised-hover/80 text-fg-soft border border-line",
+    violet: "bg-brand-500/15 text-brand-300 border border-brand-500/30 shadow-[0_0_12px_rgba(139,92,246,0.15)]",
+    cyan: "bg-electric-400/15 text-electric-400 border border-electric-400/30",
     success: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30",
     warning: "bg-amber-500/15 text-amber-400 border border-amber-500/30",
-    outline: "bg-transparent text-slate-400 border border-white/15",
+    outline: "bg-transparent text-fg-muted border border-line-strong",
   }[variant];
 
   const dotColor = {
     default: "bg-slate-400",
-    violet: "bg-[#A78BFA]",
-    cyan: "bg-[#38BDF8]",
+    violet: "bg-brand-300",
+    cyan: "bg-electric-400",
     success: "bg-emerald-400",
     warning: "bg-amber-400",
     outline: "bg-slate-500",

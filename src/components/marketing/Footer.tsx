@@ -11,28 +11,28 @@ export function Footer() {
   const [activeModal, setActiveModal] = React.useState<"privacy" | "terms" | null>(null);
 
   return (
-    <footer className="border-t border-white/[0.08] bg-[#06080F] text-slate-400 relative z-10">
+    <footer className="border-t border-line bg-surface text-fg-muted relative z-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
           {/* Brand Info */}
           <div className="lg:col-span-2 flex flex-col gap-4">
             <Logo size="md" />
-            <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
+            <p className="text-sm text-fg-muted leading-relaxed max-w-sm">
               {brand.shortDescription}
             </p>
-            <div className="flex flex-col gap-2 pt-2 text-xs text-slate-400">
+            <div className="flex flex-col gap-2 pt-2 text-xs text-fg-muted">
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-purple-400" />
+                <Mail className="h-4 w-4 text-brand-400" />
                 <a href={`mailto:${brand.contactEmail}`} className="hover:text-white transition-colors">
                   {brand.contactEmail}
                 </a>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-purple-400" />
+                <Phone className="h-4 w-4 text-brand-400" />
                 <span>{brand.phone}</span>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-purple-400" />
+                <MapPin className="h-4 w-4 text-brand-400" />
                 <span>{brand.address}</span>
               </div>
             </div>
@@ -44,7 +44,7 @@ export function Footer() {
             <ul className="flex flex-col gap-2.5 text-sm">
               {services.map((srv) => (
                 <li key={srv.slug}>
-                  <Link href={srv.href} className="hover:text-purple-300 transition-colors">
+                  <Link href={srv.href} className="hover:text-brand-300 transition-colors">
                     {srv.title}
                   </Link>
                 </li>
@@ -58,13 +58,13 @@ export function Footer() {
             <ul className="flex flex-col gap-2.5 text-sm">
               {industries.slice(0, 5).map((ind) => (
                 <li key={ind.id}>
-                  <Link href="/services" className="hover:text-purple-300 transition-colors">
+                  <Link href="/services" className="hover:text-brand-300 transition-colors">
                     {ind.title.split(" ")[0]} & {ind.title.split(" ")[1] || "Practice"}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link href="/services" className="text-purple-400 hover:text-purple-300 transition-colors inline-flex items-center gap-1">
+                <Link href="/services" className="text-brand-400 hover:text-brand-300 transition-colors inline-flex items-center gap-1">
                   View all services <ArrowUpRight className="h-3 w-3" />
                 </Link>
               </li>
@@ -76,28 +76,28 @@ export function Footer() {
             <h4 className="text-xs font-bold uppercase tracking-wider text-white">Platform</h4>
             <ul className="flex flex-col gap-2.5 text-sm">
               <li>
-                <Link href="/demo" className="hover:text-purple-300 transition-colors flex items-center gap-1.5 text-slate-200">
+                <Link href="/demo" className="hover:text-brand-300 transition-colors flex items-center gap-1.5 text-fg-soft">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   Live AI Demo
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" className="hover:text-purple-300 transition-colors">
+                <Link href="/dashboard" className="hover:text-brand-300 transition-colors">
                   Client Dashboard
                 </Link>
               </li>
               <li>
-                <Link href="/projects" className="hover:text-purple-300 transition-colors">
+                <Link href="/projects" className="hover:text-brand-300 transition-colors">
                   Projects
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-purple-300 transition-colors">
+                <Link href="/contact" className="hover:text-brand-300 transition-colors">
                   Book Consultation
                 </Link>
               </li>
               <li>
-                <Link href="/#about" className="hover:text-purple-300 transition-colors">
+                <Link href="/#about" className="hover:text-brand-300 transition-colors">
                   About Deptloy
                 </Link>
               </li>
@@ -106,24 +106,24 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-14 pt-8 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="mt-14 pt-8 border-t border-line flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-fg-subtle">
           <p>© 2026 {brand.legalName}. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <button
               onClick={() => setActiveModal("privacy")}
-              className="hover:text-slate-300 transition-colors inline-flex items-center gap-1"
+              className="hover:text-fg-soft transition-colors inline-flex items-center gap-1"
             >
-              <ShieldCheck className="h-3.5 w-3.5 text-purple-400/80" />
+              <ShieldCheck className="h-3.5 w-3.5 text-brand-400/80" />
               Privacy Policy
             </button>
             <button
               onClick={() => setActiveModal("terms")}
-              className="hover:text-slate-300 transition-colors inline-flex items-center gap-1"
+              className="hover:text-fg-soft transition-colors inline-flex items-center gap-1"
             >
-              <FileText className="h-3.5 w-3.5 text-purple-400/80" />
+              <FileText className="h-3.5 w-3.5 text-brand-400/80" />
               Terms of Service
             </button>
-            <span className="text-slate-600">SOC2 Type II Ready Architecture</span>
+            <span className="text-fg-subtle">SOC2 Type II Ready Architecture</span>
           </div>
         </div>
       </div>
@@ -136,7 +136,7 @@ export function Footer() {
         description="Last updated: October 2026"
         maxWidth="lg"
       >
-        <div className="space-y-4 text-sm text-slate-300 max-h-[60vh] overflow-y-auto pr-2">
+        <div className="space-y-4 text-sm text-fg-soft max-h-[60vh] overflow-y-auto pr-2">
           <p>
             At {brand.name}, we hold client data integrity and caller confidentiality to the highest standard. This policy describes how we collect, handle, and protect data across our AI automation and receptionist platforms.
           </p>
@@ -163,7 +163,7 @@ export function Footer() {
         description="Standard Enterprise Services Agreement"
         maxWidth="lg"
       >
-        <div className="space-y-4 text-sm text-slate-300 max-h-[60vh] overflow-y-auto pr-2">
+        <div className="space-y-4 text-sm text-fg-soft max-h-[60vh] overflow-y-auto pr-2">
           <p>
             These terms govern the deployment and usage of {brand.name}&apos;s software, AI agents, integration pipelines, and custom software services.
           </p>

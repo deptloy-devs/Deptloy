@@ -25,7 +25,7 @@ export default function AutomationServicePage() {
   const integrationCategories = [
     {
       name: "CRMs & Pipelines",
-      icon: <Database className="h-5 w-5 text-purple-400" />,
+      icon: <Database className="h-5 w-5 text-brand-400" />,
       tools: ["HubSpot", "Salesforce", "Pipedrive", "Close", "Zoho"],
       desc: "Auto-create deals, update contact stages, log call notes, and calculate deal scores.",
     },
@@ -85,7 +85,7 @@ export default function AutomationServicePage() {
               Workflows That Run Without Extra Headcount
             </h1>
 
-            <p className="text-lg text-slate-300 leading-relaxed mb-8">
+            <p className="text-lg text-fg-soft leading-relaxed mb-8">
               Tired of copy-pasting customer details across spreadsheets, calendars, and CRMs? We build robust, custom automation pipelines that connect your fragmented business software on autopilot.
             </p>
 
@@ -100,9 +100,9 @@ export default function AutomationServicePage() {
           </div>
 
           {/* Interactive Workflow Visualizer */}
-          <div className="mt-16 rounded-3xl bg-[#101522] border border-white/10 p-6 sm:p-10 shadow-2xl">
+          <div className="mt-16 rounded-3xl bg-card border border-line p-6 sm:p-10 shadow-2xl">
             <div className="text-center max-w-xl mx-auto mb-10">
-              <span className="text-xs font-bold uppercase tracking-wider text-purple-400">
+              <span className="text-xs font-bold uppercase tracking-wider text-brand-400">
                 Architecture Blueprint
               </span>
               <h3 className="text-xl font-bold text-white mt-1">
@@ -113,12 +113,12 @@ export default function AutomationServicePage() {
             {/* Workflow Step Nodes */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
               {/* Node 1 */}
-              <div className="p-5 rounded-2xl bg-[#111827] border border-white/10 relative">
-                <span className="text-[10px] font-mono text-purple-400 font-bold uppercase block mb-1">
+              <div className="p-5 rounded-2xl bg-raised border border-line relative">
+                <span className="text-[10px] font-mono text-brand-400 font-bold uppercase block mb-1">
                   Step 1 • Inbound Trigger
                 </span>
                 <h4 className="text-sm font-bold text-white mb-1">Customer Call / Form</h4>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-fg-muted">
                   New appointment request arrives via phone or website.
                 </p>
                 <div className="mt-3 flex items-center gap-1.5 text-[11px] text-emerald-400">
@@ -128,27 +128,27 @@ export default function AutomationServicePage() {
               </div>
 
               {/* Node 2 */}
-              <div className="p-5 rounded-2xl bg-[#111827] border border-purple-500/30 relative shadow-[0_0_20px_rgba(139,92,246,0.1)]">
-                <span className="text-[10px] font-mono text-purple-300 font-bold uppercase block mb-1">
+              <div className="p-5 rounded-2xl bg-raised border border-brand-500/30 relative shadow-[0_0_20px_rgba(139,92,246,0.1)]">
+                <span className="text-[10px] font-mono text-brand-300 font-bold uppercase block mb-1">
                   Step 2 • AI Classification
                 </span>
                 <h4 className="text-sm font-bold text-white mb-1">Intent & Entity Extraction</h4>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-fg-muted">
                   Model extracts customer name, service type, urgency, and budget.
                 </p>
-                <div className="mt-3 flex items-center gap-1.5 text-[11px] text-purple-300">
+                <div className="mt-3 flex items-center gap-1.5 text-[11px] text-brand-300">
                   <Sparkles className="h-3.5 w-3.5" />
                   <span>AI Parsing: 120ms</span>
                 </div>
               </div>
 
               {/* Node 3 */}
-              <div className="p-5 rounded-2xl bg-[#111827] border border-white/10 relative">
+              <div className="p-5 rounded-2xl bg-raised border border-line relative">
                 <span className="text-[10px] font-mono text-blue-400 font-bold uppercase block mb-1">
                   Step 3 • Conditional Logic
                 </span>
                 <h4 className="text-sm font-bold text-white mb-1">Calendar & Rule Router</h4>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-fg-muted">
                   Checks staff calendars, locks 45-min window, enforces deposit.
                 </p>
                 <div className="mt-3 flex items-center gap-1.5 text-[11px] text-blue-400">
@@ -158,12 +158,12 @@ export default function AutomationServicePage() {
               </div>
 
               {/* Node 4 */}
-              <div className="p-5 rounded-2xl bg-[#111827] border border-white/10 relative">
+              <div className="p-5 rounded-2xl bg-raised border border-line relative">
                 <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase block mb-1">
                   Step 4 • Multi-Tool Sync
                 </span>
                 <h4 className="text-sm font-bold text-white mb-1">CRM + SMS + Accounting</h4>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-fg-muted">
                   HubSpot deal created, Twilio SMS dispatched, Stripe invoice held.
                 </p>
                 <div className="mt-3 flex items-center gap-1.5 text-[11px] text-emerald-400">
@@ -173,7 +173,7 @@ export default function AutomationServicePage() {
               </div>
             </div>
 
-            <div className="mt-6 text-center text-xs text-slate-500">
+            <div className="mt-6 text-center text-xs text-fg-subtle">
               Zero human intervention required. Fully audited with retry logs and alert fallbacks.
             </div>
           </div>
@@ -181,7 +181,7 @@ export default function AutomationServicePage() {
       </section>
 
       {/* Integration Categories */}
-      <section className="py-20 bg-[#090D18] border-t border-white/[0.06]">
+      <section className="py-20 bg-surface border-t border-line">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="Ecosystem Compatibility"
@@ -193,17 +193,17 @@ export default function AutomationServicePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {integrationCategories.map((cat, idx) => (
-              <div key={idx} className="rounded-2xl bg-[#101522] border border-white/10 p-6 flex flex-col justify-between">
+              <div key={idx} className="rounded-2xl bg-card border border-line p-6 flex flex-col justify-between">
                 <div>
-                  <div className="rounded-xl bg-[#111827] p-3 w-fit border border-white/10 mb-4">
+                  <div className="rounded-xl bg-raised p-3 w-fit border border-line mb-4">
                     {cat.icon}
                   </div>
                   <h4 className="text-base font-bold text-white mb-2">{cat.name}</h4>
-                  <p className="text-xs text-slate-400 leading-relaxed mb-4">{cat.desc}</p>
+                  <p className="text-xs text-fg-muted leading-relaxed mb-4">{cat.desc}</p>
                 </div>
-                <div className="pt-4 border-t border-white/[0.08] flex flex-wrap gap-1.5">
+                <div className="pt-4 border-t border-line flex flex-wrap gap-1.5">
                   {cat.tools.map((tool, tIdx) => (
-                    <span key={tIdx} className="text-[10px] px-2 py-0.5 rounded bg-white/5 text-slate-300">
+                    <span key={tIdx} className="text-[10px] px-2 py-0.5 rounded bg-white/5 text-fg-soft">
                       {tool}
                     </span>
                   ))}
@@ -215,7 +215,7 @@ export default function AutomationServicePage() {
       </section>
 
       {/* Business Use Cases */}
-      <section className="py-20 bg-[#080B14] border-t border-white/[0.06]">
+      <section className="py-20 bg-canvas border-t border-line">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="High-Impact Scenarios"
@@ -226,12 +226,12 @@ export default function AutomationServicePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {automationUseCases.map((uc, idx) => (
-              <div key={idx} className="p-6 rounded-2xl bg-[#101522] border border-white/10">
+              <div key={idx} className="p-6 rounded-2xl bg-card border border-line">
                 <h4 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-                  <Workflow className="h-5 w-5 text-purple-400" />
+                  <Workflow className="h-5 w-5 text-brand-400" />
                   {uc.title}
                 </h4>
-                <p className="text-sm text-slate-400 leading-relaxed">{uc.desc}</p>
+                <p className="text-sm text-fg-muted leading-relaxed">{uc.desc}</p>
               </div>
             ))}
           </div>

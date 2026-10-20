@@ -13,7 +13,7 @@ import { industries } from "@/lib/site";
 
 export function IndustriesSection() {
   const iconMap: Record<string, React.ReactNode> = {
-    Stethoscope: <Stethoscope className="h-6 w-6 text-purple-400" />,
+    Stethoscope: <Stethoscope className="h-6 w-6 text-brand-400" />,
     Sparkles: <Sparkles className="h-6 w-6 text-pink-400" />,
     Building2: <Building2 className="h-6 w-6 text-blue-400" />,
     Briefcase: <Briefcase className="h-6 w-6 text-emerald-400" />,
@@ -22,7 +22,7 @@ export function IndustriesSection() {
   };
 
   return (
-    <section id="tailored-services" className="relative py-24 bg-[#090D18] border-t border-white/[0.06] scroll-mt-20">
+    <section id="tailored-services" className="relative py-24 bg-surface border-t border-line scroll-mt-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading */}
@@ -39,53 +39,53 @@ export function IndustriesSection() {
           {industries.map((ind) => (
             <div
               key={ind.id}
-              className="group relative rounded-3xl bg-[#101522] border border-white/10 p-7 flex flex-col justify-between hover:border-purple-500/30 hover:bg-[#12192A] transition-all duration-300"
+              className="group relative rounded-3xl bg-card border border-line p-7 flex flex-col justify-between hover:border-brand-500/30 hover:bg-card transition-all duration-300"
             >
               <div>
                 {/* Header Icon */}
                 <div className="flex items-center justify-between mb-5">
-                  <div className="rounded-2xl bg-[#111827] p-3 border border-white/10 group-hover:scale-105 transition-transform">
-                    {iconMap[ind.iconName] || <Briefcase className="h-6 w-6 text-purple-400" />}
+                  <div className="rounded-2xl bg-raised p-3 border border-line group-hover:scale-105 transition-transform">
+                    {iconMap[ind.iconName] || <Briefcase className="h-6 w-6 text-brand-400" />}
                   </div>
-                  <span className="text-[11px] font-mono text-purple-400 font-semibold">Tailored Service</span>
+                  <span className="text-[11px] font-mono text-brand-400 font-semibold">Tailored Service</span>
                 </div>
 
                 {/* Title & Tagline */}
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-brand-300 transition-colors">
                   {ind.title}
                 </h3>
-                <p className="text-xs font-medium text-purple-400 mb-3">
+                <p className="text-xs font-medium text-brand-400 mb-3">
                   {ind.tagline}
                 </p>
-                <p className="text-sm text-slate-400 leading-relaxed mb-5">
+                <p className="text-sm text-fg-muted leading-relaxed mb-5">
                   {ind.description}
                 </p>
 
                 {/* Common Bottleneck & Solution Pill */}
-                <div className="rounded-xl bg-black/30 p-3 border border-white/5 space-y-1.5 mb-6 text-xs">
+                <div className="rounded-xl bg-black/30 p-3 border border-line space-y-1.5 mb-6 text-xs">
                   <div>
-                    <span className="text-slate-500 font-semibold block text-[10px] uppercase">Operational Friction</span>
-                    <p className="text-slate-300">{ind.commonBottleneck}</p>
+                    <span className="text-fg-subtle font-semibold block text-[10px] uppercase">Operational Friction</span>
+                    <p className="text-fg-soft">{ind.commonBottleneck}</p>
                   </div>
-                  <div className="pt-1.5 border-t border-white/5">
-                    <span className="text-purple-400 font-semibold block text-[10px] uppercase">Deptloy Configuration</span>
-                    <p className="text-slate-200">{ind.deptloySolution}</p>
+                  <div className="pt-1.5 border-t border-line">
+                    <span className="text-brand-400 font-semibold block text-[10px] uppercase">Deptloy Configuration</span>
+                    <p className="text-fg-soft">{ind.deptloySolution}</p>
                   </div>
                 </div>
               </div>
 
               {/* Card Footer Link */}
-              <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between">
+              <div className="pt-4 border-t border-line flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   {ind.recommendedServices.slice(0, 2).map((srv, idx) => (
-                    <span key={idx} className="text-[10px] font-medium px-2 py-0.5 rounded bg-white/5 text-slate-300">
+                    <span key={idx} className="text-[10px] font-medium px-2 py-0.5 rounded bg-white/5 text-fg-soft">
                       {srv}
                     </span>
                   ))}
                 </div>
                 <Link
                   href="/industries"
-                  className="text-xs font-semibold text-purple-400 hover:text-purple-300 inline-flex items-center gap-1 group-hover:translate-x-1 transition-all"
+                  className="text-xs font-semibold text-brand-400 hover:text-brand-300 inline-flex items-center gap-1 group-hover:translate-x-1 transition-all"
                 >
                   <span>Learn more</span>
                   <ArrowRight className="h-3 w-3" />
@@ -100,7 +100,7 @@ export function IndustriesSection() {
         <div className="mt-12 text-center">
           <Link
             href="/services"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-purple-400 hover:text-purple-300 transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-brand-400 hover:text-brand-300 transition-colors"
           >
             <span>Explore all tailored services & solutions</span>
             <ArrowRight className="h-4 w-4" />

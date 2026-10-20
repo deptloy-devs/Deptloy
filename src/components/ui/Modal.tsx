@@ -51,7 +51,7 @@ export function Modal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-[#080B14]/80 backdrop-blur-md transition-opacity"
+        className="fixed inset-0 bg-canvas/80 backdrop-blur-md transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -59,7 +59,7 @@ export function Modal({
       {/* Modal Card */}
       <div
         className={cn(
-          "relative w-full rounded-2xl bg-[#101522] border border-white/10 p-6 shadow-2xl shadow-purple-950/40 z-10 animate-in fade-in zoom-in-95 duration-200",
+          "relative w-full rounded-2xl bg-card border border-line p-6 shadow-2xl shadow-brand-950/40 z-10 animate-in fade-in zoom-in-95 duration-200",
           widthClasses,
           className
         )}
@@ -69,11 +69,11 @@ export function Modal({
         <div className="flex items-start justify-between gap-4 mb-4">
           <div>
             {title && <h3 className="text-xl font-bold text-white tracking-tight">{title}</h3>}
-            {description && <p className="text-sm text-slate-400 mt-1">{description}</p>}
+            {description && <p className="text-sm text-fg-muted mt-1">{description}</p>}
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="rounded-lg p-1.5 text-fg-muted hover:text-white hover:bg-white/10 transition-colors"
             aria-label="Close modal"
           >
             <X className="h-5 w-5" />

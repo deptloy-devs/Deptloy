@@ -23,13 +23,13 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "rounded-2xl bg-[#101522] border border-white/10 p-5 flex flex-col justify-between shadow-lg",
+        "rounded-2xl bg-card border border-line p-5 flex flex-col justify-between shadow-lg",
         className
       )}
     >
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-semibold text-slate-400">{title}</span>
-        <div className="rounded-xl bg-[#111827] p-2 text-purple-400 border border-white/10">
+        <span className="text-xs font-semibold text-fg-muted">{title}</span>
+        <div className="rounded-xl bg-raised p-2 text-brand-400 border border-line">
           {icon}
         </div>
       </div>
@@ -56,7 +56,7 @@ export function StatCard({
                 {change}
               </span>
             )}
-            {subtitle && <span className="text-slate-500">{subtitle}</span>}
+            {subtitle && <span className="text-fg-subtle">{subtitle}</span>}
           </div>
         )}
       </div>

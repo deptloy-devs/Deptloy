@@ -108,20 +108,20 @@ export default function ContactPage() {
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
             Let&apos;s Build Your Custom AI Infrastructure
           </h1>
-          <p className="text-lg text-slate-300 leading-relaxed">
+          <p className="text-lg text-fg-soft leading-relaxed">
             Tell us about your customer communication bottlenecks, appointment volume, and current software. Our technical team will review and outline a concrete deployment scope.
           </p>
         </div>
       </section>
 
       {/* Main Grid: Form + Direct Contact Information */}
-      <section className="pb-24 bg-[#080B14]">
+      <section className="pb-24 bg-canvas">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             
             {/* Form Column */}
             <div className="lg:col-span-7">
-              <div className="rounded-3xl bg-[#101522] border border-white/10 p-6 sm:p-10 shadow-2xl relative">
+              <div className="rounded-3xl bg-card border border-line p-6 sm:p-10 shadow-2xl relative">
                 
                 {isSubmitted ? (
                   /* Honest Demonstration Confirmation Screen */
@@ -134,21 +134,21 @@ export default function ContactPage() {
                       <h3 className="text-2xl font-bold text-white">
                         Inquiry Validated Successfully
                       </h3>
-                      <p className="text-xs font-mono text-purple-400">
+                      <p className="text-xs font-mono text-brand-400">
                         Reference Token: {submissionId}
                       </p>
                     </div>
 
                     {/* Honest Notice */}
-                    <div className="p-4 rounded-2xl bg-[#111827] border border-white/10 text-xs text-slate-300 space-y-2 text-left max-w-md mx-auto">
+                    <div className="p-4 rounded-2xl bg-raised border border-line text-xs text-fg-soft space-y-2 text-left max-w-md mx-auto">
                       <div className="flex items-center gap-2 text-amber-400 font-semibold">
                         <AlertCircle className="h-4 w-4" />
                         <span>Demonstration Mode Active</span>
                       </div>
-                      <p className="text-slate-400 leading-relaxed">
+                      <p className="text-fg-muted leading-relaxed">
                         Your submission payload has been successfully validated on the frontend and simulated locally. In production, this form triggers an automated lead intake webhook to our CRM.
                       </p>
-                      <div className="pt-2 border-t border-white/5 space-y-1 text-slate-300">
+                      <div className="pt-2 border-t border-line space-y-1 text-fg-soft">
                         <p><strong>Name:</strong> {formData.fullName}</p>
                         <p><strong>Company:</strong> {formData.companyName}</p>
                         <p><strong>Email:</strong> {formData.businessEmail}</p>
@@ -168,10 +168,10 @@ export default function ContactPage() {
                 ) : (
                   /* Active Form */
                   <form onSubmit={handleSubmit} noValidate className="space-y-5">
-                    <div className="pb-4 border-b border-white/[0.08]">
+                    <div className="pb-4 border-b border-line">
                       <h3 className="text-xl font-bold text-white">Project Inquiry Form</h3>
-                      <p className="text-xs text-slate-400 mt-1">
-                        All fields marked with an asterisk (<span className="text-purple-400">*</span>) are required.
+                      <p className="text-xs text-fg-muted mt-1">
+                        All fields marked with an asterisk (<span className="text-brand-400">*</span>) are required.
                       </p>
                     </div>
 
@@ -215,11 +215,11 @@ export default function ContactPage() {
                         error={errors.serviceRequired}
                         required
                       >
-                        <option value="" disabled className="bg-[#111827]">
+                        <option value="" disabled className="bg-raised">
                           Select a solution...
                         </option>
                         {services.map((srv) => (
-                          <option key={srv.slug} value={srv.slug} className="bg-[#111827]">
+                          <option key={srv.slug} value={srv.slug} className="bg-raised">
                             {srv.title}
                           </option>
                         ))}
@@ -232,9 +232,9 @@ export default function ContactPage() {
                         value={formData.budgetRange}
                         onChange={(e) => setFormData({ ...formData, budgetRange: e.target.value })}
                       >
-                        <option value="$1,500 - $3,000" className="bg-[#111827]">$1,500 - $3,000 / month</option>
-                        <option value="$3,000 - $6,000" className="bg-[#111827]">$3,000 - $6,000 / month</option>
-                        <option value="$6,000+" className="bg-[#111827]">$6,000+ / custom enterprise</option>
+                        <option value="$1,500 - $3,000" className="bg-raised">$1,500 - $3,000 / month</option>
+                        <option value="$3,000 - $6,000" className="bg-raised">$3,000 - $6,000 / month</option>
+                        <option value="$6,000+" className="bg-raised">$6,000+ / custom enterprise</option>
                       </Select>
 
                       <Select
@@ -242,9 +242,9 @@ export default function ContactPage() {
                         value={formData.timeline}
                         onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
                       >
-                        <option value="Immediately (1-2 weeks)" className="bg-[#111827]">Immediately (1-2 weeks)</option>
-                        <option value="Within 3-4 weeks" className="bg-[#111827]">Within 3-4 weeks</option>
-                        <option value="Exploring for next quarter" className="bg-[#111827]">Exploring for next quarter</option>
+                        <option value="Immediately (1-2 weeks)" className="bg-raised">Immediately (1-2 weeks)</option>
+                        <option value="Within 3-4 weeks" className="bg-raised">Within 3-4 weeks</option>
+                        <option value="Exploring for next quarter" className="bg-raised">Exploring for next quarter</option>
                       </Select>
                     </div>
 
@@ -273,7 +273,7 @@ export default function ContactPage() {
                       </Button>
                     </div>
 
-                    <div className="pt-2 text-center text-xs text-slate-500 flex items-center justify-center gap-1.5">
+                    <div className="pt-2 text-center text-xs text-fg-subtle flex items-center justify-center gap-1.5">
                       <ShieldCheck className="h-4 w-4 text-emerald-400" />
                       <span>Your information is strictly protected under non-disclosure boundaries.</span>
                     </div>
@@ -287,33 +287,33 @@ export default function ContactPage() {
             <div className="lg:col-span-5 flex flex-col gap-6">
               
               {/* Direct Info Card */}
-              <div className="rounded-3xl bg-[#101522] border border-white/10 p-6 sm:p-8 space-y-6">
+              <div className="rounded-3xl bg-card border border-line p-6 sm:p-8 space-y-6">
                 <h3 className="text-xl font-bold text-white">Direct Communication</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">
+                <p className="text-sm text-fg-muted leading-relaxed">
                   Prefer a direct line or have immediate technical questions? Contact our solutions engineering team directly.
                 </p>
 
-                <div className="space-y-4 pt-2 border-t border-white/[0.08] text-sm">
+                <div className="space-y-4 pt-2 border-t border-line text-sm">
                   <div className="flex items-start gap-3.5">
-                    <div className="rounded-xl bg-[#111827] p-2.5 border border-white/10 text-purple-400 shrink-0">
+                    <div className="rounded-xl bg-raised p-2.5 border border-line text-brand-400 shrink-0">
                       <Mail className="h-5 w-5" />
                     </div>
                     <div>
-                      <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted block">
                         Solutions Email
                       </span>
-                      <a href={`mailto:${brand.contactEmail}`} className="text-white hover:text-purple-300 font-medium">
+                      <a href={`mailto:${brand.contactEmail}`} className="text-white hover:text-brand-300 font-medium">
                         {brand.contactEmail}
                       </a>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3.5">
-                    <div className="rounded-xl bg-[#111827] p-2.5 border border-white/10 text-purple-400 shrink-0">
+                    <div className="rounded-xl bg-raised p-2.5 border border-line text-brand-400 shrink-0">
                       <Phone className="h-5 w-5" />
                     </div>
                     <div>
-                      <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted block">
                         Direct Phone
                       </span>
                       <span className="text-white font-medium">{brand.phone}</span>
@@ -321,24 +321,24 @@ export default function ContactPage() {
                   </div>
 
                   <div className="flex items-start gap-3.5">
-                    <div className="rounded-xl bg-[#111827] p-2.5 border border-white/10 text-purple-400 shrink-0">
+                    <div className="rounded-xl bg-raised p-2.5 border border-line text-brand-400 shrink-0">
                       <Clock className="h-5 w-5" />
                     </div>
                     <div>
-                      <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted block">
                         Engineering Response Time
                       </span>
-                      <span className="text-slate-200">Monday - Friday • Sub-4 Hour Response</span>
+                      <span className="text-fg-soft">Monday - Friday • Sub-4 Hour Response</span>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Instant Scheduling Callout */}
-              <div className="rounded-3xl bg-gradient-to-br from-purple-950/40 to-[#101522] border border-purple-500/20 p-6 text-center space-y-3">
-                <Sparkles className="h-6 w-6 text-purple-400 mx-auto" />
+              <div className="rounded-3xl bg-gradient-to-br from-brand-950/40 to-card border border-brand-500/20 p-6 text-center space-y-3">
+                <Sparkles className="h-6 w-6 text-brand-400 mx-auto" />
                 <h4 className="text-base font-bold text-white">Looking for Immediate Hands-On Testing?</h4>
-                <p className="text-xs text-slate-300 max-w-sm mx-auto">
+                <p className="text-xs text-fg-soft max-w-sm mx-auto">
                   Try our interactive appointment booking prototype right in your browser without waiting for an email reply.
                 </p>
                 <div className="pt-2">

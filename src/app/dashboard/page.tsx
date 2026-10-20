@@ -300,11 +300,11 @@ export default function DashboardPage() {
   });
 
   return (
-    <div className="flex min-h-screen bg-[#080B14] text-slate-100">
+    <div className="flex min-h-screen bg-canvas text-fg">
       
       {/* Toast Notification Banner */}
       {toastMessage && (
-        <div className="fixed top-5 right-5 z-50 rounded-xl bg-purple-600 text-white px-4 py-2.5 text-xs font-semibold shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+        <div className="fixed top-5 right-5 z-50 rounded-xl bg-brand-600 text-white px-4 py-2.5 text-xs font-semibold shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
           <CheckCircle2 className="h-4 w-4" />
           <span>{toastMessage}</span>
         </div>
@@ -327,7 +327,7 @@ export default function DashboardPage() {
             className="fixed inset-0 bg-black/80 backdrop-blur-sm"
             onClick={() => setIsMobileMenuOpen(false)}
           />
-          <div className="relative w-72 bg-[#080B14] border-r border-white/10 h-full z-10 flex flex-col">
+          <div className="relative w-72 bg-canvas border-r border-line h-full z-10 flex flex-col">
             <Sidebar
               currentTab={currentTab}
               onTabChange={(tab) => {
@@ -356,11 +356,11 @@ export default function DashboardPage() {
             <div className="space-y-8">
               
               {/* Top Banner Notice */}
-              <div className="p-4 rounded-2xl bg-[#101522] border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+              <div className="p-4 rounded-2xl bg-card border border-line flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-2.5">
                   <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
                   <span className="font-semibold text-white">AI Telephony Active:</span>
-                  <span className="text-slate-300">
+                  <span className="text-fg-soft">
                     Routing calls to Deptloy Voice Model v2.4 • Current uptime: 99.98%
                   </span>
                 </div>
@@ -407,17 +407,17 @@ export default function DashboardPage() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
                 {/* Left (8 cols): Recent Appointments Table */}
-                <div className="lg:col-span-8 rounded-3xl bg-[#101522] border border-white/10 p-6 shadow-xl">
-                  <div className="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-4">
+                <div className="lg:col-span-8 rounded-3xl bg-card border border-line p-6 shadow-xl">
+                  <div className="flex items-center justify-between pb-4 border-b border-line mb-4">
                     <div>
                       <h3 className="text-base font-bold text-white">Recent Appointments</h3>
-                      <p className="text-xs text-slate-400">Autonomous calendar bookings across all channels</p>
+                      <p className="text-xs text-fg-muted">Autonomous calendar bookings across all channels</p>
                     </div>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setCurrentTab("appointments")}
-                      className="text-purple-400 text-xs"
+                      className="text-brand-400 text-xs"
                     >
                       View All
                     </Button>
@@ -426,7 +426,7 @@ export default function DashboardPage() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs">
                       <thead>
-                        <tr className="border-b border-white/5 text-slate-400 font-semibold uppercase tracking-wider text-[10px]">
+                        <tr className="border-b border-line text-fg-muted font-semibold uppercase tracking-wider text-[10px]">
                           <th className="py-2.5 px-3">Customer</th>
                           <th className="py-2.5 px-3">Service</th>
                           <th className="py-2.5 px-3">Date & Time</th>
@@ -439,20 +439,20 @@ export default function DashboardPage() {
                           <tr key={apt.id} className="hover:bg-white/[0.02] transition-colors">
                             <td className="py-3 px-3 font-semibold text-white">
                               {apt.customerName}
-                              <span className="block text-[10px] text-slate-500 font-normal">
+                              <span className="block text-[10px] text-fg-subtle font-normal">
                                 {apt.customerPhone}
                               </span>
                             </td>
-                            <td className="py-3 px-3 text-slate-300 max-w-[180px] truncate">
+                            <td className="py-3 px-3 text-fg-soft max-w-[180px] truncate">
                               {apt.service}
                             </td>
-                            <td className="py-3 px-3 text-slate-300 whitespace-nowrap">
+                            <td className="py-3 px-3 text-fg-soft whitespace-nowrap">
                               {apt.date} • {apt.time}
                             </td>
                             <td className="py-3 px-3">
                               <StatusBadge status={apt.status} />
                             </td>
-                            <td className="py-3 px-3 text-slate-400 font-mono text-[10px]">
+                            <td className="py-3 px-3 text-fg-muted font-mono text-[10px]">
                               {apt.channel}
                             </td>
                           </tr>
@@ -466,15 +466,15 @@ export default function DashboardPage() {
                 <div className="lg:col-span-4 flex flex-col gap-6">
                   
                   {/* Quick Actions Card */}
-                  <div className="rounded-3xl bg-[#101522] border border-white/10 p-5 shadow-xl space-y-3">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  <div className="rounded-3xl bg-card border border-line p-5 shadow-xl space-y-3">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-fg-muted">
                       Quick Operations
                     </h4>
                     <Button
                       variant="secondary"
                       size="sm"
                       className="w-full justify-start text-xs"
-                      leftIcon={<PhoneCall className="h-4 w-4 text-purple-400" />}
+                      leftIcon={<PhoneCall className="h-4 w-4 text-brand-400" />}
                       onClick={() => showToast("Simulating inbound call event...")}
                     >
                       Simulate Inbound Call
@@ -500,36 +500,36 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Real-time Activity Feed */}
-                  <div className="rounded-3xl bg-[#101522] border border-white/10 p-5 shadow-xl space-y-3">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  <div className="rounded-3xl bg-card border border-line p-5 shadow-xl space-y-3">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-fg-muted">
                       Live Activity Feed
                     </h4>
                     <div className="space-y-3 text-xs">
-                      <div className="flex items-start gap-2.5 pb-2 border-b border-white/5">
+                      <div className="flex items-start gap-2.5 pb-2 border-b border-line">
                         <span className="h-2 w-2 rounded-full bg-emerald-400 shrink-0 mt-1.5" />
                         <div>
-                          <p className="text-slate-200">
+                          <p className="text-fg-soft">
                             <strong>AI Receptionist</strong> booked Marcus Vance for Friday at 4:30 PM.
                           </p>
-                          <span className="text-[10px] text-slate-500">12 mins ago</span>
+                          <span className="text-[10px] text-fg-subtle">12 mins ago</span>
                         </div>
                       </div>
-                      <div className="flex items-start gap-2.5 pb-2 border-b border-white/5">
+                      <div className="flex items-start gap-2.5 pb-2 border-b border-line">
                         <span className="h-2 w-2 rounded-full bg-blue-400 shrink-0 mt-1.5" />
                         <div>
-                          <p className="text-slate-200">
+                          <p className="text-fg-soft">
                             <strong>HubSpot sync</strong> updated lead score for Sarah Jenkins (+35 pts).
                           </p>
-                          <span className="text-[10px] text-slate-500">34 mins ago</span>
+                          <span className="text-[10px] text-fg-subtle">34 mins ago</span>
                         </div>
                       </div>
                       <div className="flex items-start gap-2.5">
-                        <span className="h-2 w-2 rounded-full bg-purple-400 shrink-0 mt-1.5" />
+                        <span className="h-2 w-2 rounded-full bg-brand-400 shrink-0 mt-1.5" />
                         <div>
-                          <p className="text-slate-200">
+                          <p className="text-fg-soft">
                             <strong>Google Calendar</strong> slot locked for 45-min clean consultation.
                           </p>
-                          <span className="text-[10px] text-slate-500">1 hour ago</span>
+                          <span className="text-[10px] text-fg-subtle">1 hour ago</span>
                         </div>
                       </div>
                     </div>
@@ -547,9 +547,9 @@ export default function DashboardPage() {
             <div className="max-w-4xl space-y-8">
               
               {/* Header Status Card */}
-              <div className="rounded-3xl bg-gradient-to-r from-purple-900/30 via-[#101522] to-[#101522] border border-purple-500/30 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+              <div className="rounded-3xl bg-gradient-to-r from-brand-900/30 via-card to-card border border-brand-500/30 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
                 <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-2xl bg-purple-600/30 border border-purple-500/50 flex items-center justify-center text-purple-300">
+                  <div className="h-12 w-12 rounded-2xl bg-brand-600/30 border border-brand-500/50 flex items-center justify-center text-brand-300">
                     <Bot className="h-6 w-6" />
                   </div>
                   <div>
@@ -557,7 +557,7 @@ export default function DashboardPage() {
                       <h3 className="text-lg font-bold text-white">{receptionistConfig.assistantName}</h3>
                       <Badge variant="success" size="sm" dot>Live Telephony Node</Badge>
                     </div>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs text-fg-muted mt-0.5">
                       {receptionistConfig.voiceStyle} • Response Latency: 240ms
                     </p>
                   </div>
@@ -566,7 +566,7 @@ export default function DashboardPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  leftIcon={<Volume2 className="h-4 w-4 text-purple-400" />}
+                  leftIcon={<Volume2 className="h-4 w-4 text-brand-400" />}
                   onClick={() => showToast("Playing simulated assistant voice preview...")}
                 >
                   Test Voice Greeting
@@ -574,10 +574,10 @@ export default function DashboardPage() {
               </div>
 
               {/* Form Controls */}
-              <div className="rounded-3xl bg-[#101522] border border-white/10 p-6 sm:p-8 space-y-6 shadow-xl">
-                <div className="pb-4 border-b border-white/[0.08]">
+              <div className="rounded-3xl bg-card border border-line p-6 sm:p-8 space-y-6 shadow-xl">
+                <div className="pb-4 border-b border-line">
                   <h4 className="text-base font-bold text-white">Persona & Greeting Parameters</h4>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <p className="text-xs text-fg-muted mt-0.5">
                     Configure how your AI receptionist answers calls and presents your clinic or business.
                   </p>
                 </div>
@@ -657,8 +657,8 @@ export default function DashboardPage() {
                   />
                 </div>
 
-                <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between">
-                  <span className="text-xs text-slate-500">
+                <div className="pt-4 border-t border-line flex items-center justify-between">
+                  <span className="text-xs text-fg-subtle">
                     Changes take effect on live telephony within 60 seconds.
                   </span>
                   <Button
@@ -683,7 +683,7 @@ export default function DashboardPage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
                 <div>
                   <h3 className="text-xl font-bold text-white">Appointments Management</h3>
-                  <p className="text-xs text-slate-400">Monitor and coordinate all calendar bookings.</p>
+                  <p className="text-xs text-fg-muted">Monitor and coordinate all calendar bookings.</p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
@@ -694,8 +694,8 @@ export default function DashboardPage() {
                       onClick={() => setAptFilter(st)}
                       className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition-all ${
                         aptFilter === st
-                          ? "bg-purple-600 text-white shadow-md shadow-purple-600/30"
-                          : "bg-[#101522] text-slate-400 hover:text-white border border-white/10"
+                          ? "bg-brand-600 text-white shadow-md shadow-brand-600/30"
+                          : "bg-card text-fg-muted hover:text-white border border-line"
                       }`}
                     >
                       {st}
@@ -706,18 +706,18 @@ export default function DashboardPage() {
 
               {/* Search Bar */}
               <div className="relative max-w-sm">
-                <Search className="h-3.5 w-3.5 text-slate-500 absolute left-3 top-3 pointer-events-none" />
+                <Search className="h-3.5 w-3.5 text-fg-subtle absolute left-3 top-3 pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Filter by customer name or service..."
                   value={aptSearch}
                   onChange={(e) => setAptSearch(e.target.value)}
-                  className="w-full h-9 pl-9 pr-3 rounded-xl bg-[#101522] border border-white/10 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-purple-400"
+                  className="w-full h-9 pl-9 pr-3 rounded-xl bg-card border border-line text-xs text-white placeholder:text-fg-subtle focus:outline-none focus:ring-1 focus:ring-brand-400"
                 />
               </div>
 
               {/* Data Table */}
-              <div className="rounded-3xl bg-[#101522] border border-white/10 overflow-hidden shadow-xl">
+              <div className="rounded-3xl bg-card border border-line overflow-hidden shadow-xl">
                 {filteredAppointments.length === 0 ? (
                   <EmptyState
                     icon={<CalendarIcon className="h-6 w-6" />}
@@ -733,7 +733,7 @@ export default function DashboardPage() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs">
                       <thead>
-                        <tr className="border-b border-white/5 bg-[#111827] text-slate-400 font-semibold uppercase tracking-wider text-[10px]">
+                        <tr className="border-b border-line bg-raised text-fg-muted font-semibold uppercase tracking-wider text-[10px]">
                           <th className="py-3 px-4">Ref ID</th>
                           <th className="py-3 px-4">Customer Details</th>
                           <th className="py-3 px-4">Service</th>
@@ -746,25 +746,25 @@ export default function DashboardPage() {
                       <tbody className="divide-y divide-white/5">
                         {filteredAppointments.map((apt) => (
                           <tr key={apt.id} className="hover:bg-white/[0.02] transition-colors">
-                            <td className="py-3.5 px-4 font-mono text-purple-400 text-[11px]">
+                            <td className="py-3.5 px-4 font-mono text-brand-400 text-[11px]">
                               {apt.id}
                             </td>
                             <td className="py-3.5 px-4 font-semibold text-white">
                               {apt.customerName}
-                              <span className="block text-[11px] text-slate-400 font-normal">
+                              <span className="block text-[11px] text-fg-muted font-normal">
                                 {apt.customerPhone}
                               </span>
                             </td>
-                            <td className="py-3.5 px-4 text-slate-200">
+                            <td className="py-3.5 px-4 text-fg-soft">
                               {apt.service}
                             </td>
-                            <td className="py-3.5 px-4 text-slate-300 whitespace-nowrap">
+                            <td className="py-3.5 px-4 text-fg-soft whitespace-nowrap">
                               {apt.date} • {apt.time}
                             </td>
                             <td className="py-3.5 px-4">
                               <StatusBadge status={apt.status} />
                             </td>
-                            <td className="py-3.5 px-4 text-slate-400 font-mono text-[11px]">
+                            <td className="py-3.5 px-4 text-fg-muted font-mono text-[11px]">
                               {apt.channel}
                             </td>
                             <td className="py-3.5 px-4 text-right">
@@ -772,7 +772,7 @@ export default function DashboardPage() {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => setSelectedAptModal(apt)}
-                                className="text-xs text-slate-300"
+                                className="text-xs text-fg-soft"
                               >
                                 Details
                               </Button>
@@ -794,33 +794,33 @@ export default function DashboardPage() {
               >
                 {selectedAptModal && (
                   <div className="space-y-4 text-xs">
-                    <div className="p-3 rounded-xl bg-[#111827] border border-white/5 space-y-2">
+                    <div className="p-3 rounded-xl bg-raised border border-line space-y-2">
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Customer:</span>
+                        <span className="text-fg-muted">Customer:</span>
                         <span className="font-semibold text-white">{selectedAptModal.customerName}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Phone:</span>
-                        <span className="text-slate-200">{selectedAptModal.customerPhone}</span>
+                        <span className="text-fg-muted">Phone:</span>
+                        <span className="text-fg-soft">{selectedAptModal.customerPhone}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Email:</span>
-                        <span className="text-slate-200">{selectedAptModal.customerEmail}</span>
+                        <span className="text-fg-muted">Email:</span>
+                        <span className="text-fg-soft">{selectedAptModal.customerEmail}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Service:</span>
-                        <span className="text-slate-200 font-medium">{selectedAptModal.service}</span>
+                        <span className="text-fg-muted">Service:</span>
+                        <span className="text-fg-soft font-medium">{selectedAptModal.service}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Date/Time:</span>
-                        <span className="text-purple-300 font-bold">{selectedAptModal.date} at {selectedAptModal.time}</span>
+                        <span className="text-fg-muted">Date/Time:</span>
+                        <span className="text-brand-300 font-bold">{selectedAptModal.date} at {selectedAptModal.time}</span>
                       </div>
                     </div>
 
                     {selectedAptModal.notes && (
                       <div>
-                        <span className="text-slate-400 font-semibold block mb-1">Intake Notes:</span>
-                        <p className="p-2.5 rounded-xl bg-black/40 border border-white/5 text-slate-300">
+                        <span className="text-fg-muted font-semibold block mb-1">Intake Notes:</span>
+                        <p className="p-2.5 rounded-xl bg-black/40 border border-line text-fg-soft">
                           {selectedAptModal.notes}
                         </p>
                       </div>
@@ -858,26 +858,26 @@ export default function DashboardPage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <h3 className="text-xl font-bold text-white">Contacts & Client Records</h3>
-                  <p className="text-xs text-slate-400">Enriched profiles automatically captured by AI Receptionist.</p>
+                  <p className="text-xs text-fg-muted">Enriched profiles automatically captured by AI Receptionist.</p>
                 </div>
 
                 <div className="relative max-w-xs w-full">
-                  <Search className="h-3.5 w-3.5 text-slate-500 absolute left-3 top-3 pointer-events-none" />
+                  <Search className="h-3.5 w-3.5 text-fg-subtle absolute left-3 top-3 pointer-events-none" />
                   <input
                     type="text"
                     placeholder="Search contacts..."
                     value={contactSearch}
                     onChange={(e) => setContactSearch(e.target.value)}
-                    className="w-full h-9 pl-9 pr-3 rounded-xl bg-[#101522] border border-white/10 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-purple-400"
+                    className="w-full h-9 pl-9 pr-3 rounded-xl bg-card border border-line text-xs text-white placeholder:text-fg-subtle focus:outline-none focus:ring-1 focus:ring-brand-400"
                   />
                 </div>
               </div>
 
-              <div className="rounded-3xl bg-[#101522] border border-white/10 overflow-hidden shadow-xl">
+              <div className="rounded-3xl bg-card border border-line overflow-hidden shadow-xl">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
                     <thead>
-                      <tr className="border-b border-white/5 bg-[#111827] text-slate-400 font-semibold uppercase tracking-wider text-[10px]">
+                      <tr className="border-b border-line bg-raised text-fg-muted font-semibold uppercase tracking-wider text-[10px]">
                         <th className="py-3 px-4">Name</th>
                         <th className="py-3 px-4">Company</th>
                         <th className="py-3 px-4">Contact Info</th>
@@ -899,17 +899,17 @@ export default function DashboardPage() {
                             <td className="py-3.5 px-4 font-semibold text-white">
                               {c.name}
                             </td>
-                            <td className="py-3.5 px-4 text-slate-400">
+                            <td className="py-3.5 px-4 text-fg-muted">
                               {c.company}
                             </td>
-                            <td className="py-3.5 px-4 text-slate-300">
+                            <td className="py-3.5 px-4 text-fg-soft">
                               <div>{c.email}</div>
-                              <div className="text-[10px] text-slate-500">{c.phone}</div>
+                              <div className="text-[10px] text-fg-subtle">{c.phone}</div>
                             </td>
-                            <td className="py-3.5 px-4 text-slate-300">
+                            <td className="py-3.5 px-4 text-fg-soft">
                               {c.source}
                             </td>
-                            <td className="py-3.5 px-4 text-slate-400">
+                            <td className="py-3.5 px-4 text-fg-muted">
                               {c.lastInteraction}
                             </td>
                             <td className="py-3.5 px-4">
@@ -932,26 +932,26 @@ export default function DashboardPage() {
             <div className="space-y-6">
               <div>
                 <h3 className="text-xl font-bold text-white">Telephony & Call Logs</h3>
-                <p className="text-xs text-slate-400">Inbound conversational records, transcripts, and sentiment analysis.</p>
+                <p className="text-xs text-fg-muted">Inbound conversational records, transcripts, and sentiment analysis.</p>
               </div>
 
               <div className="space-y-4">
                 {callRecords.map((call) => (
                   <div
                     key={call.id}
-                    className="p-5 rounded-2xl bg-[#101522] border border-white/10 hover:border-purple-500/20 transition-all space-y-3"
+                    className="p-5 rounded-2xl bg-card border border-line hover:border-brand-500/20 transition-all space-y-3"
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-white/5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-line">
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-lg bg-purple-600/20 text-purple-400 flex items-center justify-center">
+                        <div className="h-8 w-8 rounded-lg bg-brand-600/20 text-brand-400 flex items-center justify-center">
                           <PhoneCall className="h-4 w-4" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-white text-sm">{call.callerName}</span>
-                            <span className="text-xs text-slate-400 font-mono">({call.callerPhone})</span>
+                            <span className="text-xs text-fg-muted font-mono">({call.callerPhone})</span>
                           </div>
-                          <span className="text-[11px] text-slate-500">
+                          <span className="text-[11px] text-fg-subtle">
                             {call.timestamp} • Duration: {call.duration}
                           </span>
                         </div>
@@ -962,26 +962,26 @@ export default function DashboardPage() {
                           call.sentiment === "Positive"
                             ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
                             : call.sentiment === "Neutral"
-                            ? "bg-slate-500/15 text-slate-300 border border-slate-500/30"
+                            ? "bg-slate-500/15 text-fg-soft border border-slate-500/30"
                             : "bg-rose-500/15 text-rose-400 border border-rose-500/30"
                         }`}>
                           Sentiment: {call.sentiment}
                         </span>
-                        <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30">
+                        <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-500/15 text-brand-300 border border-brand-500/30">
                           {call.outcome}
                         </span>
                       </div>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-[#111827] border border-white/5 text-xs text-slate-300 leading-relaxed">
-                      <span className="text-purple-400 font-semibold block mb-0.5">AI Summary & Transcript:</span>
+                    <div className="p-3 rounded-xl bg-raised border border-line text-xs text-fg-soft leading-relaxed">
+                      <span className="text-brand-400 font-semibold block mb-0.5">AI Summary & Transcript:</span>
                       &ldquo;{call.transcriptSnippet}&rdquo;
                     </div>
 
-                    <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
+                    <div className="flex items-center justify-between text-xs text-fg-subtle pt-1">
                       <button
                         onClick={() => showToast(`Playing recording for ${call.id} (simulated)...`)}
-                        className="inline-flex items-center gap-1.5 text-purple-400 hover:text-purple-300 font-medium"
+                        className="inline-flex items-center gap-1.5 text-brand-400 hover:text-brand-300 font-medium"
                       >
                         <Play className="h-3.5 w-3.5" />
                         <span>Play Audio Recording</span>
@@ -999,7 +999,7 @@ export default function DashboardPage() {
             <div className="space-y-6">
               <div>
                 <h3 className="text-xl font-bold text-white">Connected Tools & APIs</h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-fg-muted">
                   Manage OAuth credentials and webhook sync with your external calendars and business tools.
                 </p>
               </div>
@@ -1008,22 +1008,22 @@ export default function DashboardPage() {
                 {integrations.map((int) => (
                   <div
                     key={int.id}
-                    className="p-6 rounded-3xl bg-[#101522] border border-white/10 flex flex-col justify-between hover:border-purple-500/30 transition-all"
+                    className="p-6 rounded-3xl bg-card border border-line flex flex-col justify-between hover:border-brand-500/30 transition-all"
                   >
                     <div>
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-white/5 text-slate-400">
+                        <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-white/5 text-fg-muted">
                           {int.category}
                         </span>
                         <StatusBadge status={int.status} />
                       </div>
 
                       <h4 className="text-base font-bold text-white mb-1">{int.name}</h4>
-                      <p className="text-xs text-slate-400 leading-relaxed mb-4">{int.description}</p>
+                      <p className="text-xs text-fg-muted leading-relaxed mb-4">{int.description}</p>
                     </div>
 
-                    <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between text-xs">
-                      <span className="text-slate-500">{int.lastSync ? `Sync: ${int.lastSync}` : "Ready to connect"}</span>
+                    <div className="pt-4 border-t border-line flex items-center justify-between text-xs">
+                      <span className="text-fg-subtle">{int.lastSync ? `Sync: ${int.lastSync}` : "Ready to connect"}</span>
                       <Button
                         variant={int.status.includes("Connected") ? "outline" : "primary"}
                         size="sm"
@@ -1049,12 +1049,12 @@ export default function DashboardPage() {
             <div className="max-w-3xl space-y-8">
               <div>
                 <h3 className="text-xl font-bold text-white">Organization & Security Settings</h3>
-                <p className="text-xs text-slate-400">Manage API keys, team roles, and billing limits.</p>
+                <p className="text-xs text-fg-muted">Manage API keys, team roles, and billing limits.</p>
               </div>
 
               {/* Organization Profile */}
-              <div className="p-6 rounded-3xl bg-[#101522] border border-white/10 space-y-4">
-                <h4 className="text-sm font-bold text-white pb-2 border-b border-white/[0.08]">
+              <div className="p-6 rounded-3xl bg-card border border-line space-y-4">
+                <h4 className="text-sm font-bold text-white pb-2 border-b border-line">
                   Organization Profile
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1064,11 +1064,11 @@ export default function DashboardPage() {
               </div>
 
               {/* API Keys */}
-              <div className="p-6 rounded-3xl bg-[#101522] border border-white/10 space-y-4">
-                <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
+              <div className="p-6 rounded-3xl bg-card border border-line space-y-4">
+                <div className="flex items-center justify-between pb-2 border-b border-line">
                   <div>
                     <h4 className="text-sm font-bold text-white">Developer API Keys</h4>
-                    <p className="text-xs text-slate-400">Used to authenticate webhooks and custom app integrations.</p>
+                    <p className="text-xs text-fg-muted">Used to authenticate webhooks and custom app integrations.</p>
                   </div>
                   <Button
                     variant="outline"
@@ -1084,7 +1084,7 @@ export default function DashboardPage() {
                     type="password"
                     value="dp_live_92f8190c8a14b09e88b2a"
                     readOnly
-                    className="flex-1 h-9 px-3 rounded-xl bg-[#111827] border border-white/10 text-xs text-slate-400 font-mono"
+                    className="flex-1 h-9 px-3 rounded-xl bg-raised border border-line text-xs text-fg-muted font-mono"
                   />
                   <Button
                     variant="secondary"
@@ -1098,22 +1098,22 @@ export default function DashboardPage() {
               </div>
 
               {/* Subscription Plan Usage */}
-              <div className="p-6 rounded-3xl bg-[#101522] border border-white/10 space-y-4">
-                <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
+              <div className="p-6 rounded-3xl bg-card border border-line space-y-4">
+                <div className="flex items-center justify-between pb-2 border-b border-line">
                   <div>
                     <h4 className="text-sm font-bold text-white">Active Plan: Enterprise Automation</h4>
-                    <p className="text-xs text-slate-400">Unlimited telephony hours & 5 calendar connections.</p>
+                    <p className="text-xs text-fg-muted">Unlimited telephony hours & 5 calendar connections.</p>
                   </div>
                   <Badge variant="violet">Active Subscription</Badge>
                 </div>
 
                 <div className="space-y-2 text-xs">
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Monthly AI Telephony Minutes:</span>
+                    <span className="text-fg-muted">Monthly AI Telephony Minutes:</span>
                     <span className="text-white font-mono">1,840 / 5,000 used (36%)</span>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
-                    <div className="h-full bg-purple-500 rounded-full w-[36%]" />
+                  <div className="h-2 w-full rounded-full bg-raised-hover overflow-hidden">
+                    <div className="h-full bg-brand-500 rounded-full w-[36%]" />
                   </div>
                 </div>
               </div>

@@ -39,13 +39,13 @@ export default function ProjectsPage() {
               Featured Client Projects
             </h1>
 
-            <p className="text-lg text-slate-300 leading-relaxed mb-6">
+            <p className="text-lg text-fg-soft leading-relaxed mb-6">
               Review how our autonomous AI receptionists, workflow pipelines, and custom software eliminate manual busywork and maximize appointment bookings.
             </p>
 
             {/* Project Notice Banner */}
-            <div className="inline-flex items-center gap-2 p-3 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-200 text-xs mb-8 max-w-xl text-left">
-              <Info className="h-4 w-4 shrink-0 text-purple-400" />
+            <div className="inline-flex items-center gap-2 p-3 rounded-2xl bg-brand-500/10 border border-brand-500/20 text-brand-200 text-xs mb-8 max-w-xl text-left">
+              <Info className="h-4 w-4 shrink-0 text-brand-400" />
               <span>
                 <strong>Project blueprints:</strong> Client scenarios and performance statistics demonstrate our architecture capabilities across multiple sectors.
               </span>
@@ -59,8 +59,8 @@ export default function ProjectsPage() {
                   onClick={() => setFilter(opt.id)}
                   className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                     filter === opt.id
-                      ? "bg-purple-600 text-white shadow-lg shadow-purple-600/30"
-                      : "bg-[#111827] text-slate-400 hover:text-white border border-white/10"
+                      ? "bg-brand-600 text-white shadow-lg shadow-brand-600/30"
+                      : "bg-raised text-fg-muted hover:text-white border border-line"
                   }`}
                 >
                   {opt.label}
@@ -72,13 +72,13 @@ export default function ProjectsPage() {
       </section>
 
       {/* Projects Listing */}
-      <section className="py-16 bg-[#090D18] border-t border-white/[0.06]">
+      <section className="py-16 bg-surface border-t border-line">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="space-y-12">
             {filteredProjects.map((cs) => (
               <div
                 key={cs.id}
-                className="rounded-3xl bg-[#101522] border border-white/10 p-8 sm:p-12 shadow-xl hover:border-purple-500/30 transition-all duration-300"
+                className="rounded-3xl bg-card border border-line p-8 sm:p-12 shadow-xl hover:border-brand-500/30 transition-all duration-300"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                   
@@ -86,10 +86,10 @@ export default function ProjectsPage() {
                   <div className="lg:col-span-8 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center gap-3 mb-4">
-                        <span className="text-xs font-semibold px-3 py-1 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30">
+                        <span className="text-xs font-semibold px-3 py-1 rounded-full bg-brand-500/15 text-brand-300 border border-brand-500/30">
                           {cs.industry}
                         </span>
-                        <span className="text-xs font-mono text-slate-500">
+                        <span className="text-xs font-mono text-fg-subtle">
                           Client: {cs.clientPlaceholder}
                         </span>
                       </div>
@@ -103,17 +103,17 @@ export default function ProjectsPage() {
                         <h4 className="text-xs font-bold uppercase tracking-wider text-rose-400 mb-2">
                           The Problem We Solved
                         </h4>
-                        <p className="text-sm text-slate-300 leading-relaxed bg-[#111827] p-4 rounded-2xl border border-white/5">
+                        <p className="text-sm text-fg-soft leading-relaxed bg-raised p-4 rounded-2xl border border-line">
                           {cs.challenge}
                         </p>
                       </div>
 
                       {/* Solution */}
                       <div className="mb-6">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-purple-400 mb-2">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-brand-400 mb-2">
                           The Implemented Solution
                         </h4>
-                        <p className="text-sm text-slate-300 leading-relaxed bg-[#111827] p-4 rounded-2xl border border-white/5">
+                        <p className="text-sm text-fg-soft leading-relaxed bg-raised p-4 rounded-2xl border border-line">
                           {cs.solution}
                         </p>
                       </div>
@@ -123,7 +123,7 @@ export default function ProjectsPage() {
                         <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2">
                           Measured Impact
                         </h4>
-                        <p className="text-sm text-slate-300 leading-relaxed">
+                        <p className="text-sm text-fg-soft leading-relaxed">
                           {cs.outcome}
                         </p>
                       </div>
@@ -132,25 +132,25 @@ export default function ProjectsPage() {
 
                   {/* Right Column: Performance Metrics Card */}
                   <div className="lg:col-span-4 flex flex-col gap-4">
-                    <div className="rounded-2xl bg-[#0E1322] border border-white/10 p-6 shadow-lg">
-                      <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-4">
+                    <div className="rounded-2xl bg-card border border-line p-6 shadow-lg">
+                      <span className="text-xs font-bold uppercase tracking-wider text-fg-muted block mb-4">
                         Measured Results
                       </span>
 
                       <div className="space-y-4">
                         {cs.metrics.map((metric, idx) => (
-                          <div key={idx} className="p-3.5 rounded-xl bg-[#111827] border border-white/5 flex items-center justify-between">
-                            <span className="text-xs text-slate-400">{metric.label}</span>
-                            <span className="text-lg font-bold text-white font-mono text-purple-300">
+                          <div key={idx} className="p-3.5 rounded-xl bg-raised border border-line flex items-center justify-between">
+                            <span className="text-xs text-fg-muted">{metric.label}</span>
+                            <span className="text-lg font-bold text-white font-mono text-brand-300">
                               {metric.value}
                             </span>
                           </div>
                         ))}
                       </div>
 
-                      <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-500">
+                      <div className="mt-6 pt-4 border-t border-line flex items-center justify-between text-xs text-fg-subtle">
                         <span>Solution Architecture</span>
-                        <span className="text-slate-300 font-medium">Enterprise Custom</span>
+                        <span className="text-fg-soft font-medium">Enterprise Custom</span>
                       </div>
                     </div>
 

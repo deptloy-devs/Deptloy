@@ -248,8 +248,6 @@ export const projects: CaseStudyItem[] = [
   },
 ];
 
-// Alias for backwards compatibility
-export const caseStudies = projects;
 
 export const demoIndustries: DemoIndustryOption[] = [
   {

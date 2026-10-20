@@ -72,8 +72,8 @@ export default function DevelopmentServicePage() {
     <div className="flex flex-col">
       {/* Hero */}
       <section className="relative pt-16 pb-20 lg:pt-24 lg:pb-28 overflow-hidden">
-        <div className="hero-glow-violet" />
-        <div className="hero-glow-cyan" />
+        <div className="glow-brand" />
+        <div className="glow-accent" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center flex flex-col items-center">

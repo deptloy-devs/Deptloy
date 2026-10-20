@@ -18,9 +18,9 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-32">
       {/* Background radial glows */}
-      <div className="hero-glow-violet" />
-      <div className="hero-glow-cyan" />
-      <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
+      <div className="glow-brand" />
+      <div className="glow-accent" />
+      <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
@@ -114,12 +114,14 @@ export function Hero() {
                   </div>
 
                   {/* Waveform Visualization */}
-                  <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/5">
-                    <span className="w-1 bg-purple-400 rounded-full animate-wave-1" />
-                    <span className="w-1 bg-blue-400 rounded-full animate-wave-2" />
-                    <span className="w-1 bg-cyan-400 rounded-full animate-wave-3" />
-                    <span className="w-1 bg-purple-400 rounded-full animate-wave-4" />
-                    <span className="w-1 bg-indigo-400 rounded-full animate-wave-5" />
+                  <div className="flex h-8 items-center gap-1 px-2.5 rounded-lg bg-black/40 border border-white/5" aria-hidden="true">
+                    {[0, 0.2, 0.4, 0.1, 0.3].map((delay, i) => (
+                      <span
+                        key={i}
+                        className="h-1.5 w-1 rounded-full bg-gradient-to-t from-brand-500 to-electric-400 animate-wave"
+                        style={{ animationDelay: `${delay}s` }}
+                      />
+                    ))}
                   </div>
                 </div>
 

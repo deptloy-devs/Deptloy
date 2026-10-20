@@ -98,8 +98,8 @@ export default function ContactPage() {
     <div className="flex flex-col">
       {/* Hero Header */}
       <section className="relative pt-16 pb-12 lg:pt-20 lg:pb-16 overflow-hidden">
-        <div className="hero-glow-violet" />
-        <div className="hero-glow-cyan" />
+        <div className="glow-brand" />
+        <div className="glow-accent" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
           <Badge variant="violet" dot className="mb-4">

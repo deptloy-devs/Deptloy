@@ -28,19 +28,19 @@ export default function DevelopmentServicePage() {
     {
       title: "Custom Client & Booking Portals",
       desc: "Self-service client dashboards allowing customers to view appointments, manage invoices, download treatment notes, and message staff directly.",
-      icon: <Layout className="h-5 w-5 text-blue-400" />,
+      icon: <Layout className="h-5 w-5 text-brand-300" />,
       tags: ["OAuth Auth", "Real-Time Sync", "Stripe Checkout", "Role Permissions"],
     },
     {
       title: "Internal Business Tools & Dashboards",
       desc: "Replace clumsy spreadsheets with elegant, high-throughput administrative web applications tailored to your specific dispatch, inventory, or billing logic.",
-      icon: <Terminal className="h-5 w-5 text-emerald-400" />,
+      icon: <Terminal className="h-5 w-5 text-success" />,
       tags: ["PostgreSQL", "REST & GraphQL", "Audit Logging", "Custom Filters"],
     },
     {
       title: "Mobile-First Progressive Web Apps",
       desc: "Fast, installable web experiences that look and feel like native iOS and Android apps without the overhead of app-store review delays.",
-      icon: <Smartphone className="h-5 w-5 text-cyan-400" />,
+      icon: <Smartphone className="h-5 w-5 text-brand-300" />,
       tags: ["PWA", "Offline Sync", "Push Notifications", "Touch Ergonomics"],
     },
   ];
@@ -71,7 +71,7 @@ export default function DevelopmentServicePage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="relative pt-16 pb-20 lg:pt-24 lg:pb-28 overflow-hidden">
+      <section className="relative pt-14 sm:pt-20 pb-section-sm overflow-hidden">
         <div className="glow-brand" />
         <div className="glow-accent" />
 
@@ -81,7 +81,7 @@ export default function DevelopmentServicePage() {
               Full-Stack Engineering
             </Badge>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+            <h1 className="text-h1 font-semibold mb-6">
               Custom Software That Matches How You Operate
             </h1>
 
@@ -89,8 +89,8 @@ export default function DevelopmentServicePage() {
               We design and engineer bespoke web applications, high-converting digital portals, and administrative dashboards that give your business a permanent technological edge.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-              <Button href="/contact" variant="glow" size="lg" leftIcon={<Code2 className="h-4 w-4" />}>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+              <Button href="/contact" variant="primary" size="lg" leftIcon={<Code2 className="h-4 w-4" />}>
                 Start a Development Project
               </Button>
               <Button href="/demo" variant="outline" size="lg">
@@ -100,12 +100,12 @@ export default function DevelopmentServicePage() {
           </div>
 
           {/* Interactive Code & Interface Mockup */}
-          <div className="mt-16 rounded-3xl bg-card border border-line p-6 sm:p-10 shadow-2xl">
+          <div className="mt-16 rounded-panel bg-card border border-line p-6 sm:p-10 shadow-raised">
             <div className="flex items-center justify-between pb-4 border-b border-line mb-6">
               <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-rose-500/80" />
-                <span className="h-3 w-3 rounded-full bg-amber-500/80" />
-                <span className="h-3 w-3 rounded-full bg-emerald-500/80" />
+                <span className="h-3 w-3 rounded-full bg-danger/80" />
+                <span className="h-3 w-3 rounded-full bg-warning/80" />
+                <span className="h-3 w-3 rounded-full bg-success/80" />
                 <span className="ml-2 text-xs font-mono text-fg-muted">deptloy-app-v2.tsx</span>
               </div>
               <Badge variant="accent" size="sm">
@@ -114,31 +114,31 @@ export default function DevelopmentServicePage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center font-mono text-xs">
-              <div className="lg:col-span-7 bg-surface p-5 rounded-2xl border border-line space-y-2 text-fg-soft overflow-x-auto">
-                <p><span className="text-brand-400">export async function</span> <span className="text-blue-400">handleAppointmentWebhook</span>(req: <span className="text-amber-300">Request</span>) &#123;</p>
+              <div className="lg:col-span-7 bg-surface p-5 rounded-card border border-line space-y-2 text-fg-soft overflow-x-auto">
+                <p><span className="text-brand-400">export async function</span> <span className="text-brand-300">handleAppointmentWebhook</span>(req: <span className="text-brand-300">Request</span>) &#123;</p>
                 <p className="pl-4 text-fg-subtle">{"// 1. Validate cryptographic webhook signature"}</p>
-                <p className="pl-4"><span className="text-brand-400">const</span> signature = req.headers.<span className="text-blue-300">get</span>(<span className="text-emerald-300">&quot;x-deptloy-signature&quot;</span>);</p>
-                <p className="pl-4"><span className="text-brand-400">const</span> payload = <span className="text-brand-400">await</span> req.<span className="text-blue-300">json</span>();</p>
+                <p className="pl-4"><span className="text-brand-400">const</span> signature = req.headers.<span className="text-brand-300">get</span>(<span className="text-success">&quot;x-deptloy-signature&quot;</span>);</p>
+                <p className="pl-4"><span className="text-brand-400">const</span> payload = <span className="text-brand-400">await</span> req.<span className="text-brand-300">json</span>();</p>
                 <p className="pl-4 text-fg-subtle">{"// 2. Reserve provider slot with zero race conditions"}</p>
-                <p className="pl-4"><span className="text-brand-400">const</span> reservation = <span className="text-brand-400">await</span> calendar.<span className="text-blue-300">lockSlot</span>(payload);</p>
+                <p className="pl-4"><span className="text-brand-400">const</span> reservation = <span className="text-brand-400">await</span> calendar.<span className="text-brand-300">lockSlot</span>(payload);</p>
                 <p className="pl-4 text-fg-subtle">{"// 3. Dispatch SMS & trigger CRM record creation"}</p>
-                <p className="pl-4"><span className="text-brand-400">await</span> Promise.<span className="text-blue-300">all</span>([</p>
-                <p className="pl-8">smsClient.<span className="text-blue-300">sendConfirmation</span>(payload.phone),</p>
-                <p className="pl-8">crm.<span className="text-blue-300">upsertContact</span>(payload.customer),</p>
+                <p className="pl-4"><span className="text-brand-400">await</span> Promise.<span className="text-brand-300">all</span>([</p>
+                <p className="pl-8">smsClient.<span className="text-brand-300">sendConfirmation</span>(payload.phone),</p>
+                <p className="pl-8">crm.<span className="text-brand-300">upsertContact</span>(payload.customer),</p>
                 <p className="pl-4">]);</p>
-                <p className="pl-4"><span className="text-brand-400">return</span> Response.<span className="text-blue-300">json</span>(&#123; success: <span className="text-amber-300">true</span>, reservation &#125;);</p>
+                <p className="pl-4"><span className="text-brand-400">return</span> Response.<span className="text-brand-300">json</span>(&#123; success: <span className="text-brand-300">true</span>, reservation &#125;);</p>
                 <p>&#125;</p>
               </div>
 
               <div className="lg:col-span-5 flex flex-col gap-3 font-sans">
-                <div className="p-4 rounded-xl bg-raised border border-line">
-                  <span className="text-xs font-bold text-white block mb-1">Production-Ready Architecture</span>
+                <div className="p-4 rounded-control bg-raised border border-line">
+                  <span className="text-xs font-bold text-fg block mb-1">Production-Ready Architecture</span>
                   <p className="text-xs text-fg-muted leading-relaxed">
                     Zero tech debt. Strict TypeScript typing, automated CI/CD pipelines, and high-concurrency database queries.
                   </p>
                 </div>
-                <div className="p-4 rounded-xl bg-raised border border-line">
-                  <span className="text-xs font-bold text-white block mb-1">Sub-Second Global Edge Latency</span>
+                <div className="p-4 rounded-control bg-raised border border-line">
+                  <span className="text-xs font-bold text-fg block mb-1">Sub-Second Global Edge Latency</span>
                   <p className="text-xs text-fg-muted leading-relaxed">
                     Deployed across global edge networks to ensure rapid page load times for prospective customers worldwide.
                   </p>
@@ -162,12 +162,12 @@ export default function DevelopmentServicePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {capabilities.map((cap, idx) => (
-              <div key={idx} className="p-7 rounded-2xl bg-card border border-line flex flex-col justify-between">
+              <div key={idx} className="p-7 rounded-card bg-card border border-line flex flex-col justify-between">
                 <div>
-                  <div className="rounded-xl bg-raised p-3 w-fit border border-line mb-4">
+                  <div className="rounded-control bg-raised p-3 w-fit border border-line mb-4">
                     {cap.icon}
                   </div>
-                  <h4 className="text-lg font-bold text-white mb-2">{cap.title}</h4>
+                  <h3 className="text-lg font-bold text-fg mb-2">{cap.title}</h3>
                   <p className="text-sm text-fg-muted leading-relaxed mb-6">{cap.desc}</p>
                 </div>
                 <div className="pt-4 border-t border-line flex flex-wrap gap-2">
@@ -195,10 +195,10 @@ export default function DevelopmentServicePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {devProcess.map((proc, idx) => (
-              <div key={idx} className="p-6 rounded-2xl bg-card border border-line flex flex-col justify-between">
+              <div key={idx} className="p-6 rounded-card bg-card border border-line flex flex-col justify-between">
                 <div>
                   <span className="text-2xl font-bold font-mono text-brand-400 mb-2 block">{proc.step}</span>
-                  <h4 className="text-base font-bold text-white mb-2">{proc.title}</h4>
+                  <h3 className="text-base font-bold text-fg mb-2">{proc.title}</h3>
                   <p className="text-xs text-fg-muted leading-relaxed">{proc.desc}</p>
                 </div>
               </div>

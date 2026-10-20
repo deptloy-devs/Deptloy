@@ -219,7 +219,7 @@ export default function DemoPage() {
           <Badge variant="brand" dot className="mb-3">
             Interactive Frontend Prototype
           </Badge>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-3">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-fg tracking-tight mb-3">
             Experience the AI Receptionist
           </h1>
           <p className="text-sm sm:text-base text-fg-soft">
@@ -227,8 +227,8 @@ export default function DemoPage() {
           </p>
 
           {/* Persistent Honest Notice */}
-          <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs">
-            <ShieldAlert className="h-4 w-4 shrink-0 text-amber-400" />
+          <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-warning/10 border border-warning/20 text-brand-300 text-xs">
+            <ShieldAlert className="h-4 w-4 shrink-0 text-brand-300" />
             <span>
               <strong>Demonstration Prototype:</strong> This simulated workflow does not charge credit cards or add real entries to your personal calendar.
             </span>
@@ -245,7 +245,7 @@ export default function DemoPage() {
             <div className="lg:col-span-7 flex flex-col gap-6">
               
               {/* Stepper Progress Indicator */}
-              <div className="rounded-2xl bg-card border border-line p-4 flex items-center justify-between text-xs">
+              <div className="rounded-card bg-card border border-line p-4 flex items-center justify-between text-xs">
                 {[
                   { step: 1, label: "Industry" },
                   { step: 2, label: "Service" },
@@ -256,9 +256,9 @@ export default function DemoPage() {
                     <span
                       className={`h-6 w-6 rounded-full flex items-center justify-center font-bold text-xs ${
                         isConfirmed
-                          ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                          ? "bg-success/20 text-success border border-success/30"
                           : currentStep === s.step
-                          ? "bg-brand-600 text-white shadow-md shadow-brand-600/40"
+                          ? "bg-brand-600 text-fg shadow-md shadow-brand-600/40"
                           : currentStep > s.step
                           ? "bg-brand-500/20 text-brand-300"
                           : "bg-raised-hover text-fg-subtle"
@@ -268,7 +268,7 @@ export default function DemoPage() {
                     </span>
                     <span
                       className={`hidden sm:inline font-medium ${
-                        currentStep === s.step ? "text-white" : "text-fg-subtle"
+                        currentStep === s.step ? "text-fg" : "text-fg-subtle"
                       }`}
                     >
                       {s.label}
@@ -279,20 +279,20 @@ export default function DemoPage() {
               </div>
 
               {/* Step Content Container */}
-              <div className="rounded-3xl bg-card border border-line p-6 sm:p-8 shadow-xl relative min-h-[440px] flex flex-col justify-between">
+              <div className="rounded-panel bg-card border border-line p-6 sm:p-8 shadow-card relative min-h-[440px] flex flex-col justify-between">
                 
                 {/* Confirmed Screen */}
                 {isConfirmed ? (
                   <div className="py-8 text-center space-y-6">
-                    <div className="mx-auto h-16 w-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+                    <div className="mx-auto h-16 w-16 rounded-full bg-success/20 border border-success/40 flex items-center justify-center text-success">
                       <CheckCircle2 className="h-8 w-8" />
                     </div>
 
                     <div className="space-y-1">
-                      <span className="text-xs uppercase font-mono text-emerald-400 tracking-wider">
+                      <span className="text-xs uppercase font-mono text-success tracking-wider">
                         Simulated Reservation Complete
                       </span>
-                      <h3 className="text-2xl font-bold text-white">
+                      <h3 className="text-2xl font-bold text-fg">
                         Appointment Confirmed!
                       </h3>
                       <p className="text-xs text-fg-muted font-mono">
@@ -300,14 +300,14 @@ export default function DemoPage() {
                       </p>
                     </div>
 
-                    <div className="rounded-2xl bg-raised border border-line p-5 text-left text-xs space-y-2.5 max-w-md mx-auto">
+                    <div className="rounded-card bg-raised border border-line p-5 text-left text-xs space-y-2.5 max-w-md mx-auto">
                       <div className="flex justify-between pb-2 border-b border-line">
                         <span className="text-fg-muted">Industry:</span>
-                        <span className="text-white font-medium">{currentIndustry.name}</span>
+                        <span className="text-fg font-medium">{currentIndustry.name}</span>
                       </div>
                       <div className="flex justify-between pb-2 border-b border-line">
                         <span className="text-fg-muted">Service:</span>
-                        <span className="text-white font-medium">{selectedService.name}</span>
+                        <span className="text-fg font-medium">{selectedService.name}</span>
                       </div>
                       <div className="flex justify-between pb-2 border-b border-line">
                         <span className="text-fg-muted">Date & Time:</span>
@@ -315,11 +315,11 @@ export default function DemoPage() {
                       </div>
                       <div className="flex justify-between pb-2 border-b border-line">
                         <span className="text-fg-muted">Customer:</span>
-                        <span className="text-white">{bookingData.customerName}</span>
+                        <span className="text-fg">{bookingData.customerName}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-fg-muted">SMS Notification:</span>
-                        <span className="text-emerald-400 font-medium">Simulated Dispatched</span>
+                        <span className="text-success font-medium">Simulated Dispatched</span>
                       </div>
                     </div>
 
@@ -327,7 +327,7 @@ export default function DemoPage() {
                       <Button onClick={handleStartAgain} variant="secondary" size="md" leftIcon={<RotateCcw className="h-4 w-4" />}>
                         Start Again
                       </Button>
-                      <Button href="/dashboard" variant="glow" size="md">
+                      <Button href="/dashboard" variant="primary" size="md">
                         View in Client Dashboard
                       </Button>
                     </div>
@@ -338,7 +338,7 @@ export default function DemoPage() {
                     {currentStep === 1 && (
                       <div className="space-y-5">
                         <div>
-                          <h3 className="text-xl font-bold text-white">Select Sample Business Vertical</h3>
+                          <h3 className="text-xl font-bold text-fg">Select Sample Business Vertical</h3>
                           <p className="text-xs text-fg-muted mt-1">
                             Choose an industry to simulate its specialized booking rules and assistant tone.
                           </p>
@@ -350,15 +350,15 @@ export default function DemoPage() {
                               key={ind.id}
                               type="button"
                               onClick={() => handleIndustryChange(ind.id)}
-                              className={`p-4 rounded-2xl border text-left transition-all ${
+                              className={`p-4 rounded-card border text-left transition-all ${
                                 selectedIndustryId === ind.id
                                   ? "bg-brand-600/15 border-brand-500/50 shadow-[0_0_20px_rgba(139,92,246,0.15)] ring-1 ring-brand-500/50"
                                   : "bg-raised border-line hover:border-line-strong"
                               }`}
                             >
                               <div className="flex items-center justify-between mb-1">
-                                <span className="text-sm font-bold text-white">{ind.name}</span>
-                                <span className="text-[10px] text-brand-400 uppercase font-mono">{ind.category}</span>
+                                <span className="text-sm font-bold text-fg">{ind.name}</span>
+                                <span className="text-xs text-brand-400 uppercase font-mono">{ind.category}</span>
                               </div>
                               <p className="text-xs text-fg-muted line-clamp-2">{ind.services[0].name}</p>
                             </button>
@@ -371,7 +371,7 @@ export default function DemoPage() {
                     {currentStep === 2 && (
                       <div className="space-y-5">
                         <div>
-                          <h3 className="text-xl font-bold text-white">Select Service Offering</h3>
+                          <h3 className="text-xl font-bold text-fg">Select Service Offering</h3>
                           <p className="text-xs text-fg-muted mt-1">
                             Configured service catalog for {currentIndustry.name}.
                           </p>
@@ -383,14 +383,14 @@ export default function DemoPage() {
                               key={srv.id}
                               type="button"
                               onClick={() => setBookingData({ ...bookingData, serviceId: srv.id })}
-                              className={`w-full p-4 rounded-2xl border text-left transition-all flex items-center justify-between ${
+                              className={`w-full p-4 rounded-card border text-left transition-all flex items-center justify-between ${
                                 bookingData.serviceId === srv.id
                                   ? "bg-brand-600/15 border-brand-500/50 ring-1 ring-brand-500/50 shadow-md"
                                   : "bg-raised border-line hover:border-line-strong"
                               }`}
                             >
                               <div>
-                                <h4 className="text-sm font-bold text-white">{srv.name}</h4>
+                                <h3 className="text-sm font-bold text-fg">{srv.name}</h3>
                                 <div className="flex items-center gap-3 text-xs text-fg-muted mt-1">
                                   <span className="flex items-center gap-1">
                                     <Clock className="h-3 w-3 text-brand-400" /> {srv.duration}
@@ -414,7 +414,7 @@ export default function DemoPage() {
                     {currentStep === 3 && (
                       <div className="space-y-5">
                         <div>
-                          <h3 className="text-xl font-bold text-white">Customer Info & Desired Time</h3>
+                          <h3 className="text-xl font-bold text-fg">Customer Info & Desired Time</h3>
                           <p className="text-xs text-fg-muted mt-1">
                             Input details to simulate caller contact intake.
                           </p>
@@ -460,9 +460,9 @@ export default function DemoPage() {
                                 key={slot}
                                 type="button"
                                 onClick={() => setBookingData({ ...bookingData, selectedTime: slot })}
-                                className={`py-2 px-3 rounded-xl text-xs font-semibold transition-all ${
+                                className={`py-2 px-3 rounded-control text-xs font-semibold transition-all ${
                                   bookingData.selectedTime === slot
-                                    ? "bg-brand-600 text-white shadow-md shadow-brand-600/30"
+                                    ? "bg-brand-600 text-fg shadow-md shadow-brand-600/30"
                                     : "bg-raised text-fg-soft border border-line hover:border-line-strong"
                                 }`}
                               >
@@ -478,20 +478,20 @@ export default function DemoPage() {
                     {currentStep === 4 && (
                       <div className="space-y-5">
                         <div>
-                          <h3 className="text-xl font-bold text-white">Review Appointment Parameters</h3>
+                          <h3 className="text-xl font-bold text-fg">Review Appointment Parameters</h3>
                           <p className="text-xs text-fg-muted mt-1">
                             Verify your simulated details prior to testing confirmation.
                           </p>
                         </div>
 
-                        <div className="rounded-2xl bg-raised border border-line p-5 space-y-3 text-xs">
+                        <div className="rounded-card bg-raised border border-line p-5 space-y-3 text-xs">
                           <div className="flex justify-between pb-2 border-b border-line">
                             <span className="text-fg-muted">Industry:</span>
-                            <span className="text-white font-medium">{currentIndustry.name}</span>
+                            <span className="text-fg font-medium">{currentIndustry.name}</span>
                           </div>
                           <div className="flex justify-between pb-2 border-b border-line">
                             <span className="text-fg-muted">Service:</span>
-                            <span className="text-white font-medium">{selectedService.name}</span>
+                            <span className="text-fg font-medium">{selectedService.name}</span>
                           </div>
                           <div className="flex justify-between pb-2 border-b border-line">
                             <span className="text-fg-muted">Duration & Fee:</span>
@@ -503,11 +503,11 @@ export default function DemoPage() {
                           </div>
                           <div className="flex justify-between">
                             <span className="text-fg-muted">Client:</span>
-                            <span className="text-white">{bookingData.customerName} ({bookingData.customerPhone})</span>
+                            <span className="text-fg">{bookingData.customerName} ({bookingData.customerPhone})</span>
                           </div>
                         </div>
 
-                        <div className="p-3.5 rounded-xl bg-brand-500/10 border border-brand-500/20 text-xs text-brand-300">
+                        <div className="p-3.5 rounded-control bg-brand-500/10 border border-brand-500/20 text-xs text-brand-300">
                           Clicking &ldquo;Simulate Booking&rdquo; will demonstrate the confirmation flow, generate a booking token, and update the conversation transcript.
                         </div>
                       </div>
@@ -544,7 +544,7 @@ export default function DemoPage() {
                     ) : (
                       <Button
                         type="button"
-                        variant="glow"
+                        variant="primary"
                         size="md"
                         isLoading={isSubmitting}
                         onClick={handleConfirmBooking}
@@ -560,22 +560,22 @@ export default function DemoPage() {
 
             {/* Right Column (5 cols): Live Conversation Panel & Interactive Chat */}
             <div className="lg:col-span-5 flex flex-col gap-4">
-              <div className="rounded-3xl bg-card border border-line p-5 sm:p-6 shadow-xl flex flex-col h-[580px]">
+              <div className="rounded-panel bg-card border border-line p-5 sm:p-6 shadow-card flex flex-col h-[580px]">
                 
                 {/* Header */}
                 <div className="flex items-center justify-between pb-4 border-b border-line">
                   <div className="flex items-center gap-2.5">
-                    <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-brand-600 to-blue-500 flex items-center justify-center text-white">
+                    <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-brand-600 to-brand-500 flex items-center justify-center text-fg">
                       <Bot className="h-4 w-4" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold text-white">Receptionist Stream</h4>
-                      <p className="text-[11px] text-fg-muted">Simulated AI Telephony</p>
+                      <h3 className="text-sm font-bold text-fg">Receptionist Stream</h3>
+                      <p className="text-xs text-fg-muted">Simulated AI Telephony</p>
                     </div>
                   </div>
 
-                  <span className="flex items-center gap-1.5 text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-mono">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="flex items-center gap-1.5 text-xs text-success bg-success/10 px-2 py-0.5 rounded-full border border-success/20 font-mono">
+                    <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
                     Interactive
                   </span>
                 </div>
@@ -590,15 +590,15 @@ export default function DemoPage() {
                       }`}
                     >
                       <div
-                        className={`max-w-[88%] p-3 rounded-2xl text-xs leading-relaxed ${
+                        className={`max-w-[88%] p-3 rounded-card text-xs leading-relaxed ${
                           msg.sender === "customer"
-                            ? "bg-brand-600 text-white rounded-br-none"
+                            ? "bg-brand-600 text-fg rounded-br-none"
                             : "bg-raised text-fg-soft rounded-bl-none border border-line"
                         }`}
                       >
                         {msg.text}
                       </div>
-                      <span className="text-[9px] text-fg-subtle mt-1 px-1">
+                      <span className="text-xs text-fg-subtle mt-1 px-1">
                         {msg.sender === "customer" ? "You" : "Deptloy Assistant"} • {msg.timestamp}
                       </span>
                     </div>
@@ -608,7 +608,7 @@ export default function DemoPage() {
 
                 {/* Quick Prompts */}
                 <div className="py-2 border-t border-line">
-                  <span className="text-[10px] text-fg-subtle uppercase font-semibold block mb-1.5">
+                  <span className="text-xs text-fg-subtle uppercase font-semibold block mb-1.5">
                     Quick Sample Questions:
                   </span>
                   <div className="flex flex-wrap gap-1.5">
@@ -617,7 +617,7 @@ export default function DemoPage() {
                         key={idx}
                         type="button"
                         onClick={() => handleSendMessage(q)}
-                        className="text-[10px] px-2.5 py-1 rounded-full bg-white/[0.04] text-fg-soft hover:text-white hover:bg-white/10 border border-line transition-colors"
+                        className="text-xs px-2.5 py-1 rounded-full bg-white/[0.04] text-fg-soft hover:text-fg hover:bg-white/10 border border-line transition-colors"
                       >
                         &ldquo;{q}&rdquo;
                       </button>
@@ -635,12 +635,12 @@ export default function DemoPage() {
                     onKeyDown={(e) => {
                       if (e.key === "Enter") handleSendMessage();
                     }}
-                    className="flex-1 h-9 px-3 rounded-xl bg-raised border border-line text-xs text-white placeholder:text-fg-subtle focus:outline-none focus:ring-1 focus:ring-brand-400"
+                    className="flex-1 h-9 px-3 rounded-control bg-raised border border-line text-xs text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-1 focus:ring-brand-400"
                   />
                   <button
                     type="button"
                     onClick={() => handleSendMessage()}
-                    className="h-9 w-9 rounded-xl bg-brand-600 text-white flex items-center justify-center hover:bg-brand-500 transition-colors"
+                    className="h-9 w-9 rounded-control bg-brand-600 text-fg flex items-center justify-center hover:bg-brand-500 transition-colors"
                     aria-label="Send message"
                   >
                     <Send className="h-4 w-4" />

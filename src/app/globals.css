@@ -238,6 +238,15 @@
   }
 }
 
+/* Scroll reveal (see components/ui/Reveal.tsx) — only applied after JS runs */
+[data-reveal] {
+  transition: opacity 600ms var(--ease-out-soft), transform 600ms var(--ease-out-soft);
+}
+[data-reveal="hidden"] {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
 /* ---------- Reduced motion: stop all non-essential movement ---------- */
 @media (prefers-reduced-motion: reduce) {
   html {

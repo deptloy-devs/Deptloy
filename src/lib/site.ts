@@ -1,4 +1,7 @@
 import type {
+  Stat,
+  Testimonial,
+  TeamMember,
   ServiceItem,
   IndustryItem,
   CaseStudyItem,
@@ -106,6 +109,7 @@ export const industries: IndustryItem[] = [
     id: "clinics",
     slug: "clinics",
     title: "Clinics and Healthcare Practices",
+    shortTitle: "Clinics & Healthcare",
     tagline: "24/7 patient intake, triage routing, and appointment scheduling.",
     description:
       "Enable patients to book consultations, verify clinic hours, and receive preparation instructions without tying up front-desk staff during busy clinic hours.",
@@ -118,6 +122,7 @@ export const industries: IndustryItem[] = [
     id: "salons",
     slug: "salons",
     title: "Salons and Beauty Businesses",
+    shortTitle: "Salons & Beauty",
     tagline: "Seamless bookings, service inquiries, and deposit collection.",
     description:
       "Eliminate phone interruptions while stylists and therapists are serving clients. Customers can book specific stylists, request treatment details, and receive automated SMS reminders.",
@@ -130,6 +135,7 @@ export const industries: IndustryItem[] = [
     id: "real-estate",
     slug: "real-estate",
     title: "Real Estate Agencies",
+    shortTitle: "Real Estate",
     tagline: "Instant listing inquiries, showing requests, and buyer qualification.",
     description:
       "Capture prospective buyers and tenants immediately when they find a property. Qualify buyer timelines, budget, and route showing requests straight to the listing agent.",
@@ -142,6 +148,7 @@ export const industries: IndustryItem[] = [
     id: "consulting",
     slug: "consulting",
     title: "Consulting & Advisory Firms",
+    shortTitle: "Consulting & Advisory",
     tagline: "Prequalify inbound executive interest and schedule discovery calls.",
     description:
       "Screen prospect inquiries against your ideal client profile before booking partner calendar time. Automatically sync notes, company details, and agendas into your CRM.",
@@ -154,6 +161,7 @@ export const industries: IndustryItem[] = [
     id: "home-services",
     slug: "home-services",
     title: "Home Service Businesses",
+    shortTitle: "Home Services",
     tagline: "Emergency dispatch, quote requests, and job window scheduling.",
     description:
       "Plumbers, HVAC contractors, electricians, and roofers can capture urgent repair calls even while on job sites or after-hours, locking in customer commitments.",
@@ -166,6 +174,7 @@ export const industries: IndustryItem[] = [
     id: "professional",
     slug: "professional",
     title: "Professional Service Companies",
+    shortTitle: "Professional Services",
     tagline: "Confidential intake, document collection, and partner scheduling.",
     description:
       "Law firms, accounting practices, and financial advisors provide a white-glove first impression, organizing client records and appointment prep seamlessly.",
@@ -194,6 +203,7 @@ export const projects: CaseStudyItem[] = [
       { label: "Front Desk Phone Hours Saved", value: "18 hrs/wk" },
       { label: "Patient No-Show Rate Reduction", value: "35%" },
     ],
+    tags: ["AI Receptionist","Calendar sync","After-hours booking"],
     isDemonstration: true,
   },
   {
@@ -213,6 +223,7 @@ export const projects: CaseStudyItem[] = [
       { label: "No-Show Loss Avoided", value: "78%" },
       { label: "Stylist Uninterrupted Focus", value: "100%" },
     ],
+    tags: ["AI Receptionist","Automation","Deposits & SMS"],
     isDemonstration: true,
   },
   {
@@ -232,6 +243,7 @@ export const projects: CaseStudyItem[] = [
       { label: "Showing Conversions", value: "+44%" },
       { label: "CRM Sync Accuracy", value: "100%" },
     ],
+    tags: ["AI Receptionist","CRM Solutions","Lead routing"],
     isDemonstration: true,
   },
 ];
@@ -348,4 +360,85 @@ export const faqList = [
     answer:
       "Absolutely. We adhere to enterprise security best practices: end-to-end TLS encryption, zero storage of payment credentials, role-based access control, and strict data retention boundaries.",
   },
+];
+
+/** Primary navigation (Services also has a dropdown in the navbar). */
+export const mainNav = [
+  { href: "/", label: "Home" },
+  { href: "/services", label: "Services" },
+  { href: "/projects", label: "Projects" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+
+/**
+ * Headline numbers for the proof strip. Each figure already appears elsewhere
+ * in this file (service metrics / FAQ) — confirm they are accurate before launch.
+ */
+export const proofStats: Stat[] = [
+  { value: "24/7", label: "Calls and messages answered" },
+  { value: "< 2.4s", label: "Average inquiry response time" },
+  { value: "3–7 days", label: "Typical AI receptionist rollout" },
+  { value: "22+ hrs", label: "Admin hours saved each week" },
+];
+
+/** PLACEHOLDERS — replace with real client logos (SVG preferred) before launch. */
+export const clientLogos = [
+  { name: "Client logo", isPlaceholder: true as const },
+  { name: "Client logo", isPlaceholder: true as const },
+  { name: "Client logo", isPlaceholder: true as const },
+  { name: "Client logo", isPlaceholder: true as const },
+  { name: "Client logo", isPlaceholder: true as const },
+];
+
+/** PLACEHOLDERS — replace with real, approved client quotes before launch. */
+export const testimonials: Testimonial[] = [
+  {
+    quote: "Replace with a real client quote about the result they saw — for example, how many after-hours calls are now booked automatically.",
+    name: "Client name",
+    role: "Practice manager",
+    company: "Clinic name",
+    isPlaceholder: true,
+  },
+  {
+    quote: "Replace with a real client quote about time saved — for example, the admin work the team no longer does by hand.",
+    name: "Client name",
+    role: "Owner",
+    company: "Salon or studio name",
+    isPlaceholder: true,
+  },
+  {
+    quote: "Replace with a real client quote about working with Deptloy — the process, communication, or support after launch.",
+    name: "Client name",
+    role: "Managing broker",
+    company: "Brokerage name",
+    isPlaceholder: true,
+  },
+];
+
+/** About page — DRAFT copy for review. */
+export const companyValues = [
+  {
+    title: "Built around your rules",
+    description: "Every assistant and workflow is configured to your services, hours, pricing and brand tone — not a generic template.",
+  },
+  {
+    title: "Honest by default",
+    description: "Demos are labelled as demos, and we scope only what we can deliver, test and support.",
+  },
+  {
+    title: "Measured outcomes",
+    description: "We agree on the numbers that matter — missed calls, response time, hours saved — before we build.",
+  },
+  {
+    title: "Partners after launch",
+    description: "We tune, extend and support what we build as your business changes.",
+  },
+];
+
+/** PLACEHOLDERS — replace with real team photos, names and bios. */
+export const team: TeamMember[] = [
+  { name: "Team member", role: "Founder & Strategy", bio: "Short bio: background and what they lead at Deptloy.", initials: "TM", isPlaceholder: true },
+  { name: "Team member", role: "AI & Automation Lead", bio: "Short bio: background and what they lead at Deptloy.", initials: "TM", isPlaceholder: true },
+  { name: "Team member", role: "Engineering Lead", bio: "Short bio: background and what they lead at Deptloy.", initials: "TM", isPlaceholder: true },
 ];

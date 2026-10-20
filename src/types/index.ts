@@ -15,6 +15,8 @@ export interface IndustryItem {
   id: string;
   slug: string;
   title: string;
+  /** Short label for menus and footer links. */
+  shortTitle: string;
   tagline: string;
   description: string;
   commonBottleneck: string;
@@ -33,7 +35,33 @@ export interface CaseStudyItem {
   solution: string;
   outcome: string;
   metrics: { label: string; value: string }[];
+  /** Services/tools involved — shown as tags on project cards. */
+  tags: string[];
   isDemonstration: boolean;
+}
+
+/** Content the client still needs to supply. Rendered with a visible "Placeholder" marker. */
+export interface Placeholder {
+  isPlaceholder: true;
+}
+
+export interface Testimonial extends Partial<Placeholder> {
+  quote: string;
+  name: string;
+  role: string;
+  company: string;
+}
+
+export interface TeamMember extends Partial<Placeholder> {
+  name: string;
+  role: string;
+  bio: string;
+  initials: string;
+}
+
+export interface Stat {
+  value: string;
+  label: string;
 }
 
 export interface ContactFormData {

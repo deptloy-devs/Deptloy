@@ -41,13 +41,13 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
         };
       case "Follow-up":
         return {
-          bg: "bg-purple-500/15 text-purple-400 border-purple-500/30",
-          dot: "bg-purple-400",
+          bg: "bg-brand-500/15 text-brand-400 border-brand-500/30",
+          dot: "bg-brand-400",
           label: "Follow-up",
         };
       default:
         return {
-          bg: "bg-slate-500/15 text-slate-300 border-slate-500/30",
+          bg: "bg-slate-500/15 text-fg-soft border-slate-500/30",
           dot: "bg-slate-400",
           label: String(status),
         };

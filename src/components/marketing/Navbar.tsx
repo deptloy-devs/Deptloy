@@ -3,310 +3,242 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  ChevronDown,
-  Menu,
-  X,
-  Bot,
-  Zap,
-  BarChart3,
-  Code2,
-  ArrowRight,
-  Sparkles,
-  LayoutDashboard,
-  Home,
-  Briefcase,
-  Layers,
-  Phone,
-} from "lucide-react";
+import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
-import { services } from "@/lib/site";
+import { ServiceIcon } from "./ServiceIcon";
+import { mainNav, services } from "@/lib/site";
 import { cn } from "@/lib/cn";
+
+const isActive = (pathname: string, href: string) =>
+  href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+
+const linkBase =
+  "rounded-control px-3 py-2 text-sm font-medium transition-colors duration-150 hover:bg-white/[0.05] hover:text-fg";
 
 export function Navbar() {
   const pathname = usePathname();
-  const [isServicesOpen, setIsServicesOpen] = React.useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [servicesOpen, setServicesOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [scrolled, setScrolled] = React.useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const servicesButtonRef = React.useRef<HTMLButtonElement>(null);
 
-  // Close dropdown on outside click
+  // Close menus when the route changes (render-time state sync, no effect needed).
+  const [lastPath, setLastPath] = React.useState(pathname);
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
+    setServicesOpen(false);
+    setMobileOpen(false);
+  }
+
+  // Slightly stronger header background once the page scrolls.
   React.useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsServicesOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const closeMenus = () => {
-    setIsMobileMenuOpen(false);
-    setIsServicesOpen(false);
-  };
+  // Services dropdown: close on outside click or Escape (focus returns to the trigger).
+  React.useEffect(() => {
+    if (!servicesOpen) return;
+    const onPointer = (e: PointerEvent) => {
+      if (!dropdownRef.current?.contains(e.target as Node)) setServicesOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setServicesOpen(false);
+        servicesButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [servicesOpen]);
 
-  const serviceIcons = {
-    "ai-receptionist": <Bot className="h-5 w-5 text-purple-400" />,
-    automation: <Zap className="h-5 w-5 text-blue-400" />,
-    crm: <BarChart3 className="h-5 w-5 text-emerald-400" />,
-    development: <Code2 className="h-5 w-5 text-cyan-400" />,
-  };
+  // Mobile menu: Escape closes it, and the page behind does not scroll.
+  React.useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMobileOpen(false);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [mobileOpen]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#080B14]/95 backdrop-blur-2xl shadow-xl transition-all">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        
-        {/* Brand Logo */}
+    <header
+      className={cn(
+        "sticky top-0 z-50 w-full border-b backdrop-blur-xl transition-colors duration-200",
+        scrolled || mobileOpen ? "border-line bg-canvas/90" : "border-transparent bg-canvas/60"
+      )}
+    >
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-[70] focus:rounded-control focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:text-fg"
+      >
+        Skip to content
+      </a>
+
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:h-[72px] lg:px-8">
         <Logo size="md" />
 
-        {/* Visible Navigation on Tablet & Desktop (md:flex instead of lg:flex) */}
-        <nav className="hidden md:flex items-center gap-1 lg:gap-2">
-          
-          {/* Home Link */}
-          <Link
-            href="/"
-            className={cn(
-              "px-3 py-2 text-sm font-semibold rounded-lg transition-colors",
-              pathname === "/"
-                ? "text-purple-300 bg-white/[0.08]"
-                : "text-slate-300 hover:text-white hover:bg-white/[0.05]"
-            )}
-          >
-            Home
-          </Link>
-
-          {/* Services Dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setIsServicesOpen(!isServicesOpen)}
-              onMouseEnter={() => setIsServicesOpen(true)}
-              className={cn(
-                "inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold rounded-lg transition-colors cursor-pointer",
-                pathname.startsWith("/services")
-                  ? "text-purple-300 bg-white/[0.08]"
-                  : "text-slate-300 hover:text-white hover:bg-white/[0.05]"
-              )}
-              aria-expanded={isServicesOpen}
-            >
-              <span>Services</span>
-              <ChevronDown
-                className={cn(
-                  "h-4 w-4 transition-transform duration-200 text-slate-400",
-                  isServicesOpen && "rotate-180 text-purple-400"
-                )}
-              />
-            </button>
-
-            {/* Dropdown Menu */}
-            {isServicesOpen && (
+        {/* Desktop navigation */}
+        <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
+          {mainNav.map((item) =>
+            item.href === "/services" ? (
               <div
-                onMouseLeave={() => setIsServicesOpen(false)}
-                className="absolute left-0 mt-2 w-[480px] rounded-2xl bg-[#101522] border border-white/10 p-3 shadow-2xl shadow-purple-950/60 backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-150 z-50"
+                key={item.href}
+                ref={dropdownRef}
+                className="relative"
+                onPointerEnter={(e) => e.pointerType === "mouse" && setServicesOpen(true)}
+                onPointerLeave={(e) => e.pointerType === "mouse" && setServicesOpen(false)}
               >
-                <div className="grid grid-cols-1 gap-1">
-                  {services.map((srv) => (
-                    <Link
-                      key={srv.slug}
-                      href={srv.href}
-                      onClick={closeMenus}
-                      className="group flex items-start gap-3.5 p-3 rounded-xl hover:bg-white/[0.06] transition-all"
-                    >
-                      <div className="mt-0.5 rounded-lg bg-[#111827] p-2 border border-white/10 group-hover:border-purple-500/40 transition-colors">
-                        {serviceIcons[srv.slug]}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-white group-hover:text-purple-300 transition-colors">
-                            {srv.title}
-                          </span>
-                          {srv.badge && (
-                            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30">
-                              {srv.badge}
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-xs text-slate-400 mt-0.5 line-clamp-1 group-hover:text-slate-300">
-                          {srv.short}
-                        </p>
-                      </div>
-                      <ArrowRight className="h-4 w-4 text-slate-600 group-hover:text-purple-400 group-hover:translate-x-0.5 transition-all self-center opacity-0 group-hover:opacity-100" />
-                    </Link>
-                  ))}
-                </div>
+                <button
+                  ref={servicesButtonRef}
+                  type="button"
+                  onClick={() => setServicesOpen((o) => !o)}
+                  aria-expanded={servicesOpen}
+                  aria-controls="services-menu"
+                  className={cn(
+                    linkBase,
+                    "inline-flex cursor-pointer items-center gap-1",
+                    isActive(pathname, "/services") ? "text-fg" : "text-fg-muted"
+                  )}
+                >
+                  Services
+                  <ChevronDown
+                    aria-hidden="true"
+                    className={cn("h-4 w-4 transition-transform duration-200", servicesOpen && "rotate-180")}
+                  />
+                </button>
 
-                <div className="mt-2 pt-2 border-t border-white/[0.08] px-3 py-1.5 flex items-center justify-between text-xs text-slate-400">
-                  <Link
-                    href="/#services"
-                    onClick={closeMenus}
-                    className="text-purple-400 hover:text-purple-300 font-medium inline-flex items-center gap-1"
-                  >
-                    <span>Swipe service cards on Homepage</span> <ArrowRight className="h-3 w-3" />
-                  </Link>
-                  <Link href="/contact" onClick={closeMenus} className="hover:text-white transition-colors">
-                    Custom Scope →
-                  </Link>
-                </div>
+                {servicesOpen && (
+                  <div id="services-menu" className="absolute left-1/2 top-full w-[26rem] -translate-x-1/2 pt-3">
+                    <div className="animate-fade-in rounded-panel border border-line bg-card p-2 shadow-raised">
+                      <ul>
+                        {services.map((srv) => (
+                          <li key={srv.slug}>
+                            <Link
+                              href={srv.href}
+                              aria-current={pathname === srv.href ? "page" : undefined}
+                              className="group flex items-start gap-3 rounded-card p-3 transition-colors hover:bg-white/[0.05]"
+                            >
+                              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-control border border-line bg-raised text-brand-300 transition-colors group-hover:border-brand-400/40">
+                                <ServiceIcon slug={srv.slug} className="h-[18px] w-[18px]" />
+                              </span>
+                              <span className="min-w-0">
+                                <span className="block text-sm font-semibold text-fg">{srv.title}</span>
+                                <span className="mt-0.5 block text-caption text-fg-muted">{srv.short}</span>
+                              </span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="mt-1 border-t border-line px-3 pb-1 pt-3">
+                        <Link
+                          href="/services"
+                          className="inline-flex items-center gap-1 text-sm font-medium text-link hover:text-brand-200"
+                        >
+                          View all services <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-
-          {/* Projects Link (Replaces Case Studies) */}
-          <Link
-            href="/projects"
-            className={cn(
-              "px-3 py-2 text-sm font-semibold rounded-lg transition-colors",
-              pathname === "/projects" || pathname === "/case-studies"
-                ? "text-purple-300 bg-white/[0.08]"
-                : "text-slate-300 hover:text-white hover:bg-white/[0.05]"
-            )}
-          >
-            Projects
-          </Link>
-
-          {/* About Link */}
-          <Link
-            href="/#about"
-            className="px-3 py-2 text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/[0.05] rounded-lg transition-colors"
-          >
-            About
-          </Link>
-
-          {/* Contact Link */}
-          <Link
-            href="/contact"
-            className={cn(
-              "px-3 py-2 text-sm font-semibold rounded-lg transition-colors",
-              pathname === "/contact"
-                ? "text-purple-300 bg-white/[0.08]"
-                : "text-slate-300 hover:text-white hover:bg-white/[0.05]"
-            )}
-          >
-            Contact
-          </Link>
-
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={isActive(pathname, item.href) ? "page" : undefined}
+                className={cn(linkBase, isActive(pathname, item.href) ? "text-fg" : "text-fg-muted")}
+              >
+                {item.label}
+              </Link>
+            )
+          )}
         </nav>
 
-        {/* Desktop CTAs */}
-        <div className="hidden md:flex items-center gap-3">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-300 hover:text-white transition-colors rounded-lg hover:bg-white/[0.05] border border-white/5"
-          >
-            <LayoutDashboard className="h-3.5 w-3.5 text-purple-400" />
-            <span>Dashboard</span>
-          </Link>
-          <Button
-            href="/demo"
-            variant="glow"
-            size="sm"
-            leftIcon={<Sparkles className="h-3.5 w-3.5" />}
-          >
-            Try AI Demo
-          </Button>
-        </div>
-
-        {/* Mobile Navigation Button (Clear & Unmissable) */}
-        <div className="flex md:hidden items-center gap-2">
-          <Button href="/demo" variant="primary" size="sm" className="text-xs px-3">
-            AI Demo
-          </Button>
+        <div className="flex items-center gap-2">
+          {/* Wrappers control visibility — Button's own display class can't be overridden via className */}
+          <span className="hidden lg:block">
+            <Button href="/demo" variant="ghost" size="sm">
+              Try the AI demo
+            </Button>
+          </span>
+          <span className="hidden sm:block">
+            <Button href="/contact" variant="primary" size="sm">
+              Book a Consultation
+            </Button>
+          </span>
           <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#111827] border border-purple-500/30 text-white hover:bg-purple-600/20 transition-all focus:outline-none"
-            aria-label="Toggle Navigation Menu"
+            type="button"
+            onClick={() => setMobileOpen((o) => !o)}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            className="grid h-11 w-11 place-items-center rounded-control border border-line bg-raised text-fg transition-colors hover:bg-raised-hover lg:hidden"
           >
-            {isMobileMenuOpen ? <X className="h-5 w-5 text-purple-400" /> : <Menu className="h-5 w-5 text-purple-400" />}
-            <span className="text-xs font-bold uppercase tracking-wider">Menu</span>
+            {mobileOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>
         </div>
-
       </div>
 
-      {/* Mobile Menu Drawer */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden border-b border-white/10 bg-[#080B14]/98 backdrop-blur-2xl px-5 pt-3 pb-8 animate-in slide-in-from-top-4 duration-200 shadow-2xl">
-          <div className="flex flex-col gap-2">
-            
-            <Link
-              href="/"
-              onClick={closeMenus}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-white/[0.06] text-white text-sm font-semibold"
-            >
-              <Home className="h-4 w-4 text-purple-400" />
-              <span>Home</span>
-            </Link>
-
-            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-3 pt-2">
-              Our Services
-            </div>
-            {services.map((srv) => (
-              <Link
-                key={srv.slug}
-                href={srv.href}
-                onClick={closeMenus}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/[0.06] text-slate-200 hover:text-white text-sm"
-              >
-                {serviceIcons[srv.slug]}
-                <span>{srv.title}</span>
-              </Link>
-            ))}
-
-            <Link
-              href="/#services"
-              onClick={closeMenus}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-purple-600/15 text-purple-300 text-xs font-semibold ml-3"
-            >
-              <span>Swipe Services on Home Page →</span>
-            </Link>
-
-            <div className="my-2 border-t border-white/[0.08]" />
-
-            <Link
-              href="/projects"
-              onClick={closeMenus}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-white/[0.06] text-slate-200 hover:text-white text-sm font-semibold"
-            >
-              <Briefcase className="h-4 w-4 text-blue-400" />
-              <span>Projects</span>
-            </Link>
-
-            <Link
-              href="/#about"
-              onClick={closeMenus}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-white/[0.06] text-slate-200 hover:text-white text-sm font-semibold"
-            >
-              <Layers className="h-4 w-4 text-emerald-400" />
-              <span>About Deptloy</span>
-            </Link>
-
-            <Link
-              href="/contact"
-              onClick={closeMenus}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-white/[0.06] text-slate-200 hover:text-white text-sm font-semibold"
-            >
-              <Phone className="h-4 w-4 text-amber-400" />
-              <span>Contact</span>
-            </Link>
-
-            <Link
-              href="/dashboard"
-              onClick={closeMenus}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-white/[0.04] text-slate-300 hover:text-white text-sm font-medium"
-            >
-              <LayoutDashboard className="h-4 w-4 text-purple-400" />
-              <span>Client Dashboard Preview</span>
-            </Link>
-
-            <div className="mt-4 pt-3 flex flex-col gap-2">
-              <Button href="/demo" variant="glow" size="md" className="w-full" onClick={closeMenus}>
-                Experience AI Demo
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div
+          id="mobile-menu"
+          className="animate-fade-in max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-canvas lg:hidden"
+        >
+          <nav aria-label="Mobile" className="mx-auto max-w-7xl px-4 pb-8 pt-4 sm:px-6">
+            <ul className="flex flex-col">
+              {mainNav.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    aria-current={isActive(pathname, item.href) ? "page" : undefined}
+                    className={cn(
+                      "flex h-12 items-center rounded-control px-3 text-base font-medium hover:bg-white/[0.05]",
+                      isActive(pathname, item.href) ? "text-fg" : "text-fg-soft"
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                  {item.href === "/services" && (
+                    <ul className="mb-2 ml-3 border-l border-line pl-3">
+                      {services.map((srv) => (
+                        <li key={srv.slug}>
+                          <Link
+                            href={srv.href}
+                            className="flex h-11 items-center gap-3 rounded-control px-2 text-sm text-fg-muted hover:bg-white/[0.05] hover:text-fg"
+                          >
+                            <ServiceIcon slug={srv.slug} className="h-4 w-4 text-brand-300" />
+                            {srv.title}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-6 flex flex-col gap-3 border-t border-line pt-6">
+              <Button href="/contact" variant="primary" size="lg" className="w-full">
+                Book a Consultation
               </Button>
-              <Button href="/contact" variant="outline" size="md" className="w-full" onClick={closeMenus}>
-                Book Consultation
+              <Button href="/demo" variant="secondary" size="lg" className="w-full">
+                Try the AI demo
               </Button>
             </div>
-          </div>
+          </nav>
         </div>
       )}
     </header>

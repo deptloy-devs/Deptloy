@@ -1,206 +1,172 @@
-"use client";
-
+import { ArrowRight, CalendarCheck, CheckCircle2, Clock, Sparkles, User, Volume2, Zap } from "lucide-react";
 import Link from "next/link";
-import {
-  Sparkles,
-  ArrowRight,
-  CalendarCheck,
-  CheckCircle2,
-  Clock,
-  User,
-  Volume2,
-} from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { Container } from "@/components/ui/Container";
 import { brand, trustPoints } from "@/lib/site";
 
-export function Hero() {
+/** Simulated call card — the product shown working is the hero's main visual. */
+function CallCard() {
   return (
-    <section className="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-32">
-      {/* Background radial glows */}
-      <div className="hero-glow-violet" />
-      <div className="hero-glow-cyan" />
-      <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
+    <figure className="relative">
+      {/* Signal rings + glow behind the card (decorative) */}
+      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+        <div className="absolute left-1/2 top-1/2 h-[130%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.05]" />
+        <div className="absolute left-1/2 top-1/2 h-[165%] w-[165%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.035]" />
+        <div className="absolute left-1/2 top-1/2 h-3/4 w-3/4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-600/25 blur-[90px]" />
+      </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          
-          {/* Left Column: Headline, Copy, Actions & Trust Points */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left z-10">
-            {/* Top Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#A78BFA] text-xs font-medium mb-6 backdrop-blur-md shadow-[0_0_20px_rgba(139,92,246,0.15)]">
-              <span className="flex h-2 w-2 rounded-full bg-[#A78BFA] animate-ping" />
-              <span>AI-Powered Business Solutions</span>
-            </div>
-
-            {/* Main Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.1] mb-6">
-              Let AI Handle the Busywork.{" "}
-              <span className="bg-gradient-to-r from-[#A78BFA] via-[#C084FC] to-[#38BDF8] bg-clip-text text-transparent">
-                You Build the Business.
+      <div className="rounded-panel bg-gradient-to-b from-brand-400/35 via-white/10 to-white/[0.03] p-px shadow-raised">
+        <div className="rounded-[calc(var(--radius-panel)-1px)] bg-card/95 p-5 backdrop-blur-xl sm:p-6">
+          <div className="flex items-center justify-between border-b border-line pb-4">
+            <div className="flex items-center gap-3">
+              <span className="relative grid h-10 w-10 place-items-center rounded-control bg-gradient-brand text-white shadow-glow">
+                <Volume2 className="h-5 w-5" aria-hidden="true" />
+                <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-card bg-success" />
               </span>
-            </h1>
-
-            {/* Supporting Subtitle */}
-            <p className="text-base sm:text-lg text-slate-300 leading-relaxed mb-8 max-w-2xl">
-              Turn missed calls and manual data entry into autonomous revenue. {brand.name} builds branded AI voice receptionists, intelligent workflow automations, CRM pipelines, and custom software that work around the clock.
-            </p>
-
-            {/* Call to Actions */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto mb-12">
-              <Button
-                href="/demo"
-                variant="glow"
-                size="lg"
-                leftIcon={<Sparkles className="h-4 w-4" />}
-                rightIcon={<ArrowRight className="h-4 w-4" />}
-                className="w-full sm:w-auto font-semibold"
-              >
-                Experience AI Receptionist
-              </Button>
-              <Button
-                href="/contact"
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto"
-              >
-                Book a Consultation
-              </Button>
+              <div>
+                <p className="flex items-center gap-2 text-sm font-semibold text-fg">
+                  Deptloy Voice Agent
+                  <span className="rounded bg-brand-500/15 px-1.5 py-px font-mono text-xs text-brand-300">v2.4</span>
+                </p>
+                <p className="flex items-center gap-1.5 text-xs text-fg-muted">
+                  <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+                  Live • Inbound Line Active
+                </p>
+              </div>
             </div>
-
-            {/* Three Concise Trust Points */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-white/[0.08] w-full">
-              {trustPoints.map((tp, idx) => (
-                <div key={idx} className="flex flex-col gap-1">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-white">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-purple-400 shrink-0" />
-                    <span>{tp.title}</span>
-                  </div>
-                  <p className="text-xs text-slate-400 leading-normal">
-                    {tp.description}
-                  </p>
-                </div>
+            <div className="flex h-8 items-center gap-1 rounded-control border border-line bg-black/30 px-2.5" aria-hidden="true">
+              {[0, 0.2, 0.4, 0.1, 0.3].map((delay, i) => (
+                <span
+                  key={i}
+                  className="h-1.5 w-1 rounded-full bg-gradient-to-t from-brand-500 to-electric-400 animate-wave"
+                  style={{ animationDelay: `${delay}s` }}
+                />
               ))}
             </div>
           </div>
 
-          {/* Right Column: AI Receptionist Product Preview Card */}
-          <div className="lg:col-span-5 relative z-10">
-            <div className="relative rounded-3xl p-1 bg-gradient-to-b from-purple-500/30 via-white/10 to-transparent shadow-2xl shadow-purple-950/50">
-              <div className="rounded-[22px] bg-[#0E1322] border border-white/10 p-5 sm:p-6 backdrop-blur-xl">
-                
-                {/* Dashboard Card Top Header */}
-                <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
-                  <div className="flex items-center gap-3">
-                    <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-purple-600 to-blue-500 shadow-md shadow-purple-600/30 text-white">
-                      <Volume2 className="h-5 w-5" />
-                      <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
-                      </span>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <h4 className="text-sm font-bold text-white">Deptloy Voice Agent</h4>
-                        <span className="text-[10px] text-purple-300 bg-purple-500/20 px-1.5 py-0.2 rounded font-mono">
-                          v2.4
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-400 flex items-center gap-1">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                        Live • Inbound Line Active
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Waveform Visualization */}
-                  <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/5">
-                    <span className="w-1 bg-purple-400 rounded-full animate-wave-1" />
-                    <span className="w-1 bg-blue-400 rounded-full animate-wave-2" />
-                    <span className="w-1 bg-cyan-400 rounded-full animate-wave-3" />
-                    <span className="w-1 bg-purple-400 rounded-full animate-wave-4" />
-                    <span className="w-1 bg-indigo-400 rounded-full animate-wave-5" />
-                  </div>
-                </div>
-
-                {/* Example Conversation Bubbles */}
-                <div className="my-5 flex flex-col gap-3">
-                  {/* Customer Message */}
-                  <div className="flex items-start gap-2.5 max-w-[85%]">
-                    <div className="h-6 w-6 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 shrink-0 text-xs mt-0.5">
-                      <User className="h-3.5 w-3.5" />
-                    </div>
-                    <div className="rounded-2xl rounded-tl-sm bg-[#161F33] p-3 text-xs text-slate-200 border border-white/5 leading-relaxed">
-                      &ldquo;Hi, I need to schedule a consultation this Thursday afternoon for our team. Do you have an opening around 3 PM?&rdquo;
-                    </div>
-                  </div>
-
-                  {/* AI Assistant Response */}
-                  <div className="flex items-start gap-2.5 max-w-[90%] self-end flex-row-reverse">
-                    <div className="h-6 w-6 rounded-full bg-purple-600/30 border border-purple-500/50 flex items-center justify-center text-purple-300 shrink-0 text-xs mt-0.5">
-                      <Sparkles className="h-3 w-3" />
-                    </div>
-                    <div className="rounded-2xl rounded-tr-sm bg-gradient-to-br from-purple-900/40 to-slate-900 p-3 text-xs text-purple-100 border border-purple-500/20 leading-relaxed">
-                      &ldquo;Yes, absolutely! We have an opening on Thursday at 3:15 PM with Dr. Harris. Shall I reserve that slot and send you the calendar invite?&rdquo;
-                    </div>
-                  </div>
-                </div>
-
-                {/* Live Action Status / Sync Indicators */}
-                <div className="grid grid-cols-2 gap-2 mb-4">
-                  <div className="flex items-center gap-2 p-2 rounded-xl bg-black/30 border border-white/5 text-[11px] text-slate-300">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                    <span className="truncate">Caller Verified via CallerID</span>
-                  </div>
-                  <div className="flex items-center gap-2 p-2 rounded-xl bg-black/30 border border-white/5 text-[11px] text-slate-300">
-                    <CalendarCheck className="h-3.5 w-3.5 text-blue-400 shrink-0" />
-                    <span className="truncate">Calendar Slot Reserved</span>
-                  </div>
-                </div>
-
-                {/* Upcoming Appointment Preview Card */}
-                <div className="rounded-xl bg-[#111827] border border-white/10 p-3.5 shadow-inner">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                      Confirmed Booking
-                    </span>
-                    <Badge variant="success" size="sm" dot>
-                      Confirmed
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between text-xs text-white">
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-3.5 w-3.5 text-purple-400" />
-                      <span>Thursday, 3:15 PM</span>
-                    </div>
-                    <span className="text-slate-400 text-[11px]">Duration: 45 min</span>
-                  </div>
-                  <div className="mt-2 pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
-                    <span>Client: Sarah Jenkins</span>
-                    <span className="text-purple-400 font-medium">Synced to CRM</span>
-                  </div>
-                </div>
-
-                {/* Interactive Demo Link Footer */}
-                <div className="mt-4 pt-3 border-t border-white/[0.08] flex items-center justify-between text-xs">
-                  <span className="text-slate-400">Simulated live dashboard preview</span>
-                  <Link
-                    href="/demo"
-                    className="text-purple-400 hover:text-purple-300 font-semibold inline-flex items-center gap-1"
-                  >
-                    Launch Interactive Demo <ArrowRight className="h-3 w-3" />
-                  </Link>
-                </div>
-
-              </div>
+          <div className="my-5 flex flex-col gap-3 text-sm leading-relaxed">
+            <div className="flex max-w-[88%] items-start gap-2.5">
+              <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-raised-hover text-fg-muted" aria-hidden="true">
+                <User className="h-3.5 w-3.5" />
+              </span>
+              <p className="rounded-card rounded-tl-sm border border-line bg-raised p-3 text-fg-soft">
+                <span className="sr-only">Caller: </span>
+                &ldquo;Hi, I need to schedule a consultation this Thursday afternoon for our team. Do you have an opening around 3 PM?&rdquo;
+              </p>
             </div>
-
-            {/* Ambient shadow pill under card */}
-            <div className="mx-auto h-4 w-4/5 rounded-full bg-purple-600/20 blur-xl -mt-2" />
+            <div className="flex max-w-[92%] flex-row-reverse items-start gap-2.5 self-end">
+              <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full border border-brand-400/40 bg-brand-500/20 text-brand-300" aria-hidden="true">
+                <Sparkles className="h-3 w-3" />
+              </span>
+              <p className="rounded-card rounded-tr-sm border border-brand-400/25 bg-brand-500/10 p-3 text-fg">
+                <span className="sr-only">AI receptionist: </span>
+                &ldquo;Yes, absolutely! We have an opening on Thursday at 3:15 PM with Dr. Harris. Shall I reserve that slot and send you the calendar invite?&rdquo;
+              </p>
+            </div>
           </div>
 
+          <div className="rounded-card border border-line bg-raised/70 p-4">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-wide text-fg-muted">Confirmed Booking</span>
+              <Badge variant="success" size="sm" dot>
+                Confirmed
+              </Badge>
+            </div>
+            <div className="flex items-center justify-between text-sm text-fg">
+              <span className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-brand-300" aria-hidden="true" />
+                Thursday, 3:15 PM
+              </span>
+              <span className="text-xs text-fg-muted">Duration: 45 min</span>
+            </div>
+            <div className="mt-3 flex items-center justify-between border-t border-line pt-3 text-xs text-fg-muted">
+              <span>Client: Sarah Jenkins</span>
+              <span className="font-medium text-brand-300">Synced to CRM</span>
+            </div>
+          </div>
+
+          <figcaption className="mt-4 flex items-center justify-between gap-3 border-t border-line pt-4 text-xs">
+            <span className="text-fg-subtle">Simulated live dashboard preview</span>
+            <Link href="/demo" className="inline-flex items-center gap-1 font-semibold text-link hover:text-brand-200">
+              Launch Interactive Demo <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </Link>
+          </figcaption>
         </div>
       </div>
+
+      {/* Floating status chips (decorative echoes of the card) */}
+      <div
+        className="absolute -top-5 left-10 hidden items-center gap-2 rounded-full border border-line bg-card/95 px-3 py-2 text-xs text-fg-soft shadow-card backdrop-blur-md xl:flex"
+        aria-hidden="true"
+      >
+        <CheckCircle2 className="h-4 w-4 text-success" /> Caller verified via CallerID
+      </div>
+      <div
+        className="absolute -bottom-5 right-10 hidden items-center gap-2 rounded-full border border-line bg-card/95 px-3 py-2 text-xs text-fg-soft shadow-card backdrop-blur-md xl:flex"
+        aria-hidden="true"
+      >
+        <CalendarCheck className="h-4 w-4 text-electric-400" /> Calendar slot reserved
+      </div>
+    </figure>
+  );
+}
+
+export function Hero() {
+  return (
+    <section className="relative isolate overflow-hidden">
+      <div className="glow-brand" aria-hidden="true" />
+      <div className="glow-accent" aria-hidden="true" />
+      <div
+        className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]"
+        aria-hidden="true"
+      />
+
+      <Container className="relative pb-section pt-12 sm:pt-16 lg:pt-20">
+        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-12 lg:gap-10">
+          <div className="flex flex-col items-start lg:col-span-7">
+            <Badge variant="brand" dot pulse>
+              AI-Powered Business Solutions
+            </Badge>
+
+            <h1 className="mt-6 text-display font-semibold">
+              Let AI Handle the Busywork. <span className="text-gradient-brand sm:block">You Build the Business.</span>
+            </h1>
+
+            <p className="mt-6 max-w-2xl text-lead text-fg-soft">
+              Turn missed calls and manual data entry into autonomous revenue. {brand.name} builds branded AI voice
+              receptionists, intelligent workflow automations, CRM pipelines, and custom software that work around the
+              clock.
+            </p>
+
+            <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+              <Button href="/contact" size="lg" rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}>
+                Book a Consultation
+              </Button>
+              <Button href="/demo" variant="outline" size="lg" leftIcon={<Zap className="h-4 w-4 text-brand-300" aria-hidden="true" />}>
+                Experience AI Receptionist
+              </Button>
+            </div>
+
+            <ul className="mt-12 grid w-full grid-cols-1 gap-5 border-t border-line pt-8 sm:grid-cols-3">
+              {trustPoints.map((tp) => (
+                <li key={tp.title}>
+                  <p className="flex items-center gap-2 text-sm font-semibold text-fg">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-300" aria-hidden="true" />
+                    {tp.title}
+                  </p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-fg-muted">{tp.description}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="relative lg:col-span-5">
+            <CallCard />
+          </div>
+        </div>
+      </Container>
     </section>
   );
 }

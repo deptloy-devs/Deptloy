@@ -1,42 +1,43 @@
+import * as React from "react";
 import { cn } from "@/lib/cn";
-import { Badge } from "./Badge";
 
 interface SectionHeadingProps {
   eyebrow?: string;
-  title: string;
-  description?: string;
+  title: React.ReactNode;
+  description?: React.ReactNode;
   align?: "left" | "center";
+  /** Heading level — keep the page outline in order (h1 → h2 → h3). */
+  as?: "h1" | "h2" | "h3";
   className?: string;
 }
+
+const titleSize = {
+  h1: "text-h1",
+  h2: "text-h2",
+  h3: "text-h3",
+} as const;
 
 export function SectionHeading({
   eyebrow,
   title,
   description,
   align = "center",
+  as: Heading = "h2",
   className,
 }: SectionHeadingProps) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-3",
-        align === "center" ? "items-center text-center max-w-3xl mx-auto" : "items-start text-left max-w-2xl",
+        "flex flex-col gap-4",
+        align === "center" ? "mx-auto max-w-3xl items-center text-center" : "max-w-2xl items-start text-left",
         className
       )}
     >
       {eyebrow && (
-        <Badge variant="violet" dot>
-          {eyebrow}
-        </Badge>
+        <p className="text-eyebrow font-semibold uppercase text-brand-300">{eyebrow}</p>
       )}
-      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
-        {title}
-      </h2>
-      {description && (
-        <p className="text-base sm:text-lg text-[#94A3B8] leading-relaxed">
-          {description}
-        </p>
-      )}
+      <Heading className={cn("font-display font-semibold text-fg", titleSize[Heading])}>{title}</Heading>
+      {description && <p className="text-lead text-fg-muted">{description}</p>}
     </div>
   );
 }

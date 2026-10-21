@@ -65,107 +65,107 @@ export default function AiReceptionistPage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative pt-16 pb-20 lg:pt-24 lg:pb-28 overflow-hidden">
-        <div className="hero-glow-violet" />
-        <div className="hero-glow-cyan" />
+      <section className="relative pt-14 sm:pt-20 pb-section-sm overflow-hidden">
+        <div className="glow-brand" />
+        <div className="glow-accent" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
           <div className="max-w-3xl mx-auto text-center flex flex-col items-center">
-            <Badge variant="violet" dot className="mb-4">
+            <Badge variant="brand" dot className="mb-4">
               Flagship Voice & Chat Solution
             </Badge>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+            <h1 className="text-h1 font-semibold mb-6">
               An AI Receptionist That Never Misses a Call
             </h1>
 
-            <p className="text-lg text-slate-300 leading-relaxed mb-8">
+            <p className="text-lg text-fg-soft leading-relaxed mb-8">
               A conversational, human-grade voice assistant customized to your business. It answers calls 24/7, schedules appointments directly into your calendar, answers complex FAQs, and captures qualified leads.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-              <Button href="/demo" variant="glow" size="lg" leftIcon={<Sparkles className="h-4 w-4" />}>
-                Try Live Interactive Demo
-              </Button>
-              <Button href="/contact" variant="outline" size="lg">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+              <Button href="/contact" variant="primary" size="lg">
                 Schedule Architecture Call
+              </Button>
+              <Button href="/demo" variant="outline" size="lg" leftIcon={<Sparkles className="h-4 w-4" aria-hidden="true" />}>
+                Try Live Interactive Demo
               </Button>
             </div>
           </div>
 
           {/* Interactive Receptionist Visualizer Card */}
-          <div className="mt-16 rounded-3xl bg-[#101522] border border-white/10 p-6 sm:p-10 shadow-2xl relative">
+          <div className="mt-16 rounded-panel bg-card border border-line p-6 sm:p-10 shadow-raised relative">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               
               <div className="lg:col-span-6 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-400">
+                  <div className="h-10 w-10 rounded-control bg-brand-600/20 border border-brand-500/30 flex items-center justify-center text-brand-400">
                     <Volume2 className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-white">Neural Voice Engine Simulation</h3>
-                    <p className="text-xs text-slate-400">Low-latency acoustic turn-taking (240ms)</p>
+                    <h2 className="text-base font-bold text-fg">Neural Voice Engine Simulation</h2>
+                    <p className="text-xs text-fg-muted">Low-latency acoustic turn-taking (240ms)</p>
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-[#111827] border border-white/10 p-4 space-y-3 text-xs">
+                <div className="rounded-card bg-raised border border-line p-4 space-y-3 text-xs">
                   <div className="flex items-start gap-2.5">
-                    <span className="font-semibold text-slate-400 shrink-0">Caller:</span>
-                    <p className="text-slate-200">&ldquo;Hi! I want to schedule a deep dental cleaning for next Tuesday morning.&rdquo;</p>
+                    <span className="font-semibold text-fg-muted shrink-0">Caller:</span>
+                    <p className="text-fg-soft">&ldquo;Hi! I want to schedule a deep dental cleaning for next Tuesday morning.&rdquo;</p>
                   </div>
-                  <div className="flex items-start gap-2.5 pt-2 border-t border-white/5">
-                    <span className="font-semibold text-purple-400 shrink-0">Deptloy AI:</span>
-                    <p className="text-purple-200">&ldquo;I would be happy to help with that. Dr. Lawson has openings next Tuesday at 9:30 AM and 11:00 AM. Which one fits your morning better?&rdquo;</p>
+                  <div className="flex items-start gap-2.5 pt-2 border-t border-line">
+                    <span className="font-semibold text-brand-400 shrink-0">Deptloy AI:</span>
+                    <p className="text-brand-200">&ldquo;I would be happy to help with that. Dr. Lawson has openings next Tuesday at 9:30 AM and 11:00 AM. Which one fits your morning better?&rdquo;</p>
                   </div>
-                  <div className="flex items-start gap-2.5 pt-2 border-t border-white/5">
-                    <span className="font-semibold text-slate-400 shrink-0">Caller:</span>
-                    <p className="text-slate-200">&ldquo;11:00 AM is great. Do you take BlueCross BlueShield?&rdquo;</p>
+                  <div className="flex items-start gap-2.5 pt-2 border-t border-line">
+                    <span className="font-semibold text-fg-muted shrink-0">Caller:</span>
+                    <p className="text-fg-soft">&ldquo;11:00 AM is great. Do you take BlueCross BlueShield?&rdquo;</p>
                   </div>
-                  <div className="flex items-start gap-2.5 pt-2 border-t border-white/5">
-                    <span className="font-semibold text-purple-400 shrink-0">Deptloy AI:</span>
-                    <p className="text-purple-200">&ldquo;Yes, we are in-network with BlueCross PPO. I have reserved Tuesday at 11:00 AM for you. What is your full name?&rdquo;</p>
+                  <div className="flex items-start gap-2.5 pt-2 border-t border-line">
+                    <span className="font-semibold text-brand-400 shrink-0">Deptloy AI:</span>
+                    <p className="text-brand-200">&ldquo;Yes, we are in-network with BlueCross PPO. I have reserved Tuesday at 11:00 AM for you. What is your full name?&rdquo;</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs text-slate-500">
+                <div className="flex items-center gap-2 text-xs text-fg-subtle">
                   <Shield className="h-3.5 w-3.5" />
                   <span>Configured to strict HIPAA-compliant security standards.</span>
                 </div>
               </div>
 
               <div className="lg:col-span-6 flex flex-col gap-4">
-                <div className="rounded-2xl bg-[#0B0F1A] border border-white/10 p-5">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-3">
+                <div className="rounded-card bg-surface border border-line p-5">
+                  <span className="text-xs font-bold uppercase tracking-wider text-fg-muted block mb-3">
                     Direct Calendar Integration
                   </span>
 
                   <div className="space-y-2.5 text-xs">
-                    <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.04]">
+                    <div className="flex items-center justify-between p-2.5 rounded-control bg-white/[0.04]">
                       <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-purple-400" />
-                        <span className="text-slate-200">Tuesday, Oct 28 • 11:00 AM</span>
+                        <Clock className="h-4 w-4 text-brand-400" />
+                        <span className="text-fg-soft">Tuesday, Oct 28 • 11:00 AM</span>
                       </div>
                       <Badge variant="success" size="sm">Slot Held</Badge>
                     </div>
 
-                    <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.04]">
+                    <div className="flex items-center justify-between p-2.5 rounded-control bg-white/[0.04]">
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-blue-400" />
-                        <span className="text-slate-200">Provider: Dr. Marcus Lawson</span>
+                        <Calendar className="h-4 w-4 text-brand-300" />
+                        <span className="text-fg-soft">Provider: Dr. Marcus Lawson</span>
                       </div>
-                      <span className="text-slate-400">Chair #2</span>
+                      <span className="text-fg-muted">Chair #2</span>
                     </div>
 
-                    <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.04]">
+                    <div className="flex items-center justify-between p-2.5 rounded-control bg-white/[0.04]">
                       <div className="flex items-center gap-2">
-                        <Zap className="h-4 w-4 text-emerald-400" />
-                        <span className="text-slate-200">EHR / CRM Sync</span>
+                        <Zap className="h-4 w-4 text-success" />
+                        <span className="text-fg-soft">EHR / CRM Sync</span>
                       </div>
-                      <span className="text-emerald-400 font-medium">Auto-created</span>
+                      <span className="text-success font-medium">Auto-created</span>
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-white/5">
+                  <div className="mt-4 pt-3 border-t border-line">
                     <Button href="/demo" variant="secondary" size="sm" className="w-full">
                       Launch Full Booking Prototype
                     </Button>
@@ -180,7 +180,7 @@ export default function AiReceptionistPage() {
       </section>
 
       {/* Appointment Booking Workflow */}
-      <section className="py-20 bg-[#090D18] border-t border-white/[0.06]">
+      <section className="py-20 bg-surface border-t border-line">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="Workflow Logic"
@@ -192,13 +192,13 @@ export default function AiReceptionistPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {workflowSteps.map((wf, idx) => (
-              <div key={idx} className="rounded-2xl bg-[#101522] border border-white/10 p-6 flex flex-col justify-between">
+              <div key={idx} className="rounded-card bg-card border border-line p-6 flex flex-col justify-between">
                 <div>
-                  <span className="text-2xl font-bold font-mono text-purple-400 mb-3 block">
+                  <span className="text-2xl font-bold font-mono text-brand-400 mb-3 block">
                     {wf.step}
                   </span>
-                  <h4 className="text-base font-bold text-white mb-2">{wf.title}</h4>
-                  <p className="text-xs text-slate-400 leading-relaxed">{wf.desc}</p>
+                  <h3 className="text-base font-bold text-fg mb-2">{wf.title}</h3>
+                  <p className="text-xs text-fg-muted leading-relaxed">{wf.desc}</p>
                 </div>
               </div>
             ))}
@@ -207,7 +207,7 @@ export default function AiReceptionistPage() {
       </section>
 
       {/* Benefits and Use Cases */}
-      <section className="py-20 bg-[#080B14] border-t border-white/[0.06]">
+      <section className="py-20 bg-canvas border-t border-line">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="Practical Applications"
@@ -218,12 +218,12 @@ export default function AiReceptionistPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {useCases.map((uc, idx) => (
-              <div key={idx} className="p-6 rounded-2xl bg-[#101522] border border-white/10">
-                <h4 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-purple-400" />
+              <div key={idx} className="p-6 rounded-card bg-card border border-line">
+                <h3 className="text-lg font-bold text-fg mb-2 flex items-center gap-2">
+                  <CheckCircle2 className="h-5 w-5 text-brand-400" />
                   {uc.title}
-                </h4>
-                <p className="text-sm text-slate-400 leading-relaxed">{uc.desc}</p>
+                </h3>
+                <p className="text-sm text-fg-muted leading-relaxed">{uc.desc}</p>
               </div>
             ))}
           </div>
@@ -231,7 +231,7 @@ export default function AiReceptionistPage() {
       </section>
 
       {/* Industries Served */}
-      <section className="py-20 bg-[#090D18] border-t border-white/[0.06]">
+      <section className="py-20 bg-surface border-t border-line">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="Vertical Compatibility"
@@ -242,9 +242,9 @@ export default function AiReceptionistPage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {industries.map((ind) => (
-              <div key={ind.id} className="p-4 rounded-xl bg-[#101522] border border-white/10 text-center flex flex-col items-center">
-                <span className="text-xs font-bold text-white mb-1">{ind.title.split(" ")[0]}</span>
-                <span className="text-[11px] text-slate-400">{ind.title.split(" ")[1] || "Services"}</span>
+              <div key={ind.id} className="p-4 rounded-control bg-card border border-line text-center flex flex-col items-center">
+                <span className="text-xs font-bold text-fg mb-1">{ind.title.split(" ")[0]}</span>
+                <span className="text-xs text-fg-muted">{ind.title.split(" ")[1] || "Services"}</span>
               </div>
             ))}
           </div>
@@ -252,7 +252,7 @@ export default function AiReceptionistPage() {
       </section>
 
       {/* FAQ Accordion */}
-      <section className="py-20 bg-[#080B14] border-t border-white/[0.06]">
+      <section className="py-20 bg-canvas border-t border-line">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="Answers & Clarifications"
@@ -267,21 +267,21 @@ export default function AiReceptionistPage() {
               return (
                 <div
                   key={idx}
-                  className="rounded-2xl bg-[#101522] border border-white/10 overflow-hidden transition-colors"
+                  className="rounded-card bg-card border border-line overflow-hidden transition-colors"
                 >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    className="w-full flex items-center justify-between p-5 text-left text-sm font-semibold text-white hover:text-purple-300 transition-colors"
+                    className="w-full flex items-center justify-between p-5 text-left text-sm font-semibold text-fg hover:text-brand-300 transition-colors"
                   >
                     <span>{faq.question}</span>
                     <ChevronDown
-                      className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${
-                        isOpen ? "rotate-180 text-purple-400" : ""
+                      className={`h-4 w-4 text-fg-muted transition-transform duration-200 ${
+                        isOpen ? "rotate-180 text-brand-400" : ""
                       }`}
                     />
                   </button>
                   {isOpen && (
-                    <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-white/5">
+                    <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-fg-muted leading-relaxed border-t border-line">
                       {faq.answer}
                     </div>
                   )}

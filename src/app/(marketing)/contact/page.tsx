@@ -1,358 +1,85 @@
-"use client";
-
-import * as React from "react";
-import {
-  Mail,
-  Phone,
-  Clock,
-  Sparkles,
-  CheckCircle2,
-  AlertCircle,
-  ShieldCheck,
-  Send,
-} from "lucide-react";
+import type { Metadata } from "next";
+import { Clock, Mail, Phone, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { Input, Textarea, Select } from "@/components/ui/Field";
-import { Badge } from "@/components/ui/Badge";
-import { brand, services } from "@/lib/site";
-import type { ContactFormData, ContactFormErrors, ServiceSlug } from "@/types";
+import { Card } from "@/components/ui/Card";
+import { Container } from "@/components/ui/Container";
+import { PageHero } from "@/components/marketing/PageHero";
+import { ContactForm } from "@/components/marketing/ContactForm";
+import { brand } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Contact — Book a Consultation",
+  description:
+    "Tell us about your call volume, booking workflow and software. Deptloy's team will outline a concrete AI receptionist and automation scope for your business.",
+  alternates: { canonical: "/contact" },
+};
 
 export default function ContactPage() {
-  const [formData, setFormData] = React.useState<ContactFormData>({
-    fullName: "",
-    businessEmail: "",
-    companyName: "",
-    serviceRequired: "",
-    projectDescription: "",
-    budgetRange: "$2,500 - $5,000",
-    timeline: "Within 2-4 weeks",
-  });
-
-  const [errors, setErrors] = React.useState<ContactFormErrors>({});
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
-  const [submissionId, setSubmissionId] = React.useState("");
-
-  const validate = (): boolean => {
-    const newErrors: ContactFormErrors = {};
-
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = "Please enter your full name";
-    } else if (formData.fullName.trim().length < 2) {
-      newErrors.fullName = "Name must be at least 2 characters";
-    }
-
-    if (!formData.businessEmail.trim()) {
-      newErrors.businessEmail = "Business email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.businessEmail)) {
-      newErrors.businessEmail = "Please enter a valid email address";
-    }
-
-    if (!formData.companyName.trim()) {
-      newErrors.companyName = "Company or practice name is required";
-    }
-
-    if (!formData.serviceRequired) {
-      newErrors.serviceRequired = "Please select the primary service needed";
-    }
-
-    if (!formData.projectDescription.trim()) {
-      newErrors.projectDescription = "Please provide brief details about your inquiry";
-    } else if (formData.projectDescription.trim().length < 10) {
-      newErrors.projectDescription = "Please enter at least 10 characters describing your needs";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-
-    setIsSubmitting(true);
-
-    // Simulate realistic asynchronous validation and local storage logging
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      setSubmissionId(`DEP-${Math.floor(100000 + Math.random() * 900000)}`);
-    }, 1200);
-  };
-
-  const handleReset = () => {
-    setFormData({
-      fullName: "",
-      businessEmail: "",
-      companyName: "",
-      serviceRequired: "",
-      projectDescription: "",
-      budgetRange: "$2,500 - $5,000",
-      timeline: "Within 2-4 weeks",
-    });
-    setErrors({});
-    setIsSubmitted(false);
-  };
+  const telHref = `tel:${brand.phone.replace(/[^\d+]/g, "")}`;
+  const contacts = [
+    { icon: Mail, label: "Solutions Email", value: brand.contactEmail, href: `mailto:${brand.contactEmail}` },
+    { icon: Phone, label: "Direct Phone", value: brand.phone, href: telHref },
+    { icon: Clock, label: "Engineering Response Time", value: "Monday - Friday • Sub-4 Hour Response" },
+  ];
 
   return (
-    <div className="flex flex-col">
-      {/* Hero Header */}
-      <section className="relative pt-16 pb-12 lg:pt-20 lg:pb-16 overflow-hidden">
-        <div className="hero-glow-violet" />
-        <div className="hero-glow-cyan" />
+    <>
+      <PageHero
+        eyebrow="Technical Consultation"
+        title="Let's Build Your Custom AI Infrastructure"
+        description="Tell us about your customer communication bottlenecks, appointment volume, and current software. Our technical team will review and outline a concrete deployment scope."
+      />
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
-          <Badge variant="violet" dot className="mb-4">
-            Technical Consultation
-          </Badge>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
-            Let&apos;s Build Your Custom AI Infrastructure
-          </h1>
-          <p className="text-lg text-slate-300 leading-relaxed">
-            Tell us about your customer communication bottlenecks, appointment volume, and current software. Our technical team will review and outline a concrete deployment scope.
-          </p>
-        </div>
-      </section>
+      <section className="pb-section">
+        <Container>
+          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-10">
+            <Card padding="xl" radius="panel" className="lg:col-span-7">
+              <ContactForm />
+            </Card>
 
-      {/* Main Grid: Form + Direct Contact Information */}
-      <section className="pb-24 bg-[#080B14]">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            
-            {/* Form Column */}
-            <div className="lg:col-span-7">
-              <div className="rounded-3xl bg-[#101522] border border-white/10 p-6 sm:p-10 shadow-2xl relative">
-                
-                {isSubmitted ? (
-                  /* Honest Demonstration Confirmation Screen */
-                  <div className="text-center py-8 space-y-6">
-                    <div className="mx-auto h-16 w-16 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                      <CheckCircle2 className="h-8 w-8" />
-                    </div>
-
-                    <div className="space-y-2">
-                      <h3 className="text-2xl font-bold text-white">
-                        Inquiry Validated Successfully
-                      </h3>
-                      <p className="text-xs font-mono text-purple-400">
-                        Reference Token: {submissionId}
-                      </p>
-                    </div>
-
-                    {/* Honest Notice */}
-                    <div className="p-4 rounded-2xl bg-[#111827] border border-white/10 text-xs text-slate-300 space-y-2 text-left max-w-md mx-auto">
-                      <div className="flex items-center gap-2 text-amber-400 font-semibold">
-                        <AlertCircle className="h-4 w-4" />
-                        <span>Demonstration Mode Active</span>
-                      </div>
-                      <p className="text-slate-400 leading-relaxed">
-                        Your submission payload has been successfully validated on the frontend and simulated locally. In production, this form triggers an automated lead intake webhook to our CRM.
-                      </p>
-                      <div className="pt-2 border-t border-white/5 space-y-1 text-slate-300">
-                        <p><strong>Name:</strong> {formData.fullName}</p>
-                        <p><strong>Company:</strong> {formData.companyName}</p>
-                        <p><strong>Email:</strong> {formData.businessEmail}</p>
-                        <p><strong>Service:</strong> {formData.serviceRequired}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
-                      <Button onClick={handleReset} variant="secondary" size="md">
-                        Submit Another Inquiry
-                      </Button>
-                      <Button href="/demo" variant="glow" size="md">
-                        Explore Live AI Receptionist
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  /* Active Form */
-                  <form onSubmit={handleSubmit} noValidate className="space-y-5">
-                    <div className="pb-4 border-b border-white/[0.08]">
-                      <h3 className="text-xl font-bold text-white">Project Inquiry Form</h3>
-                      <p className="text-xs text-slate-400 mt-1">
-                        All fields marked with an asterisk (<span className="text-purple-400">*</span>) are required.
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Input
-                        label="Full Name"
-                        placeholder="e.g. Dr. Jordan Hayes"
-                        value={formData.fullName}
-                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                        error={errors.fullName}
-                        required
-                      />
-
-                      <Input
-                        label="Business Email"
-                        type="email"
-                        placeholder="jordan@apexclinic.com"
-                        value={formData.businessEmail}
-                        onChange={(e) => setFormData({ ...formData, businessEmail: e.target.value })}
-                        error={errors.businessEmail}
-                        required
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Input
-                        label="Company or Practice Name"
-                        placeholder="Apex Health Clinic"
-                        value={formData.companyName}
-                        onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                        error={errors.companyName}
-                        required
-                      />
-
-                      <Select
-                        label="Primary Service Needed"
-                        value={formData.serviceRequired}
-                        onChange={(e) =>
-                          setFormData({ ...formData, serviceRequired: e.target.value as ServiceSlug })
-                        }
-                        error={errors.serviceRequired}
-                        required
-                      >
-                        <option value="" disabled className="bg-[#111827]">
-                          Select a solution...
-                        </option>
-                        {services.map((srv) => (
-                          <option key={srv.slug} value={srv.slug} className="bg-[#111827]">
-                            {srv.title}
-                          </option>
-                        ))}
-                      </Select>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Select
-                        label="Estimated Budget Range"
-                        value={formData.budgetRange}
-                        onChange={(e) => setFormData({ ...formData, budgetRange: e.target.value })}
-                      >
-                        <option value="$1,500 - $3,000" className="bg-[#111827]">$1,500 - $3,000 / month</option>
-                        <option value="$3,000 - $6,000" className="bg-[#111827]">$3,000 - $6,000 / month</option>
-                        <option value="$6,000+" className="bg-[#111827]">$6,000+ / custom enterprise</option>
-                      </Select>
-
-                      <Select
-                        label="Desired Rollout Timeline"
-                        value={formData.timeline}
-                        onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
-                      >
-                        <option value="Immediately (1-2 weeks)" className="bg-[#111827]">Immediately (1-2 weeks)</option>
-                        <option value="Within 3-4 weeks" className="bg-[#111827]">Within 3-4 weeks</option>
-                        <option value="Exploring for next quarter" className="bg-[#111827]">Exploring for next quarter</option>
-                      </Select>
-                    </div>
-
-                    <Textarea
-                      label="Project Details & Current Pain Points"
-                      placeholder="Describe your current phone/inquiry volume, software stack (e.g. Google Calendar, HubSpot, Dentrix), and what you want automated..."
-                      value={formData.projectDescription}
-                      onChange={(e) =>
-                        setFormData({ ...formData, projectDescription: e.target.value })
-                      }
-                      error={errors.projectDescription}
-                      rows={4}
-                      required
-                    />
-
-                    <div className="pt-2">
-                      <Button
-                        type="submit"
-                        variant="glow"
-                        size="lg"
-                        className="w-full font-semibold"
-                        isLoading={isSubmitting}
-                        rightIcon={<Send className="h-4 w-4" />}
-                      >
-                        Submit Consultation Request
-                      </Button>
-                    </div>
-
-                    <div className="pt-2 text-center text-xs text-slate-500 flex items-center justify-center gap-1.5">
-                      <ShieldCheck className="h-4 w-4 text-emerald-400" />
-                      <span>Your information is strictly protected under non-disclosure boundaries.</span>
-                    </div>
-                  </form>
-                )}
-
-              </div>
-            </div>
-
-            {/* Direct Contact Info & Office Column */}
-            <div className="lg:col-span-5 flex flex-col gap-6">
-              
-              {/* Direct Info Card */}
-              <div className="rounded-3xl bg-[#101522] border border-white/10 p-6 sm:p-8 space-y-6">
-                <h3 className="text-xl font-bold text-white">Direct Communication</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">
-                  Prefer a direct line or have immediate technical questions? Contact our solutions engineering team directly.
+            <aside className="flex flex-col gap-6 lg:col-span-5">
+              <Card padding="lg" radius="panel">
+                <h2 className="font-sans text-xl font-semibold text-fg">Direct Communication</h2>
+                <p className="mt-2 text-sm leading-relaxed text-fg-muted">
+                  Prefer a direct line or have immediate technical questions? Contact our solutions engineering team
+                  directly.
                 </p>
-
-                <div className="space-y-4 pt-2 border-t border-white/[0.08] text-sm">
-                  <div className="flex items-start gap-3.5">
-                    <div className="rounded-xl bg-[#111827] p-2.5 border border-white/10 text-purple-400 shrink-0">
-                      <Mail className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
-                        Solutions Email
+                <ul className="mt-6 space-y-4 border-t border-line pt-6 text-sm">
+                  {contacts.map((c) => (
+                    <li key={c.label} className="flex items-start gap-3.5">
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-control border border-line bg-raised text-brand-300">
+                        <c.icon className="h-5 w-5" aria-hidden="true" />
                       </span>
-                      <a href={`mailto:${brand.contactEmail}`} className="text-white hover:text-purple-300 font-medium">
-                        {brand.contactEmail}
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3.5">
-                    <div className="rounded-xl bg-[#111827] p-2.5 border border-white/10 text-purple-400 shrink-0">
-                      <Phone className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
-                        Direct Phone
+                      <span>
+                        <span className="block text-xs font-semibold uppercase tracking-wide text-fg-muted">{c.label}</span>
+                        {c.href ? (
+                          <a href={c.href} className="font-medium text-fg hover:text-brand-200">
+                            {c.value}
+                          </a>
+                        ) : (
+                          <span className="text-fg-soft">{c.value}</span>
+                        )}
                       </span>
-                      <span className="text-white font-medium">{brand.phone}</span>
-                    </div>
-                  </div>
+                    </li>
+                  ))}
+                </ul>
+              </Card>
 
-                  <div className="flex items-start gap-3.5">
-                    <div className="rounded-xl bg-[#111827] p-2.5 border border-white/10 text-purple-400 shrink-0">
-                      <Clock className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
-                        Engineering Response Time
-                      </span>
-                      <span className="text-slate-200">Monday - Friday • Sub-4 Hour Response</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Instant Scheduling Callout */}
-              <div className="rounded-3xl bg-gradient-to-br from-purple-950/40 to-[#101522] border border-purple-500/20 p-6 text-center space-y-3">
-                <Sparkles className="h-6 w-6 text-purple-400 mx-auto" />
-                <h4 className="text-base font-bold text-white">Looking for Immediate Hands-On Testing?</h4>
-                <p className="text-xs text-slate-300 max-w-sm mx-auto">
-                  Try our interactive appointment booking prototype right in your browser without waiting for an email reply.
+              <Card padding="lg" radius="panel" tone="highlight" className="text-center">
+                <Sparkles className="mx-auto h-6 w-6 text-brand-300" aria-hidden="true" />
+                <h2 className="mt-3 font-sans text-base font-semibold text-fg">Looking for Immediate Hands-On Testing?</h2>
+                <p className="mx-auto mt-2 max-w-sm text-sm text-fg-muted">
+                  Try our interactive appointment booking prototype right in your browser without waiting for an email
+                  reply.
                 </p>
-                <div className="pt-2">
-                  <Button href="/demo" variant="outline" size="sm" className="w-full">
-                    Launch AI Demo Prototype
-                  </Button>
-                </div>
-              </div>
-
-            </div>
-
+                <Button href="/demo" variant="outline" size="md" className="mt-5 w-full">
+                  Launch AI Demo Prototype
+                </Button>
+              </Card>
+            </aside>
           </div>
-        </div>
+        </Container>
       </section>
-    </div>
+    </>
   );
 }

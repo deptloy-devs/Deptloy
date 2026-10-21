@@ -214,21 +214,21 @@ export default function DemoPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <section className="relative pt-12 pb-8 lg:pt-16 lg:pb-10 border-b border-white/[0.08] bg-[#080B14]">
+      <section className="relative pt-12 pb-8 lg:pt-16 lg:pb-10 border-b border-line bg-canvas">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
-          <Badge variant="violet" dot className="mb-3">
+          <Badge variant="brand" dot className="mb-3">
             Interactive Frontend Prototype
           </Badge>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-3">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-fg tracking-tight mb-3">
             Experience the AI Receptionist
           </h1>
-          <p className="text-sm sm:text-base text-slate-300">
+          <p className="text-sm sm:text-base text-fg-soft">
             Simulate how a customer interacts with our conversational booking engine across multiple industries in real time.
           </p>
 
           {/* Persistent Honest Notice */}
-          <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs">
-            <ShieldAlert className="h-4 w-4 shrink-0 text-amber-400" />
+          <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-warning/10 border border-warning/20 text-brand-300 text-xs">
+            <ShieldAlert className="h-4 w-4 shrink-0 text-brand-300" />
             <span>
               <strong>Demonstration Prototype:</strong> This simulated workflow does not charge credit cards or add real entries to your personal calendar.
             </span>
@@ -237,7 +237,7 @@ export default function DemoPage() {
       </section>
 
       {/* Main Interactive Workspace: 2 Columns */}
-      <section className="py-10 bg-[#090D18] flex-1">
+      <section className="py-10 bg-surface flex-1">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
@@ -245,7 +245,7 @@ export default function DemoPage() {
             <div className="lg:col-span-7 flex flex-col gap-6">
               
               {/* Stepper Progress Indicator */}
-              <div className="rounded-2xl bg-[#101522] border border-white/10 p-4 flex items-center justify-between text-xs">
+              <div className="rounded-card bg-card border border-line p-4 flex items-center justify-between text-xs">
                 {[
                   { step: 1, label: "Industry" },
                   { step: 2, label: "Service" },
@@ -256,70 +256,70 @@ export default function DemoPage() {
                     <span
                       className={`h-6 w-6 rounded-full flex items-center justify-center font-bold text-xs ${
                         isConfirmed
-                          ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                          ? "bg-success/20 text-success border border-success/30"
                           : currentStep === s.step
-                          ? "bg-purple-600 text-white shadow-md shadow-purple-600/40"
+                          ? "bg-brand-600 text-fg shadow-md shadow-brand-600/40"
                           : currentStep > s.step
-                          ? "bg-purple-500/20 text-purple-300"
-                          : "bg-slate-800 text-slate-500"
+                          ? "bg-brand-500/20 text-brand-300"
+                          : "bg-raised-hover text-fg-subtle"
                       }`}
                     >
                       {s.step}
                     </span>
                     <span
                       className={`hidden sm:inline font-medium ${
-                        currentStep === s.step ? "text-white" : "text-slate-500"
+                        currentStep === s.step ? "text-fg" : "text-fg-subtle"
                       }`}
                     >
                       {s.label}
                     </span>
-                    {idx < 3 && <ChevronRight className="h-4 w-4 text-slate-700 hidden sm:block" />}
+                    {idx < 3 && <ChevronRight className="h-4 w-4 text-fg-subtle hidden sm:block" />}
                   </div>
                 ))}
               </div>
 
               {/* Step Content Container */}
-              <div className="rounded-3xl bg-[#101522] border border-white/10 p-6 sm:p-8 shadow-xl relative min-h-[440px] flex flex-col justify-between">
+              <div className="rounded-panel bg-card border border-line p-6 sm:p-8 shadow-card relative min-h-[440px] flex flex-col justify-between">
                 
                 {/* Confirmed Screen */}
                 {isConfirmed ? (
                   <div className="py-8 text-center space-y-6">
-                    <div className="mx-auto h-16 w-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+                    <div className="mx-auto h-16 w-16 rounded-full bg-success/20 border border-success/40 flex items-center justify-center text-success">
                       <CheckCircle2 className="h-8 w-8" />
                     </div>
 
                     <div className="space-y-1">
-                      <span className="text-xs uppercase font-mono text-emerald-400 tracking-wider">
+                      <span className="text-xs uppercase font-mono text-success tracking-wider">
                         Simulated Reservation Complete
                       </span>
-                      <h3 className="text-2xl font-bold text-white">
+                      <h3 className="text-2xl font-bold text-fg">
                         Appointment Confirmed!
                       </h3>
-                      <p className="text-xs text-slate-400 font-mono">
+                      <p className="text-xs text-fg-muted font-mono">
                         Booking ID: {confirmedBookingId}
                       </p>
                     </div>
 
-                    <div className="rounded-2xl bg-[#111827] border border-white/10 p-5 text-left text-xs space-y-2.5 max-w-md mx-auto">
-                      <div className="flex justify-between pb-2 border-b border-white/5">
-                        <span className="text-slate-400">Industry:</span>
-                        <span className="text-white font-medium">{currentIndustry.name}</span>
+                    <div className="rounded-card bg-raised border border-line p-5 text-left text-xs space-y-2.5 max-w-md mx-auto">
+                      <div className="flex justify-between pb-2 border-b border-line">
+                        <span className="text-fg-muted">Industry:</span>
+                        <span className="text-fg font-medium">{currentIndustry.name}</span>
                       </div>
-                      <div className="flex justify-between pb-2 border-b border-white/5">
-                        <span className="text-slate-400">Service:</span>
-                        <span className="text-white font-medium">{selectedService.name}</span>
+                      <div className="flex justify-between pb-2 border-b border-line">
+                        <span className="text-fg-muted">Service:</span>
+                        <span className="text-fg font-medium">{selectedService.name}</span>
                       </div>
-                      <div className="flex justify-between pb-2 border-b border-white/5">
-                        <span className="text-slate-400">Date & Time:</span>
-                        <span className="text-purple-300 font-bold">{bookingData.selectedDate} at {bookingData.selectedTime}</span>
+                      <div className="flex justify-between pb-2 border-b border-line">
+                        <span className="text-fg-muted">Date & Time:</span>
+                        <span className="text-brand-300 font-bold">{bookingData.selectedDate} at {bookingData.selectedTime}</span>
                       </div>
-                      <div className="flex justify-between pb-2 border-b border-white/5">
-                        <span className="text-slate-400">Customer:</span>
-                        <span className="text-white">{bookingData.customerName}</span>
+                      <div className="flex justify-between pb-2 border-b border-line">
+                        <span className="text-fg-muted">Customer:</span>
+                        <span className="text-fg">{bookingData.customerName}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400">SMS Notification:</span>
-                        <span className="text-emerald-400 font-medium">Simulated Dispatched</span>
+                        <span className="text-fg-muted">SMS Notification:</span>
+                        <span className="text-success font-medium">Simulated Dispatched</span>
                       </div>
                     </div>
 
@@ -327,7 +327,7 @@ export default function DemoPage() {
                       <Button onClick={handleStartAgain} variant="secondary" size="md" leftIcon={<RotateCcw className="h-4 w-4" />}>
                         Start Again
                       </Button>
-                      <Button href="/dashboard" variant="glow" size="md">
+                      <Button href="/dashboard" variant="primary" size="md">
                         View in Client Dashboard
                       </Button>
                     </div>
@@ -338,8 +338,8 @@ export default function DemoPage() {
                     {currentStep === 1 && (
                       <div className="space-y-5">
                         <div>
-                          <h3 className="text-xl font-bold text-white">Select Sample Business Vertical</h3>
-                          <p className="text-xs text-slate-400 mt-1">
+                          <h2 className="text-xl font-bold text-fg">Select Sample Business Vertical</h2>
+                          <p className="text-xs text-fg-muted mt-1">
                             Choose an industry to simulate its specialized booking rules and assistant tone.
                           </p>
                         </div>
@@ -350,17 +350,17 @@ export default function DemoPage() {
                               key={ind.id}
                               type="button"
                               onClick={() => handleIndustryChange(ind.id)}
-                              className={`p-4 rounded-2xl border text-left transition-all ${
+                              className={`p-4 rounded-card border text-left transition-all ${
                                 selectedIndustryId === ind.id
-                                  ? "bg-purple-600/15 border-purple-500/50 shadow-[0_0_20px_rgba(139,92,246,0.15)] ring-1 ring-purple-500/50"
-                                  : "bg-[#111827] border-white/10 hover:border-white/20"
+                                  ? "bg-brand-600/15 border-brand-500/50 shadow-[0_0_20px_rgba(139,92,246,0.15)] ring-1 ring-brand-500/50"
+                                  : "bg-raised border-line hover:border-line-strong"
                               }`}
                             >
                               <div className="flex items-center justify-between mb-1">
-                                <span className="text-sm font-bold text-white">{ind.name}</span>
-                                <span className="text-[10px] text-purple-400 uppercase font-mono">{ind.category}</span>
+                                <span className="text-sm font-bold text-fg">{ind.name}</span>
+                                <span className="text-xs text-brand-400 uppercase font-mono">{ind.category}</span>
                               </div>
-                              <p className="text-xs text-slate-400 line-clamp-2">{ind.services[0].name}</p>
+                              <p className="text-xs text-fg-muted line-clamp-2">{ind.services[0].name}</p>
                             </button>
                           ))}
                         </div>
@@ -371,8 +371,8 @@ export default function DemoPage() {
                     {currentStep === 2 && (
                       <div className="space-y-5">
                         <div>
-                          <h3 className="text-xl font-bold text-white">Select Service Offering</h3>
-                          <p className="text-xs text-slate-400 mt-1">
+                          <h3 className="text-xl font-bold text-fg">Select Service Offering</h3>
+                          <p className="text-xs text-fg-muted mt-1">
                             Configured service catalog for {currentIndustry.name}.
                           </p>
                         </div>
@@ -383,24 +383,24 @@ export default function DemoPage() {
                               key={srv.id}
                               type="button"
                               onClick={() => setBookingData({ ...bookingData, serviceId: srv.id })}
-                              className={`w-full p-4 rounded-2xl border text-left transition-all flex items-center justify-between ${
+                              className={`w-full p-4 rounded-card border text-left transition-all flex items-center justify-between ${
                                 bookingData.serviceId === srv.id
-                                  ? "bg-purple-600/15 border-purple-500/50 ring-1 ring-purple-500/50 shadow-md"
-                                  : "bg-[#111827] border-white/10 hover:border-white/20"
+                                  ? "bg-brand-600/15 border-brand-500/50 ring-1 ring-brand-500/50 shadow-md"
+                                  : "bg-raised border-line hover:border-line-strong"
                               }`}
                             >
                               <div>
-                                <h4 className="text-sm font-bold text-white">{srv.name}</h4>
-                                <div className="flex items-center gap-3 text-xs text-slate-400 mt-1">
+                                <h3 className="text-sm font-bold text-fg">{srv.name}</h3>
+                                <div className="flex items-center gap-3 text-xs text-fg-muted mt-1">
                                   <span className="flex items-center gap-1">
-                                    <Clock className="h-3 w-3 text-purple-400" /> {srv.duration}
+                                    <Clock className="h-3 w-3 text-brand-400" /> {srv.duration}
                                   </span>
                                   <span>•</span>
                                   <span>{srv.price}</span>
                                 </div>
                               </div>
                               <span className={`h-4 w-4 rounded-full border flex items-center justify-center ${
-                                bookingData.serviceId === srv.id ? "border-purple-400 bg-purple-400" : "border-slate-600"
+                                bookingData.serviceId === srv.id ? "border-brand-400 bg-brand-400" : "border-slate-600"
                               }`}>
                                 {bookingData.serviceId === srv.id && <span className="h-1.5 w-1.5 rounded-full bg-black" />}
                               </span>
@@ -414,8 +414,8 @@ export default function DemoPage() {
                     {currentStep === 3 && (
                       <div className="space-y-5">
                         <div>
-                          <h3 className="text-xl font-bold text-white">Customer Info & Desired Time</h3>
-                          <p className="text-xs text-slate-400 mt-1">
+                          <h3 className="text-xl font-bold text-fg">Customer Info & Desired Time</h3>
+                          <p className="text-xs text-fg-muted mt-1">
                             Input details to simulate caller contact intake.
                           </p>
                         </div>
@@ -451,7 +451,7 @@ export default function DemoPage() {
 
                         {/* Preferred Time Slots */}
                         <div>
-                          <label className="text-xs font-semibold uppercase tracking-wider text-slate-300 block mb-2">
+                          <label className="text-xs font-semibold uppercase tracking-wider text-fg-soft block mb-2">
                             Available Real-Time Slots (Thursday, Oct 24)
                           </label>
                           <div className="grid grid-cols-3 gap-2">
@@ -460,10 +460,10 @@ export default function DemoPage() {
                                 key={slot}
                                 type="button"
                                 onClick={() => setBookingData({ ...bookingData, selectedTime: slot })}
-                                className={`py-2 px-3 rounded-xl text-xs font-semibold transition-all ${
+                                className={`py-2 px-3 rounded-control text-xs font-semibold transition-all ${
                                   bookingData.selectedTime === slot
-                                    ? "bg-purple-600 text-white shadow-md shadow-purple-600/30"
-                                    : "bg-[#111827] text-slate-300 border border-white/10 hover:border-white/20"
+                                    ? "bg-brand-600 text-fg shadow-md shadow-brand-600/30"
+                                    : "bg-raised text-fg-soft border border-line hover:border-line-strong"
                                 }`}
                               >
                                 {slot}
@@ -478,36 +478,36 @@ export default function DemoPage() {
                     {currentStep === 4 && (
                       <div className="space-y-5">
                         <div>
-                          <h3 className="text-xl font-bold text-white">Review Appointment Parameters</h3>
-                          <p className="text-xs text-slate-400 mt-1">
+                          <h3 className="text-xl font-bold text-fg">Review Appointment Parameters</h3>
+                          <p className="text-xs text-fg-muted mt-1">
                             Verify your simulated details prior to testing confirmation.
                           </p>
                         </div>
 
-                        <div className="rounded-2xl bg-[#111827] border border-white/10 p-5 space-y-3 text-xs">
-                          <div className="flex justify-between pb-2 border-b border-white/5">
-                            <span className="text-slate-400">Industry:</span>
-                            <span className="text-white font-medium">{currentIndustry.name}</span>
+                        <div className="rounded-card bg-raised border border-line p-5 space-y-3 text-xs">
+                          <div className="flex justify-between pb-2 border-b border-line">
+                            <span className="text-fg-muted">Industry:</span>
+                            <span className="text-fg font-medium">{currentIndustry.name}</span>
                           </div>
-                          <div className="flex justify-between pb-2 border-b border-white/5">
-                            <span className="text-slate-400">Service:</span>
-                            <span className="text-white font-medium">{selectedService.name}</span>
+                          <div className="flex justify-between pb-2 border-b border-line">
+                            <span className="text-fg-muted">Service:</span>
+                            <span className="text-fg font-medium">{selectedService.name}</span>
                           </div>
-                          <div className="flex justify-between pb-2 border-b border-white/5">
-                            <span className="text-slate-400">Duration & Fee:</span>
-                            <span className="text-slate-300">{selectedService.duration} • {selectedService.price}</span>
+                          <div className="flex justify-between pb-2 border-b border-line">
+                            <span className="text-fg-muted">Duration & Fee:</span>
+                            <span className="text-fg-soft">{selectedService.duration} • {selectedService.price}</span>
                           </div>
-                          <div className="flex justify-between pb-2 border-b border-white/5">
-                            <span className="text-slate-400">Reserved Slot:</span>
-                            <span className="text-purple-300 font-bold">{bookingData.selectedDate} at {bookingData.selectedTime}</span>
+                          <div className="flex justify-between pb-2 border-b border-line">
+                            <span className="text-fg-muted">Reserved Slot:</span>
+                            <span className="text-brand-300 font-bold">{bookingData.selectedDate} at {bookingData.selectedTime}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-slate-400">Client:</span>
-                            <span className="text-white">{bookingData.customerName} ({bookingData.customerPhone})</span>
+                            <span className="text-fg-muted">Client:</span>
+                            <span className="text-fg">{bookingData.customerName} ({bookingData.customerPhone})</span>
                           </div>
                         </div>
 
-                        <div className="p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-xs text-purple-300">
+                        <div className="p-3.5 rounded-control bg-brand-500/10 border border-brand-500/20 text-xs text-brand-300">
                           Clicking &ldquo;Simulate Booking&rdquo; will demonstrate the confirmation flow, generate a booking token, and update the conversation transcript.
                         </div>
                       </div>
@@ -517,7 +517,7 @@ export default function DemoPage() {
 
                 {/* Footer Controls (when not confirmed) */}
                 {!isConfirmed && (
-                  <div className="pt-6 mt-6 border-t border-white/[0.08] flex items-center justify-between">
+                  <div className="pt-6 mt-6 border-t border-line flex items-center justify-between">
                     {currentStep > 1 ? (
                       <Button
                         type="button"
@@ -544,7 +544,7 @@ export default function DemoPage() {
                     ) : (
                       <Button
                         type="button"
-                        variant="glow"
+                        variant="primary"
                         size="md"
                         isLoading={isSubmitting}
                         onClick={handleConfirmBooking}
@@ -560,22 +560,22 @@ export default function DemoPage() {
 
             {/* Right Column (5 cols): Live Conversation Panel & Interactive Chat */}
             <div className="lg:col-span-5 flex flex-col gap-4">
-              <div className="rounded-3xl bg-[#101522] border border-white/10 p-5 sm:p-6 shadow-xl flex flex-col h-[580px]">
+              <div className="rounded-panel bg-card border border-line p-5 sm:p-6 shadow-card flex flex-col h-[580px]">
                 
                 {/* Header */}
-                <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+                <div className="flex items-center justify-between pb-4 border-b border-line">
                   <div className="flex items-center gap-2.5">
-                    <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-white">
+                    <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-brand-600 to-brand-500 flex items-center justify-center text-fg">
                       <Bot className="h-4 w-4" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold text-white">Receptionist Stream</h4>
-                      <p className="text-[11px] text-slate-400">Simulated AI Telephony</p>
+                      <h3 className="text-sm font-bold text-fg">Receptionist Stream</h3>
+                      <p className="text-xs text-fg-muted">Simulated AI Telephony</p>
                     </div>
                   </div>
 
-                  <span className="flex items-center gap-1.5 text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-mono">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="flex items-center gap-1.5 text-xs text-success bg-success/10 px-2 py-0.5 rounded-full border border-success/20 font-mono">
+                    <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
                     Interactive
                   </span>
                 </div>
@@ -590,15 +590,15 @@ export default function DemoPage() {
                       }`}
                     >
                       <div
-                        className={`max-w-[88%] p-3 rounded-2xl text-xs leading-relaxed ${
+                        className={`max-w-[88%] p-3 rounded-card text-xs leading-relaxed ${
                           msg.sender === "customer"
-                            ? "bg-purple-600 text-white rounded-br-none"
-                            : "bg-[#161F33] text-slate-200 rounded-bl-none border border-white/5"
+                            ? "bg-brand-600 text-fg rounded-br-none"
+                            : "bg-raised text-fg-soft rounded-bl-none border border-line"
                         }`}
                       >
                         {msg.text}
                       </div>
-                      <span className="text-[9px] text-slate-500 mt-1 px-1">
+                      <span className="text-xs text-fg-subtle mt-1 px-1">
                         {msg.sender === "customer" ? "You" : "Deptloy Assistant"} • {msg.timestamp}
                       </span>
                     </div>
@@ -607,8 +607,8 @@ export default function DemoPage() {
                 </div>
 
                 {/* Quick Prompts */}
-                <div className="py-2 border-t border-white/[0.06]">
-                  <span className="text-[10px] text-slate-500 uppercase font-semibold block mb-1.5">
+                <div className="py-2 border-t border-line">
+                  <span className="text-xs text-fg-subtle uppercase font-semibold block mb-1.5">
                     Quick Sample Questions:
                   </span>
                   <div className="flex flex-wrap gap-1.5">
@@ -617,7 +617,7 @@ export default function DemoPage() {
                         key={idx}
                         type="button"
                         onClick={() => handleSendMessage(q)}
-                        className="text-[10px] px-2.5 py-1 rounded-full bg-white/[0.04] text-slate-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors"
+                        className="text-xs px-2.5 py-1 rounded-full bg-white/[0.04] text-fg-soft hover:text-fg hover:bg-white/10 border border-line transition-colors"
                       >
                         &ldquo;{q}&rdquo;
                       </button>
@@ -635,12 +635,12 @@ export default function DemoPage() {
                     onKeyDown={(e) => {
                       if (e.key === "Enter") handleSendMessage();
                     }}
-                    className="flex-1 h-9 px-3 rounded-xl bg-[#111827] border border-white/10 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-purple-400"
+                    className="flex-1 h-9 px-3 rounded-control bg-raised border border-line text-xs text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-1 focus:ring-brand-400"
                   />
                   <button
                     type="button"
                     onClick={() => handleSendMessage()}
-                    className="h-9 w-9 rounded-xl bg-purple-600 text-white flex items-center justify-center hover:bg-purple-500 transition-colors"
+                    className="h-9 w-9 rounded-control bg-brand-600 text-fg flex items-center justify-center hover:bg-brand-500 transition-colors"
                     aria-label="Send message"
                   >
                     <Send className="h-4 w-4" />

@@ -122,34 +122,55 @@ export function Navbar() {
                 </button>
 
                 {servicesOpen && (
-                  <div id="services-menu" className="absolute left-1/2 top-full w-[26rem] -translate-x-1/2 pt-3">
-                    <div className="animate-fade-in rounded-panel border border-line bg-card p-2 shadow-raised">
+                  <div id="services-menu" className="absolute left-1/2 top-full w-[26.5rem] -translate-x-1/2 pt-3">
+                    <div className="animate-fade-in relative overflow-hidden rounded-panel border border-line bg-card shadow-raised p-2">
                       <ul>
                         {services.map((srv) => (
                           <li key={srv.slug}>
                             <Link
                               href={srv.href}
                               aria-current={pathname === srv.href ? "page" : undefined}
-                              className="group flex items-start gap-3 rounded-card p-3 transition-colors hover:bg-white/[0.05]"
+                              className="group flex items-center gap-3.5 rounded-card p-3 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.05]"
                             >
-                              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-control border border-line bg-raised text-brand-300 transition-colors group-hover:border-brand-400/40">
-                                <ServiceIcon slug={srv.slug} className="h-[18px] w-[18px]" />
+                              <span className="flex h-10 w-10 shrink-0 items-center justify-center">
+                                <ServiceIcon
+                                  slug={srv.slug}
+                                  className="h-9 w-9 transition-transform duration-200 group-hover:scale-105"
+                                />
                               </span>
-                              <span className="min-w-0">
-                                <span className="block text-sm font-semibold text-fg">{srv.title}</span>
-                                <span className="mt-0.5 block text-caption text-fg-muted">{srv.short}</span>
+                              <span className="min-w-0 flex-1">
+                                <span className="block text-sm font-semibold text-fg transition-colors group-hover:text-brand-600 dark:group-hover:text-brand-300">
+                                  {srv.title}
+                                </span>
+                                <span className="mt-0.5 block text-caption text-fg-muted leading-snug">
+                                  {srv.short}
+                                </span>
                               </span>
                             </Link>
                           </li>
                         ))}
                       </ul>
-                      <div className="mt-1 border-t border-line px-3 pb-1 pt-3">
+
+                      <div className="mt-1 border-t border-line px-3 pb-1 pt-2.5 flex items-center justify-between">
                         <Link
                           href="/services"
-                          className="inline-flex items-center gap-1 text-sm font-medium text-link hover:text-brand-200"
+                          className="inline-flex items-center gap-1 text-sm font-medium text-link hover:text-brand-400 transition-colors"
                         >
                           View all services <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                         </Link>
+                        {/* Brand watermark: transparent logo for light & dark mode */}
+                        <div className="relative flex items-center h-4 w-20 shrink-0 opacity-40 hover:opacity-80 transition-opacity">
+                          <img
+                            src="/deptloy_Icon_transparent.svg"
+                            alt="Deptloy"
+                            className="h-full w-auto object-contain select-none pointer-events-none hidden [html[data-theme='dark']_&]:block"
+                          />
+                          <img
+                            src="/deptloy_transparent.svg"
+                            alt="Deptloy"
+                            className="h-full w-auto object-contain select-none pointer-events-none block [html[data-theme='dark']_&]:hidden"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>

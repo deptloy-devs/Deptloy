@@ -14,8 +14,7 @@ import {
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { FinalCta } from "@/components/marketing/FinalCta";
-import { faqList, industries } from "@/lib/site";
+import { faqList } from "@/lib/site";
 
 export default function AiReceptionistPage() {
   const [openFaq, setOpenFaq] = React.useState<number | null>(0);
@@ -230,27 +229,6 @@ export default function AiReceptionistPage() {
         </div>
       </section>
 
-      {/* Industries Served */}
-      <section className="py-20 bg-surface border-t border-line">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow="Vertical Compatibility"
-            title="Custom Pre-Built Knowledge Bases for Your Industry"
-            align="center"
-            className="mb-12"
-          />
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {industries.map((ind) => (
-              <div key={ind.id} className="p-4 rounded-control bg-card border border-line text-center flex flex-col items-center">
-                <span className="text-xs font-bold text-fg mb-1">{ind.title.split(" ")[0]}</span>
-                <span className="text-xs text-fg-muted">{ind.title.split(" ")[1] || "Services"}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* FAQ Accordion */}
       <section className="py-20 bg-canvas border-t border-line">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
@@ -291,9 +269,6 @@ export default function AiReceptionistPage() {
           </div>
         </div>
       </section>
-
-      {/* CTA */}
-      <FinalCta />
     </div>
   );
 }

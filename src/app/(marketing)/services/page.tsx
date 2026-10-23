@@ -5,8 +5,6 @@ import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PageHero } from "@/components/marketing/PageHero";
 import { ServiceGrid } from "@/components/marketing/ServicesSection";
-import { IndustriesSection } from "@/components/marketing/IndustriesSection";
-import { FinalCta } from "@/components/marketing/FinalCta";
 
 export const metadata: Metadata = {
   title: "AI Services & Business Solutions",
@@ -43,9 +41,6 @@ export default function ServicesOverviewPage() {
         />
         <ServiceGrid />
       </Section>
-
-      <IndustriesSection />
-      <FinalCta />
     </>
   );
 }

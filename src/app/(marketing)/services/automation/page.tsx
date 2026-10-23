@@ -12,7 +12,6 @@ import {
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { FinalCta } from "@/components/marketing/FinalCta";
 
 export function generateMetadata() {
   return {
@@ -238,9 +237,6 @@ export default function AutomationServicePage() {
           </div>
         </div>
       </section>
-
-      {/* CTA */}
-      <FinalCta />
     </div>
   );
 }

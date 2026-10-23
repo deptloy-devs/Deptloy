@@ -11,14 +11,16 @@ interface LogoProps {
 }
 
 const sizes = {
-  sm: { icon: 24, text: "text-lg" },
-  md: { icon: 30, text: "text-xl" },
-  lg: { icon: 38, text: "text-2xl" },
+  sm: { height: 22, width: 30, text: "text-lg" },
+  md: { height: 28, width: 38, text: "text-xl" },
+  lg: { height: 34, width: 46, text: "text-2xl" },
 } as const;
 
-/** Deptloy mark (speed lines + D) with the wordmark. Colors sampled from the logo file. */
+/** Official Deptloy mark (speed lines + play-arrow D) with the wordmark. Directly sourced from deploy-logos. */
 export function Logo({ className, href = "/", showText = true, size = "md" }: LogoProps) {
-  const gradientId = `logo-grad-${useId().replace(/:/g, "")}`;
+  const id = useId().replace(/:/g, "");
+  const dGradId = `dGrad-${id}`;
+  const lineGradId = `lineGrad-${id}`;
   const s = sizes[size];
 
   return (
@@ -28,26 +30,34 @@ export function Logo({ className, href = "/", showText = true, size = "md" }: Lo
       aria-label={`${brand.name} home`}
     >
       <svg
-        width={s.icon}
-        height={s.icon}
-        viewBox="0 0 64 64"
+        width={s.width}
+        height={s.height}
+        viewBox="275 380 295 220"
         fill="none"
         aria-hidden="true"
         className="shrink-0 transition-transform duration-300 group-hover:scale-105"
       >
         <defs>
-          <linearGradient id={gradientId} x1="0" y1="10" x2="60" y2="54" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#4840F5" />
-            <stop offset="50%" stopColor="#376FF8" />
-            <stop offset="100%" stopColor="#1EBBFE" />
+          <linearGradient id={dGradId} gradientUnits="userSpaceOnUse" x1="362" y1="400" x2="560" y2="560">
+            <stop offset="0%" stopColor="#5440F2" />
+            <stop offset="55%" stopColor="#2F7DF8" />
+            <stop offset="100%" stopColor="#14BBFF" />
+          </linearGradient>
+          <linearGradient id={lineGradId} gradientUnits="userSpaceOnUse" x1="285" y1="440" x2="404" y2="540">
+            <stop offset="0%" stopColor="#5143F0" />
+            <stop offset="100%" stopColor="#4466F4" />
           </linearGradient>
         </defs>
-        <rect x="8" y="21" width="11" height="4.5" rx="2.25" fill={`url(#${gradientId})`} />
-        <rect x="4" y="29.75" width="16" height="4.5" rx="2.25" fill={`url(#${gradientId})`} />
-        <rect x="10" y="38.5" width="10" height="4.5" rx="2.25" fill={`url(#${gradientId})`} />
+
+        {/* Speed lines */}
+        <rect x="315" y="442" width="81" height="22" rx="11" fill={`url(#${lineGradId})`} />
+        <rect x="285" y="481" width="103" height="21" rx="10.5" fill={`url(#${lineGradId})`} />
+        <rect x="332" y="520" width="72" height="21" rx="10.5" fill={`url(#${lineGradId})`} />
+
+        {/* D mark with play-arrow cutout */}
         <path
-          d="M26 16.5C26 14.567 27.567 13 29.5 13H36C45.3888 13 53 20.6112 53 30C53 39.3888 45.3888 47 36 47H29.5C27.567 47 26 45.433 26 43.5V37C26 35.8954 26.8954 35 28 35H35.5C38.2614 35 40.5 32.7614 40.5 30C40.5 27.2386 38.2614 25 35.5 25H28C26.8954 25 26 24.1046 26 23V16.5Z"
-          fill={`url(#${gradientId})`}
+          fill={`url(#${dGradId})`}
+          d="M 372,390 H 460 A 100,100 0 0 1 460,590 H 380 Q 370,590 370,580 V 565 Q 370,555 380,555 H 424 Q 431,555 437,550 L 500,498 Q 508,490 500,482 L 437,431 Q 431,425 424,425 H 372 Q 362,425 362,415 V 400 Q 362,390 372,390 Z"
         />
       </svg>
 

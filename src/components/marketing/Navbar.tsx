@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ServiceIcon } from "./ServiceIcon";
 import { mainNav, services } from "@/lib/site";
 import { cn } from "@/lib/cn";
@@ -167,7 +168,10 @@ export function Navbar() {
           )}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Theme appearance switcher (Sun when dark, Moon when light) */}
+          <ThemeToggle />
+
           {/* Wrappers control visibility — Button's own display class can't be overridden via className */}
           <span className="hidden lg:block">
             <Button href="/demo" variant="ghost" size="sm">
@@ -185,7 +189,7 @@ export function Navbar() {
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            className="grid h-11 w-11 place-items-center rounded-control border border-line bg-raised text-fg transition-colors hover:bg-raised-hover lg:hidden"
+            className="grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-control border border-line bg-raised text-fg transition-colors hover:bg-raised-hover lg:hidden cursor-pointer"
           >
             {mobileOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>
@@ -231,6 +235,10 @@ export function Navbar() {
               ))}
             </ul>
             <div className="mt-6 flex flex-col gap-3 border-t border-line pt-6">
+              <div className="flex items-center justify-between rounded-control border border-line bg-card/60 px-3.5 py-2">
+                <span className="text-sm font-medium text-fg">Appearance</span>
+                <ThemeToggle />
+              </div>
               <Button href="/contact" variant="primary" size="lg" className="w-full">
                 Book a Consultation
               </Button>

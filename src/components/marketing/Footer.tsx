@@ -15,12 +15,13 @@ const columns = [
   },
   {
     title: "Industries",
-    links: industries.map((i) => ({ href: "/#industries", label: i.shortTitle })),
+    links: industries.map((i) => ({ href: "/services", label: i.shortTitle })),
   },
   {
     title: "Company",
     links: [
       { href: "/about", label: "About" },
+      { href: "/blogs", label: "Blogs" },
       { href: "/projects", label: "Projects" },
       { href: "/contact", label: "Contact" },
       { href: "/demo", label: "AI demo" },

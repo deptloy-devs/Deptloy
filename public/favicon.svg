@@ -1,20 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <defs>
-    <linearGradient id="deptloyGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#4840F5"/>
-      <stop offset="50%" stop-color="#376FF8"/>
-      <stop offset="100%" stop-color="#1EBBFE"/>
+    <linearGradient id="dGradFav" gradientUnits="userSpaceOnUse" x1="362" y1="400" x2="560" y2="560">
+      <stop offset="0%" stop-color="#5440F2"/>
+      <stop offset="55%" stop-color="#2F7DF8"/>
+      <stop offset="100%" stop-color="#14BBFF"/>
+    </linearGradient>
+    <linearGradient id="lineGradFav" gradientUnits="userSpaceOnUse" x1="285" y1="440" x2="404" y2="540">
+      <stop offset="0%" stop-color="#5143F0"/>
+      <stop offset="100%" stop-color="#4466F4"/>
     </linearGradient>
   </defs>
   <!-- Background rect -->
   <rect width="64" height="64" rx="14" fill="#070A12"/>
   <rect width="64" height="64" rx="14" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
 
-  <!-- Speed lines on left -->
-  <rect x="10" y="22" width="10" height="4" rx="2" fill="url(#deptloyGrad)"/>
-  <rect x="6" y="30" width="16" height="4" rx="2" fill="url(#deptloyGrad)"/>
-  <rect x="12" y="38" width="10" height="4" rx="2" fill="url(#deptloyGrad)"/>
-
-  <!-- Dynamic arrow / D shape -->
-  <path d="M26 18C26 15.7909 27.7909 14 30 14H36C44.8366 14 52 21.1634 52 30C52 38.8366 44.8366 46 36 46H30C27.7909 46 26 44.2091 26 42V36C26 34.8954 26.8954 34 28 34H36C38.2091 34 40 32.2091 40 30C40 27.7909 38.2091 26 36 26H28C26.8954 26 26 25.1046 26 24V18Z" fill="url(#deptloyGrad)"/>
+  <!-- Centered official vector mark from deploy-logos -->
+  <g transform="translate(5.5, 12.2) scale(0.18) translate(-275, -380)">
+    <rect x="315" y="442" width="81" height="22" rx="11" fill="url(#lineGradFav)"/>
+    <rect x="285" y="481" width="103" height="21" rx="10.5" fill="url(#lineGradFav)"/>
+    <rect x="332" y="520" width="72" height="21" rx="10.5" fill="url(#lineGradFav)"/>
+    <path fill="url(#dGradFav)" d="M 372,390 H 460 A 100,100 0 0 1 460,590 H 380 Q 370,590 370,580 V 565 Q 370,555 380,555 H 424 Q 431,555 437,550 L 500,498 Q 508,490 500,482 L 437,431 Q 431,425 424,425 H 372 Q 362,425 362,415 V 400 Q 362,390 372,390 Z"/>
+  </g>
 </svg>

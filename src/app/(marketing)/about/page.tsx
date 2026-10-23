@@ -9,7 +9,6 @@ import { Reveal } from "@/components/ui/Reveal";
 import { PlaceholderTag } from "@/components/ui/PlaceholderTag";
 import { PageHero } from "@/components/marketing/PageHero";
 import { ServiceIcon } from "@/components/marketing/ServiceIcon";
-import { FinalCta } from "@/components/marketing/FinalCta";
 import { brand, companyValues, industries, proofStats, services, team } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -166,8 +165,6 @@ export default function AboutPage() {
           ))}
         </ul>
       </Section>
-
-      <FinalCta />
     </>
   );
 }

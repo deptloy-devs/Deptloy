@@ -11,6 +11,7 @@ import {
   Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 interface HeaderProps {
   onToggleMobileMenu: () => void;
@@ -114,8 +115,11 @@ export function Header({
         />
       </div>
 
-      {/* Right: Notification Dropdown & Demo Action */}
+      {/* Right: Notification Dropdown, Theme Switcher & Demo Action */}
       <div className="flex items-center gap-3">
+        {/* Appearance Switcher */}
+        <ThemeToggle className="h-9 w-9 rounded-xl" />
+
         {/* Notifications */}
         <div className="relative">
           <button

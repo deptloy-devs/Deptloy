@@ -3,7 +3,6 @@ import { Info } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { PageHero } from "@/components/marketing/PageHero";
 import { ProjectsList } from "@/components/marketing/ProjectsList";
-import { FinalCta } from "@/components/marketing/FinalCta";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -32,8 +31,6 @@ export default function ProjectsPage() {
       <Section tone="surface" divider>
         <ProjectsList />
       </Section>
-
-      <FinalCta />
     </>
   );
 }

@@ -37,7 +37,10 @@ export const metadata: Metadata = {
   // favicon.ico, apple-icon.png, opengraph-image.png and twitter-image.png live in
   // src/app and are picked up automatically; the SVG is the sharp version for modern browsers.
   icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    icon: [
+      { url: "/deptloy_icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
     // Declared explicitly: setting `icons` here stops Next from auto-linking app/apple-icon.png.
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },

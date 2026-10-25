@@ -122,6 +122,7 @@ export function Navbar() {
                 </button>
 
                 {servicesOpen && (
+                {servicesOpen && (
                   <div id="services-menu" className="absolute left-1/2 top-full w-64 -translate-x-1/2 pt-2">
                     <div className="animate-fade-in rounded-xl border border-line bg-card/95 p-1.5 shadow-raised backdrop-blur-xl">
                       <ul className="space-y-0.5">
@@ -146,14 +147,27 @@ export function Navbar() {
                           </li>
                         ))}
                       </ul>
-                      <div className="mt-1 border-t border-line px-2 pt-1.5 pb-0.5">
+                      <div className="mt-1 border-t border-line px-2 pt-1.5 pb-0.5 flex items-center justify-between">
                         <Link
                           href="/services"
-                          className="flex items-center justify-between rounded-md px-2 py-1.5 text-xs font-semibold text-brand-300 hover:text-brand-200 transition-colors"
+                          className="flex items-center gap-1 text-xs font-semibold text-brand-300 hover:text-brand-200 transition-colors"
                         >
                           <span>All Services</span>
                           <ArrowRight className="h-3 w-3" aria-hidden="true" />
                         </Link>
+                        {/* Brand watermark: transparent logo for light & dark mode */}
+                        <div className="relative flex items-center h-3.5 w-16 shrink-0 opacity-40 hover:opacity-80 transition-opacity">
+                          <img
+                            src="/deptloy_Icon_transparent.svg"
+                            alt="Deptloy"
+                            className="h-full w-auto object-contain select-none pointer-events-none hidden [html[data-theme='dark']_&]:block"
+                          />
+                          <img
+                            src="/deptloy_transparent.svg"
+                            alt="Deptloy"
+                            className="h-full w-auto object-contain select-none pointer-events-none block [html[data-theme='dark']_&]:hidden"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>

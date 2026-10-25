@@ -122,7 +122,6 @@ export function Navbar() {
                 </button>
 
                 {servicesOpen && (
-                {servicesOpen && (
                   <div id="services-menu" className="absolute left-1/2 top-full w-64 -translate-x-1/2 pt-2">
                     <div className="animate-fade-in rounded-xl border border-line bg-card/95 p-1.5 shadow-raised backdrop-blur-xl">
                       <ul className="space-y-0.5">

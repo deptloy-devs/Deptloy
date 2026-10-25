@@ -17,49 +17,51 @@ import { ServiceIcon } from "./ServiceIcon";
 import { services } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
-/** Four service cards — shared by /services overview. The whole card links to the service. */
+/** Four service cards — shared by /services overview. Minimal and focused. */
 export function ServiceGrid() {
   return (
     <ul className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
       {services.map((srv, idx) => (
         <li key={srv.slug}>
           <Reveal delay={(idx % 2) * 60} className="h-full">
-            <article className="group relative flex h-full flex-col rounded-card border border-line bg-card p-5 sm:p-6 shadow-card transition-[transform,border-color,box-shadow] duration-200 ease-out-soft hover:-translate-y-1 hover:border-brand-400/35 hover:shadow-raised focus-within:border-brand-400/35">
-              <div className="flex items-start justify-between gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-control border border-brand-400/25 bg-brand-500/10 text-brand-300">
-                  <ServiceIcon slug={srv.slug} className="h-5 w-5" />
-                </span>
-                {srv.badge && <Badge size="sm" variant={idx === 0 ? "brand" : "default"}>{srv.badge}</Badge>}
+            <article className="group relative flex h-full flex-col justify-between rounded-card border border-line bg-card p-5 sm:p-6 shadow-card transition-all duration-200 hover:-translate-y-1 hover:border-brand-400/35 hover:shadow-raised">
+              <div>
+                <div className="flex items-start justify-between gap-3">
+                  <span className="grid h-10 w-10 place-items-center rounded-control border border-brand-400/25 bg-brand-500/10 text-brand-300">
+                    <ServiceIcon slug={srv.slug} className="h-5 w-5" />
+                  </span>
+                  {srv.badge && <Badge size="sm" variant={idx === 0 ? "brand" : "default"}>{srv.badge}</Badge>}
+                </div>
+
+                <h3 className="mt-4 text-xl font-semibold text-fg">
+                  <Link href={srv.href} className="after:absolute after:inset-0 focus-visible:outline-none">
+                    {srv.title}
+                  </Link>
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-fg-muted">{srv.short}</p>
+
+                {/* Only 2 core capabilities */}
+                <ul className="mt-4 space-y-1.5">
+                  {srv.points.slice(0, 2).map((pt) => (
+                    <li key={pt} className="flex items-center gap-2 text-xs text-fg-soft">
+                      <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-500" aria-hidden="true" />
+                      <span>{pt}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              <h3 className="mt-4 text-xl font-semibold text-fg">
-                <Link href={srv.href} className="after:absolute after:inset-0 focus-visible:outline-none">
-                  {srv.title}
-                </Link>
-              </h3>
-              <p className="mt-1.5 text-sm font-medium text-fg-soft">{srv.short}</p>
-              <p className="mt-2 text-xs leading-relaxed text-fg-muted">{srv.description}</p>
-
-              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-                {srv.points.map((pt) => (
-                  <li key={pt} className="flex items-start gap-1.5 text-xs text-fg-soft">
-                    <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-300" aria-hidden="true" />
-                    {pt}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-auto pt-4">
-                <div className="flex items-end justify-between gap-4 border-t border-line pt-3.5">
+              <div className="mt-5 border-t border-line pt-3.5">
+                <div className="flex items-end justify-between gap-4">
                   {srv.metrics && (
                     <div>
                       <p className="text-[11px] text-fg-muted">{srv.metrics.label}</p>
-                      <p className="font-display text-lg font-semibold text-fg">{srv.metrics.value}</p>
+                      <p className="font-display text-base font-semibold text-fg">{srv.metrics.value}</p>
                     </div>
                   )}
-                  <span className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-link">
+                  <span className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-link group-hover:text-brand-200 transition-colors">
                     Explore
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
                   </span>
                 </div>
               </div>
@@ -71,7 +73,7 @@ export function ServiceGrid() {
   );
 }
 
-/** Home page services section — 3D Stacked Circular Swipe Carousel */
+/** Home page services section — 3D Stacked Circular Swipe Carousel with Minimal Cards */
 export function ServicesSection() {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [dragX, setDragX] = React.useState(0);
@@ -92,7 +94,6 @@ export function ServicesSection() {
 
   // Pointer drag events without setPointerCapture to keep native clicks 100% working
   const handlePointerDown = (e: React.PointerEvent) => {
-    // Only respond to main click / touch
     if (e.button !== 0 && e.pointerType === "mouse") return;
     startXRef.current = e.clientX;
     hasMovedRef.current = false;
@@ -136,12 +137,11 @@ export function ServicesSection() {
       <SectionHeading
         eyebrow="Technology That Works for Your Business"
         title="Our Services"
-        description="Four core services, built to eliminate operational friction and scale revenue. Click any card to explore its dedicated page, or swipe to rotate."
         align="center"
-        className="mb-12"
+        className="mb-10"
       />
 
-      {/* 3D Stacked Carousel Arena with Left & Right Flank Arrows Placed Beside Cards */}
+      {/* 3D Stacked Carousel Arena with Left & Right Flank Arrows Beside Cards */}
       <div className="relative mx-auto flex items-center justify-center gap-3 sm:gap-6 lg:gap-8 max-w-6xl px-2 sm:px-4">
         {/* Left Side Arrow Button */}
         <button
@@ -153,7 +153,7 @@ export function ServicesSection() {
           <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
         </button>
 
-        {/* 3D Carousel Arena in Center */}
+        {/* 3D Carousel Arena in Center — Compact, minimal height */}
         <div
           ref={containerRef}
           tabIndex={0}
@@ -164,7 +164,7 @@ export function ServicesSection() {
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerLeave={handlePointerUp}
-          className="relative flex-1 h-[470px] sm:h-[490px] max-w-2xl select-none cursor-grab active:cursor-grabbing focus:outline-none"
+          className="relative flex-1 h-[340px] sm:h-[355px] max-w-2xl select-none cursor-grab active:cursor-grabbing focus:outline-none"
           style={{
             perspective: "1200px",
             touchAction: "pan-y",
@@ -204,13 +204,13 @@ export function ServicesSection() {
             const zIndex = Math.round(30 - absOffset * 10);
             const isActive = absOffset < 0.35;
 
-            // Inner Card Markup
+            // Inner Card Markup: Minimal, essential information only
             const CardBody = (
               <>
                 {/* Active Card Radial Aura */}
                 {isActive && (
                   <div
-                    className="pointer-events-none absolute -top-20 left-1/2 -z-10 h-64 w-72 -translate-x-1/2 rounded-full bg-brand-500/15 blur-[80px]"
+                    className="pointer-events-none absolute -top-16 left-1/2 -z-10 h-48 w-64 -translate-x-1/2 rounded-full bg-brand-500/15 blur-[60px]"
                     aria-hidden="true"
                   />
                 )}
@@ -233,37 +233,36 @@ export function ServicesSection() {
                     </div>
                   </div>
 
-                  {/* Heading & Tagline */}
+                  {/* Heading & Crisp Tagline */}
                   <h3 className="mt-4 font-display text-xl sm:text-2xl font-bold tracking-tight text-fg group-hover:text-brand-300 transition-colors">
                     {srv.title}
                   </h3>
-                  <p className="mt-1 text-sm font-medium text-brand-300">{srv.short}</p>
-                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-fg-muted">
-                    {srv.description}
+                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-fg-soft font-medium">
+                    {srv.short}
                   </p>
 
-                  {/* Checklist Points */}
-                  <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {srv.points.map((pt) => (
-                      <li key={pt} className="flex items-start gap-1.5 text-xs text-fg-soft">
-                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-300" aria-hidden="true" />
+                  {/* Only 2 Effective Highlights (No walls of text) */}
+                  <ul className="mt-4 space-y-1.5">
+                    {srv.points.slice(0, 2).map((pt) => (
+                      <li key={pt} className="flex items-center gap-2 text-xs text-fg-muted">
+                        <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-500" aria-hidden="true" />
                         <span>{pt}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                {/* Bottom Bar: Metric + Explore Link */}
+                {/* Bottom Bar: Key Metric + Direct Page Link */}
                 <div className="mt-5 border-t border-line pt-3.5">
                   <div className="flex items-end justify-between gap-4">
                     {srv.metrics && (
                       <div>
-                        <p className="text-[11px] text-fg-muted">{srv.metrics.label}</p>
-                        <p className="font-display text-base sm:text-lg font-bold text-fg">{srv.metrics.value}</p>
+                        <p className="text-[10px] uppercase tracking-wider text-fg-subtle">{srv.metrics.label}</p>
+                        <p className="font-display text-base font-bold text-fg">{srv.metrics.value}</p>
                       </div>
                     )}
                     <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-link group-hover:text-brand-200 transition-colors">
-                      Explore Service
+                      View Service
                       <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                     </span>
                   </div>
@@ -289,7 +288,7 @@ export function ServicesSection() {
                 )}
               >
                 {isActive ? (
-                  /* The active card is a native Next.js Link — 100% reliable navigation */
+                  /* The active card is a native Next.js Link */
                   <Link
                     href={srv.href}
                     onClick={(e) => {
@@ -297,7 +296,7 @@ export function ServicesSection() {
                         e.preventDefault();
                       }
                     }}
-                    className="group relative flex h-full flex-col justify-between rounded-panel border bg-card/95 p-6 sm:p-7 backdrop-blur-xl transition-[border-color,box-shadow] duration-300 border-brand-400/40 shadow-glow ring-1 ring-brand-400/20 hover:border-brand-400/60 block cursor-pointer"
+                    className="group relative flex h-full flex-col justify-between rounded-panel border bg-card/95 p-5 sm:p-6 backdrop-blur-xl transition-[border-color,box-shadow] duration-300 border-brand-400/40 shadow-glow ring-1 ring-brand-400/20 hover:border-brand-400/60 block cursor-pointer"
                   >
                     {CardBody}
                   </Link>
@@ -309,7 +308,7 @@ export function ServicesSection() {
                       if (diff === 1) nextCard();
                       else if (diff === -1) prevCard();
                     }}
-                    className="relative flex h-full flex-col justify-between rounded-panel border bg-card/95 p-6 sm:p-7 backdrop-blur-xl transition-[border-color,box-shadow] duration-300 border-line shadow-card hover:border-brand-400/30 cursor-pointer"
+                    className="relative flex h-full flex-col justify-between rounded-panel border bg-card/95 p-5 sm:p-6 backdrop-blur-xl transition-[border-color,box-shadow] duration-300 border-line shadow-card hover:border-brand-400/30 cursor-pointer"
                   >
                     {CardBody}
                   </article>
@@ -331,7 +330,7 @@ export function ServicesSection() {
       </div>
 
       {/* Swipe Status Indicator & Navigation Dots */}
-      <div className="mt-10 flex flex-col items-center gap-3">
+      <div className="mt-8 flex flex-col items-center gap-2.5">
         <div className="flex items-center gap-2">
           {services.map((srv, idx) => (
             <button

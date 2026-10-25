@@ -122,33 +122,37 @@ export function Navbar() {
                 </button>
 
                 {servicesOpen && (
-                  <div id="services-menu" className="absolute left-1/2 top-full w-[26rem] -translate-x-1/2 pt-3">
-                    <div className="animate-fade-in rounded-panel border border-line bg-card p-2 shadow-raised">
-                      <ul>
+                  <div id="services-menu" className="absolute left-1/2 top-full w-64 -translate-x-1/2 pt-2">
+                    <div className="animate-fade-in rounded-xl border border-line bg-card/95 p-1.5 shadow-raised backdrop-blur-xl">
+                      <ul className="space-y-0.5">
                         {services.map((srv) => (
                           <li key={srv.slug}>
                             <Link
                               href={srv.href}
                               aria-current={pathname === srv.href ? "page" : undefined}
-                              className="group flex items-start gap-3 rounded-card p-3 transition-colors hover:bg-white/[0.05]"
+                              className={cn(
+                                "group flex items-center justify-between rounded-lg px-2.5 py-2 text-sm font-medium transition-colors hover:bg-raised",
+                                pathname === srv.href ? "text-fg bg-raised/70" : "text-fg-soft hover:text-fg"
+                              )}
                             >
-                              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-control border border-line bg-raised text-brand-300 transition-colors group-hover:border-brand-400/40">
-                                <ServiceIcon slug={srv.slug} className="h-[18px] w-[18px]" />
-                              </span>
-                              <span className="min-w-0">
-                                <span className="block text-sm font-semibold text-fg">{srv.title}</span>
-                                <span className="mt-0.5 block text-caption text-fg-muted">{srv.short}</span>
-                              </span>
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md border border-line bg-surface text-brand-300 transition-colors group-hover:border-brand-400/40">
+                                  <ServiceIcon slug={srv.slug} className="h-3.5 w-3.5" />
+                                </span>
+                                <span className="truncate">{srv.title}</span>
+                              </div>
+                              <ArrowRight className="h-3.5 w-3.5 shrink-0 opacity-0 -translate-x-1 text-brand-300 transition-all group-hover:opacity-100 group-hover:translate-x-0" aria-hidden="true" />
                             </Link>
                           </li>
                         ))}
                       </ul>
-                      <div className="mt-1 border-t border-line px-3 pb-1 pt-3">
+                      <div className="mt-1 border-t border-line px-2 pt-1.5 pb-0.5">
                         <Link
                           href="/services"
-                          className="inline-flex items-center gap-1 text-sm font-medium text-link hover:text-brand-200"
+                          className="flex items-center justify-between rounded-md px-2 py-1.5 text-xs font-semibold text-brand-300 hover:text-brand-200 transition-colors"
                         >
-                          View all services <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                          <span>All Services</span>
+                          <ArrowRight className="h-3 w-3" aria-hidden="true" />
                         </Link>
                       </div>
                     </div>

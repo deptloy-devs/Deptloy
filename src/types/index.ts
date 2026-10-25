@@ -66,17 +66,15 @@ export interface Stat {
 
 export interface ContactFormData {
   fullName: string;
-  businessEmail: string;
+  email: string;
   companyName: string;
   serviceRequired: ServiceSlug | "";
   projectDescription: string;
-  budgetRange?: string;
-  timeline?: string;
 }
 
 export interface ContactFormErrors {
   fullName?: string;
-  businessEmail?: string;
+  email?: string;
   companyName?: string;
   serviceRequired?: string;
   projectDescription?: string;

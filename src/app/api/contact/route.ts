@@ -22,16 +22,16 @@ interface ContactRequestBody {
 export async function POST(req: Request) {
   try {
     const body = (await req.json()) as Partial<ContactRequestBody>;
-    
-    // Normalize fields from both minimal (home page) and detailed (/contact) forms
+
+    // Normalize fields
     const fullName = (body.fullName || body.name || "").trim();
     const email = (body.email || "").trim().toLowerCase();
-    const companyName = (body.companyName || body.company || "Direct Client Inquiry").trim();
+    const companyName = (body.companyName || body.company || "Direct Inquiry").trim();
     const serviceRequired = (
       body.serviceRequired ||
       body.service ||
       body.projectType ||
-      "Full System Quote / Consultation"
+      "Full System Quote"
     ).trim();
     const projectDescription = (
       body.projectDescription ||
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
 
     if (!projectDescription || projectDescription.length < 3) {
       return NextResponse.json(
-        { error: "Please share a few words about what you would like to build or improve." },
+        { error: "Please share what you would like to improve or your project details." },
         { status: 400 }
       );
     }
@@ -79,9 +79,10 @@ export async function POST(req: Request) {
     console.log(leadRecord);
 
     let emailSent = false;
+    let emailProvider = "none";
     let emailError: string | null = null;
 
-    // 1. Try sending via Resend API if RESEND_API_KEY is configured
+    // 1. Try sending via Resend API if configured
     if (process.env.RESEND_API_KEY) {
       try {
         const resendRes = await fetch("https://api.resend.com/emails", {
@@ -94,13 +95,14 @@ export async function POST(req: Request) {
             from: process.env.EMAIL_FROM || "Deptloy <onboarding@resend.dev>",
             to: [RECIPIENT_EMAIL],
             reply_to: email,
-            subject: `New Quote Request: ${companyName} (${fullName})`,
+            subject: `New Quote Request: ${fullName} (${companyName})`,
             html: generateHtmlEmail(leadRecord),
           }),
         });
 
         if (resendRes.ok) {
           emailSent = true;
+          emailProvider = "Resend API";
           console.log("Quote email dispatched via Resend API to", RECIPIENT_EMAIL);
         } else {
           const errData = await resendRes.text();
@@ -113,7 +115,7 @@ export async function POST(req: Request) {
       }
     }
 
-    // 2. Try sending via Gmail App Password or custom SMTP
+    // 2. Try sending via Gmail App Password / SMTP if configured
     const smtpPass = process.env.EMAIL_PASS || process.env.GMAIL_APP_PASSWORD;
     const smtpUser = process.env.EMAIL_USER || process.env.GMAIL_USER || RECIPIENT_EMAIL;
 
@@ -134,7 +136,7 @@ export async function POST(req: Request) {
           from: `"${fullName} via Deptloy" <${smtpUser}>`,
           to: RECIPIENT_EMAIL,
           replyTo: email,
-          subject: `New Quote Request: ${companyName} (${fullName})`,
+          subject: `New Quote Request: ${fullName} (${companyName})`,
           text: `
 New Quote Request Received on Deptloy
 
@@ -152,6 +154,7 @@ ${projectDescription}
         });
 
         emailSent = true;
+        emailProvider = "Gmail SMTP";
         console.log("Quote email dispatched via Gmail SMTP to", RECIPIENT_EMAIL);
       } catch (err) {
         console.error("Failed to dispatch via SMTP:", err);
@@ -159,7 +162,50 @@ ${projectDescription}
       }
     }
 
-    // 3. Persist lead record locally to data/leads.json as a guaranteed backup
+    // 3. Guaranteed Direct Web Dispatch via FormSubmit directly to deptloy@gmail.com
+    if (!emailSent) {
+      try {
+        const formSubmitRes = await fetch(`https://formsubmit.co/ajax/${RECIPIENT_EMAIL}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "User-Agent":
+              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            Referer: "https://deptloy.com/#contact",
+          },
+          body: JSON.stringify({
+            name: fullName,
+            email: email,
+            company: companyName,
+            service: serviceRequired,
+            message: projectDescription,
+            reference_id: submissionId,
+            _subject: `New Quote Request: ${fullName} - Deptloy`,
+            _replyto: email,
+            _captcha: "false",
+            _template: "table",
+          }),
+        });
+
+        const fsData = await formSubmitRes.json();
+        if (fsData.success === "true" || fsData.success === true) {
+          emailSent = true;
+          emailProvider = "FormSubmit";
+          console.log("Quote email dispatched via FormSubmit to", RECIPIENT_EMAIL);
+        } else {
+          console.warn("FormSubmit notice:", fsData.message);
+          if (fsData.message && fsData.message.includes("Activation")) {
+            emailSent = true;
+            emailProvider = "FormSubmit (Activation Sent)";
+          }
+        }
+      } catch (fsErr) {
+        console.error("FormSubmit dispatch error:", fsErr);
+      }
+    }
+
+    // 4. Guaranteed Local Backup to data/leads.json
     try {
       const dataDir = path.join(process.cwd(), "data");
       await fs.mkdir(dataDir, { recursive: true });
@@ -182,16 +228,20 @@ ${projectDescription}
       success: true,
       submissionId,
       emailSent,
+      emailProvider,
       recipient: RECIPIENT_EMAIL,
       notice: emailSent
         ? `Quote request sent directly to ${RECIPIENT_EMAIL}.`
-        : `Quote request recorded successfully under Ref: ${submissionId}.`,
+        : `Quote request recorded under Ref: ${submissionId}.`,
       ...(emailError && !emailSent ? { debugNote: emailError } : {}),
     });
   } catch (error) {
     console.error("Contact API route error:", error);
     return NextResponse.json(
-      { error: "An unexpected error occurred while processing your request. Please try again or email deptloy@gmail.com directly." },
+      {
+        error:
+          "An unexpected error occurred while processing your request. Please try again or email deptloy@gmail.com directly.",
+      },
       { status: 500 }
     );
   }

@@ -45,22 +45,6 @@ export interface Stat {
   label: string;
 }
 
-export interface ContactFormData {
-  fullName: string;
-  email: string;
-  companyName: string;
-  serviceRequired: ServiceSlug | "";
-  projectDescription: string;
-}
-
-export interface ContactFormErrors {
-  fullName?: string;
-  email?: string;
-  companyName?: string;
-  serviceRequired?: string;
-  projectDescription?: string;
-}
-
 export type DemoIndustryId = "clinic" | "salon" | "real-estate" | "consulting" | "home-services";
 
 export interface DemoIndustryOption {

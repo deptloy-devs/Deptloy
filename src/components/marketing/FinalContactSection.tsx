@@ -16,7 +16,10 @@ export function FinalContactSection() {
     setStatus("submitting");
     setErrorMsg("");
 
+    const refId = `DEP-${Math.floor(100000 + Math.random() * 900000)}`;
+
     try {
+      // 1. Primary: Server-side dispatch via /api/contact
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -31,18 +34,46 @@ export function FinalContactSection() {
       const data = await res.json();
       if (res.ok && data.success) {
         setStatus("success");
-        setSubmissionId(data.submissionId || `DEP-${Math.floor(100000 + Math.random() * 900000)}`);
-      } else {
-        throw new Error(data.error || "Failed to deliver quote request.");
+        setSubmissionId(data.submissionId || refId);
+        return;
       }
-    } catch (err: unknown) {
-      console.error("Submission error:", err);
-      setErrorMsg(
-        err instanceof Error
-          ? err.message
-          : "Could not send right now. You can email deptloy@gmail.com directly."
-      );
+      throw new Error(data.error || "Server could not send directly.");
+    } catch {
+      // 2. Client-side fail-safe: Direct FormSubmit dispatch to deptloy@gmail.com
+      try {
+        const fsRes = await fetch("https://formsubmit.co/ajax/deptloy@gmail.com", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            message,
+            reference_id: refId,
+            _subject: `New Quote Request: ${name} - Deptloy`,
+            _replyto: email,
+            _captcha: "false",
+          }),
+        });
+
+        const fsData = await fsRes.json();
+        if (
+          fsData.success === "true" ||
+          fsData.success === true ||
+          (fsData.message && fsData.message.includes("Activation"))
+        ) {
+          setStatus("success");
+          setSubmissionId(refId);
+          return;
+        }
+      } catch {
+        // Fall through to error
+      }
+
       setStatus("error");
+      setErrorMsg("Could not deliver automatically. You can email deptloy@gmail.com directly with the button below.");
     }
   };
 

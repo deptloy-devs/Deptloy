@@ -1,166 +1,112 @@
 @import "tailwindcss";
 
 /*
- * Deptloy design tokens
+ * Deptloy Design System
  * ---------------------
- * 1. Primitives  — raw palette sampled from the logo (indigo #4840F5 → electric #1EBBFE).
- * 2. Semantic    — what a color is *for* (canvas, card, fg, primary…). Components use these.
- * 3. Utilities   — Tailwind generates bg-card, text-fg-muted, rounded-card, text-h2, etc.
- * Every text/surface pair below meets WCAG AA (4.5:1) — see CHANGELOG for the numbers.
+ * Engineered aesthetic:
+ * - Palette: Midnight navy (#15134a), Lavender (#8478e0), Iris purple (#5750a8),
+ *   Royal indigo (#2d2a85), Radiant orange (#fd9150), Coral (#ef7a5e),
+ *   Periwinkle (#d2cdf3), Mist (#e8e6f7), Paper (#f4f3fb).
+ * - Typography: Archivo (headings), IBM Plex Sans (body), IBM Plex Mono (metrics/data).
  */
 
-/* ---------- 1. Primitives ---------- */
-@theme {
-  /* Brand indigo (logo left side). 600 = exact logo color. */
-  --color-brand-50: #eef0ff;
-  --color-brand-100: #e0e3ff;
-  --color-brand-200: #c7ccff;
-  --color-brand-300: #a9b4ff;
-  --color-brand-400: #8a97ff;
-  --color-brand-500: #6670fa;
-  --color-brand-600: #4840f5;
-  --color-brand-700: #3b33d9;
-  --color-brand-800: #2f29ad;
-  --color-brand-900: #272485;
-  --color-brand-950: #17164d;
+/* ---------- 1. Tokens ---------- */
+:root {
+  --paper: #f4f3fb;
+  --mist: #e8e6f7;
+  --peri: #d2cdf3;
+  --lav: #8478e0;
+  --pur: #5750a8;
+  --ind: #2d2a85;
+  --deep: #15134a;
+  --or: #fd9150;
+  --co: #ef7a5e;
+  --peach: #f6dcc8;
+  --cream: #fbf3ec;
+  --rose: #e3d6f0;
+  --sky: #bfe3f5;
+  --mute: #5c5a86;
 
-  /* Electric blue (logo right side). Highlights only — never body text on light fills. */
-  --color-electric-300: #8ad9ff;
-  --color-electric-400: #3cc4fe;
-  --color-electric-500: #1ebbfe;
-  --color-electric-600: #2f62e6;
+  /* Theme semantic mappings */
+  --canvas: var(--paper);
+  --surface: #ffffff;
+  --card: #ffffff;
+  --raised: var(--mist);
+  --raised-hover: var(--peri);
+  --line: rgba(87, 80, 168, 0.14);
+  --line-strong: rgba(87, 80, 168, 0.28);
+  --fg: var(--deep);
+  --fg-soft: #2d2a85;
+  --fg-muted: var(--mute);
+  --fg-subtle: #7a77a9;
+  --primary: var(--deep);
+  --primary-end: var(--ind);
+  --accent: var(--or);
+  --accent-secondary: var(--lav);
+  --link: var(--pur);
+  --ring: var(--lav);
 
-  /* Ink — blue-tinted near-blacks, matching the logo background. */
-  --color-ink-950: #05070d;
-  --color-ink-900: #070a12;
-  --color-ink-850: #0a0e18;
-  --color-ink-800: #0f1420;
-  --color-ink-750: #161c2b;
-  --color-ink-700: #1e2536;
+  --shadow-card: 0 8px 30px rgba(87, 80, 168, 0.08);
+  --shadow-raised: 0 16px 45px rgba(87, 80, 168, 0.14);
+  --shadow-glow: 0 12px 35px rgba(253, 145, 80, 0.35);
 
-  /* Typography — font files are loaded by next/font in app/layout.tsx */
-  --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: var(--font-outfit), var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-
-  /* Type scale (fluid for headings, fixed for body). Smallest text is 13px. */
-  --text-display: clamp(2.5rem, 1.55rem + 3.8vw, 4.25rem);
-  --text-display--line-height: 1.05;
-  --text-display--letter-spacing: -0.03em;
-  --text-h1: clamp(2.25rem, 1.6rem + 2.6vw, 3.5rem);
-  --text-h1--line-height: 1.1;
-  --text-h1--letter-spacing: -0.025em;
-  --text-h2: clamp(1.875rem, 1.45rem + 1.7vw, 2.75rem);
-  --text-h2--line-height: 1.15;
-  --text-h2--letter-spacing: -0.02em;
-  --text-h3: 1.375rem;
-  --text-h3--line-height: 1.3;
-  --text-h3--letter-spacing: -0.01em;
-  --text-lead: 1.125rem;
-  --text-lead--line-height: 1.65;
-  --text-caption: 0.8125rem;
-  --text-caption--line-height: 1.45;
-  --text-eyebrow: 0.8125rem;
-  --text-eyebrow--line-height: 1.2;
-  --text-eyebrow--letter-spacing: 0.08em;
-
-  /* Spacing — vertical rhythm between page sections */
-  --spacing-section: clamp(4.5rem, 2.75rem + 6vw, 7.5rem);
-  --spacing-section-sm: clamp(3rem, 2rem + 4vw, 5rem);
-
-  /* Radius — three sizes only (plus rounded-full for pills) */
-  --radius-control: 0.75rem;
-  --radius-card: 1rem;
-  --radius-panel: 1.5rem;
-
-  /* Elevation */
-  --shadow-card: inset 0 1px 0 0 rgb(255 255 255 / 0.04), 0 12px 32px -18px rgb(0 0 0 / 0.65);
-  --shadow-raised: inset 0 1px 0 0 rgb(255 255 255 / 0.05), 0 28px 56px -28px rgb(0 0 0 / 0.8);
-  --shadow-glow: 0 10px 30px -12px rgb(72 64 245 / 0.55);
-
-  /* Motion — standard durations: 150ms (hover), 200ms (UI), 400–600ms (reveal) */
-  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
-  --animate-fade-in: fade-in 200ms var(--ease-out-soft) both;
-  --animate-wave: wave-bar 1.1s ease-in-out infinite;
-
-  @keyframes fade-in {
-    from { opacity: 0; transform: translateY(-4px); }
-    to { opacity: 1; transform: none; }
-  }
-  @keyframes wave-bar {
-    0%, 100% { height: 6px; }
-    50% { height: 22px; }
-  }
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
 }
 
-/* ---------- 2. Semantic tokens (dark & light themes) ---------- */
-:root,
 html[data-theme="dark"],
 .dark {
-  --canvas: var(--color-ink-900);        /* page background */
-  --surface: var(--color-ink-850);       /* alternate sections, footer */
-  --card: var(--color-ink-800);          /* cards, panels */
-  --raised: var(--color-ink-750);        /* inputs, chips, nested blocks */
-  --raised-hover: var(--color-ink-700);
+  color-scheme: dark;
+  --canvas: #0c0b28;
+  --surface: #15134a;
+  --card: #191754;
+  --raised: #211e69;
+  --raised-hover: #2e2a87;
+  --line: rgba(210, 205, 243, 0.14);
+  --line-strong: rgba(210, 205, 243, 0.26);
+  --fg: #ffffff;
+  --fg-soft: #e8e6f7;
+  --fg-muted: #a49ed6;
+  --fg-subtle: #7976a8;
+  --primary: #ffffff;
+  --primary-end: var(--peri);
+  --accent: var(--or);
+  --accent-secondary: var(--lav);
+  --link: var(--peri);
+  --ring: var(--or);
 
-  --line: rgb(255 255 255 / 0.08);       /* default borders */
-  --line-strong: rgb(255 255 255 / 0.16);
-
-  --fg: #f4f6fb;                         /* headings — 18.3:1 on canvas */
-  --fg-soft: #cbd3e1;                    /* body copy — 13.1:1 */
-  --fg-muted: #a0abbf;                   /* secondary copy — 8.5:1 */
-  --fg-subtle: #8692a8;                  /* captions, meta — 6.3:1 (5.4:1 on raised) */
-
-  --primary: var(--color-brand-600);     /* main CTA fill — white text 6.3:1 */
-  --primary-end: var(--color-electric-600); /* CTA gradient end — white text 5.2:1 */
-  --link: var(--color-brand-300);        /* links/icons on dark — 10:1 */
-  --accent: var(--color-electric-400);   /* highlights only */
-  --ring: var(--color-brand-400);
-
-  --success: #34d399;
-  --warning: #fbbf24;
-  --danger: #f87171;
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --shadow-raised: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 12px 35px rgba(253, 145, 80, 0.4);
 }
 
-html[data-theme="light"],
-.light {
-  color-scheme: light;
+@theme {
+  --font-sans: var(--font-ibm-sans), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-archivo), system-ui, sans-serif;
+  --font-archivo: var(--font-archivo), system-ui, sans-serif;
+  --font-mono: var(--font-ibm-mono), monospace;
 
-  --canvas: #f8fafc;                     /* page background (slate-50) */
-  --surface: #f1f5f9;                    /* alternate sections, footer (slate-100) */
-  --card: #ffffff;                       /* cards, panels (pure white) */
-  --raised: #e2e8f0;                     /* inputs, chips, nested blocks (slate-200) */
-  --raised-hover: #cbd5e1;               /* slate-300 */
+  --color-paper: var(--paper);
+  --color-mist: var(--mist);
+  --color-peri: var(--peri);
+  --color-lav: var(--lav);
+  --color-pur: var(--pur);
+  --color-ind: var(--ind);
+  --color-deep: var(--deep);
+  --color-or: var(--or);
+  --color-co: var(--co);
+  --color-peach: var(--peach);
+  --color-cream: var(--cream);
+  --color-rose: var(--rose);
+  --color-sky: var(--sky);
+  --color-mute: var(--mute);
 
-  --line: rgba(15, 23, 42, 0.09);        /* clean borders on light */
-  --line-strong: rgba(15, 23, 42, 0.18); /* stronger dividers */
-
-  --fg: #0a0e1a;                         /* headings — deep ink black (19:1 on canvas) */
-  --fg-soft: #334155;                    /* body copy (slate-700) */
-  --fg-muted: #64748b;                   /* secondary copy (slate-500) */
-  --fg-subtle: #8b9ab2;                  /* captions, meta */
-
-  --primary: var(--color-brand-600);     /* #4840f5 */
-  --primary-end: var(--color-electric-600); /* #2f62e6 */
-  --link: var(--color-brand-600);        /* accessible link on white (6.5:1) */
-  --accent: var(--color-brand-600);
-  --ring: var(--color-brand-500);
-
-  --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
-  --shadow-raised: 0 16px 40px -6px rgba(15, 23, 42, 0.09), 0 6px 14px -2px rgba(15, 23, 42, 0.04);
-  --shadow-glow: 0 10px 30px -10px rgba(72, 64, 245, 0.35);
-
-  --success: #059669;
-  --warning: #d97706;
-  --danger: #dc2626;
-
-  /* Harmonize accent shades for light mode backgrounds */
-  --color-brand-300: #4840f5;
-  --color-brand-400: #3b33d9;
-  --color-electric-300: #0284c7;
-  --color-electric-400: #0369a1;
+  --radius-control: 9999px;
+  --radius-card: 1.25rem;
+  --radius-panel: 1.75rem;
 }
 
-/* ---------- 3. Utilities from semantic tokens ---------- */
 @theme inline {
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
@@ -186,9 +132,8 @@ html[data-theme="light"],
 /* ---------- Base ---------- */
 @layer base {
   html {
-    color-scheme: dark;
     scroll-behavior: smooth;
-    scroll-padding-top: 5.5rem; /* keeps anchor targets clear of the sticky header */
+    scroll-padding-top: 5.5rem;
   }
 
   body {
@@ -200,10 +145,11 @@ html[data-theme="light"],
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3 {
-    font-family: var(--font-display);
+  h1, h2, h3, h4 {
+    font-family: var(--font-archivo);
     color: var(--fg);
-    text-wrap: balance;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
   }
 
   p {
@@ -211,120 +157,268 @@ html[data-theme="light"],
   }
 
   ::selection {
-    background: rgb(72 64 245 / 0.45);
-    color: #fff;
+    background: var(--lav);
+    color: #ffffff;
   }
 
   :focus-visible {
-    outline: 2px solid var(--ring);
+    outline: 2px solid var(--pur);
     outline-offset: 3px;
   }
 
   ::-webkit-scrollbar { width: 8px; height: 8px; }
   ::-webkit-scrollbar-track { background: var(--canvas); }
   ::-webkit-scrollbar-thumb { background: var(--raised-hover); border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: #2a3347; }
 }
 
-/* ---------- Brand utilities ---------- */
+/* ---------- Reading Progress Bar ---------- */
+#bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  transform-origin: 0 0;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--lav), var(--or));
+  z-index: 60;
+  transition: transform 0.1s linear;
+}
+
+/* ---------- Ambient Background Glows ---------- */
+.blobs {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.blobs i {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.65;
+}
+.blobs i:nth-child(1) {
+  width: 46vw;
+  height: 46vw;
+  left: -12vw;
+  top: -10vw;
+  background: var(--peri);
+}
+.blobs i:nth-child(2) {
+  width: 38vw;
+  height: 38vw;
+  right: -10vw;
+  top: 8vh;
+  background: var(--peach);
+}
+.blobs i:nth-child(3) {
+  width: 34vw;
+  height: 34vw;
+  left: 30vw;
+  bottom: -16vw;
+  background: var(--rose);
+  opacity: 0.45;
+}
+.blobs i:nth-child(4) {
+  width: 24vw;
+  height: 24vw;
+  right: 20vw;
+  bottom: 10vh;
+  background: var(--sky);
+  opacity: 0.5;
+}
+
+.dark .blobs i {
+  opacity: 0.28;
+}
+.dark .blobs i:nth-child(1) { background: #3b2a8c; }
+.dark .blobs i:nth-child(2) { background: #6b3524; }
+.dark .blobs i:nth-child(3) { background: #441c5c; }
+.dark .blobs i:nth-child(4) { background: #1c3d5e; }
+
+/* ---------- Floating Navpill ---------- */
+.navpill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(87, 80, 168, 0.16);
+  border-radius: 99px;
+  padding: 6px 8px 6px 20px;
+  box-shadow: 0 8px 30px rgba(87, 80, 168, 0.12);
+  width: 100%;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+}
+.dark .navpill {
+  background: rgba(21, 19, 74, 0.85);
+  border-color: rgba(210, 205, 243, 0.18);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------- Deptloy Button ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 26px;
+  border-radius: 99px;
+  background: var(--deep);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+  border: 0;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s, color 0.3s, transform 0.2s;
+  text-decoration: none;
+}
+.dark .btn {
+  background: #ffffff;
+  color: var(--deep);
+}
+.btn:hover {
+  background: var(--or) !important;
+  color: var(--deep) !important;
+  box-shadow: 0 10px 40px rgba(253, 145, 80, 0.45);
+  transform: translateY(-1px);
+}
+.btn.sm {
+  padding: 9px 18px;
+  font-size: 14px;
+}
+.btn.ghost {
+  background: transparent;
+  color: var(--deep);
+  border: 1.5px solid rgba(21, 19, 74, 0.22);
+}
+.dark .btn.ghost {
+  background: transparent;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+.btn.ghost:hover {
+  background: #ffffff !important;
+  color: var(--deep) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+.dark .btn.ghost:hover {
+  background: #ffffff !important;
+  color: var(--deep) !important;
+}
+
+/* ---------- Kinetic Hero Orbit Disc ---------- */
+.rbwrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: min(68svh, 580px);
+}
+.disc {
+  position: absolute;
+  width: min(78%, 460px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffffff, var(--peri) 55%, var(--peach));
+  box-shadow: 0 40px 90px rgba(87, 80, 168, 0.22);
+}
+.dark .disc {
+  background: radial-gradient(circle at 35% 30%, #3a328c, #1f1b62 60%, #15134a);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.5);
+}
+.disc::before, .disc::after {
+  content: "";
+  position: absolute;
+  inset: -5%;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(87, 80, 168, 0.35);
+  animation: discSpin 40s linear infinite;
+}
+.dark .disc::before, .dark .disc::after {
+  border-color: rgba(210, 205, 243, 0.3);
+}
+.disc::after {
+  inset: -14%;
+  border-color: rgba(253, 145, 80, 0.45);
+  animation-duration: 60s;
+  animation-direction: reverse;
+}
+@keyframes discSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Typography Reveal ---------- */
+.reveal-up {
+  display: block;
+  font-weight: inherit;
+  transform: translateY(105%);
+  animation: upReveal 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes upReveal {
+  to { transform: none; }
+}
+
+/* ---------- Gradients ---------- */
 @utility text-gradient-brand {
-  background-image: linear-gradient(95deg, var(--color-brand-300) 0%, var(--color-electric-400) 100%);
-  background-clip: text;
+  background: linear-gradient(90deg, var(--pur), var(--co) 70%, var(--or));
   -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility text-gradient-hero {
+  background: linear-gradient(90deg, var(--pur), var(--co) 60%, var(--or));
+  -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
 }
 
 @utility bg-gradient-brand {
-  background-image: linear-gradient(100deg, var(--primary) 0%, var(--primary-end) 100%);
+  background-image: linear-gradient(120deg, var(--deep), var(--ind));
 }
 
-/* Hover/pressed state of the brand gradient — darker, so white text stays >= 6:1 */
-@utility bg-gradient-brand-strong {
-  background-image: linear-gradient(100deg, var(--color-brand-700) 0%, #2a57d1 100%);
+/* Card hover glow */
+.card-hover-fx {
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s, border-color 0.3s;
+}
+.card-hover-fx:hover {
+  transform: translateY(-3px);
+  border-color: rgba(132, 120, 224, 0.4);
+  box-shadow: 0 16px 40px rgba(87, 80, 168, 0.12);
+}
+.dark .card-hover-fx:hover {
+  border-color: rgba(253, 145, 80, 0.35);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
 }
 
-/* Soft decorative glows behind hero areas */
-@layer components {
-  .glow-brand,
-  .glow-accent {
-    position: absolute;
-    pointer-events: none;
-    z-index: 0;
-    filter: blur(40px);
-  }
-  .glow-brand {
-    width: 50rem;
-    height: 50rem;
-    right: -10%;
-    top: -15%;
-    background: radial-gradient(circle, rgb(72 64 245 / 0.16) 0%, rgb(30 187 254 / 0.04) 45%, transparent 70%);
-  }
-  .glow-accent {
-    width: 35rem;
-    height: 35rem;
-    left: -5%;
-    top: 15%;
-    background: radial-gradient(circle, rgb(30 187 254 / 0.09) 0%, rgb(72 64 245 / 0.03) 40%, transparent 65%);
-  }
-  .bg-grid {
-    background-size: 40px 40px;
-    background-image:
-      linear-gradient(to right, rgb(255 255 255 / 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(255 255 255 / 0.03) 1px, transparent 1px);
-  }
+/* Floating indicator pills */
+.floating-badge {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 12px 30px rgba(87, 80, 168, 0.18);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  animation: floatBob 5s ease-in-out infinite;
+}
+.dark .floating-badge {
+  background: #1c1859;
+  color: #ffffff;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(210, 205, 243, 0.15);
+}
+@keyframes floatBob {
+  50% { transform: translateY(-8px); }
 }
 
-/* Scroll reveal (see components/ui/Reveal.tsx) — only applied after JS runs */
-[data-reveal] {
-  transition: opacity 600ms var(--ease-out-soft), transform 600ms var(--ease-out-soft);
-}
-[data-reveal="hidden"] {
-  opacity: 0;
-  transform: translateY(16px);
-}
-
-/* Light mode decorative glows and grid */
-html[data-theme="light"] .glow-brand,
-.light .glow-brand {
-  background: radial-gradient(circle, rgb(72 64 245 / 0.08) 0%, rgb(30 187 254 / 0.02) 45%, transparent 70%);
-}
-
-html[data-theme="light"] .glow-accent,
-.light .glow-accent {
-  background: radial-gradient(circle, rgb(30 187 254 / 0.06) 0%, rgb(72 64 245 / 0.02) 40%, transparent 65%);
-}
-
-html[data-theme="light"] .bg-grid,
-.light .bg-grid {
-  background-image:
-    linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
-}
-
-/* Light mode hover state overrides for hardcoded dark classes */
-html[data-theme="light"] .hover\:bg-white\/\[0\.05\]:hover,
-html[data-theme="light"] .hover\:bg-white\/\[0\.06\]:hover,
-html[data-theme="light"] .hover\:bg-white\/\[0\.04\]:hover {
-  background-color: rgba(15, 23, 42, 0.05) !important;
-}
-
-html[data-theme="light"] .bg-white\/\[0\.04\],
-html[data-theme="light"] .bg-white\/\[0\.05\] {
-  background-color: rgba(15, 23, 42, 0.04) !important;
-}
-
-html[data-theme="light"] .border-white\/10,
-html[data-theme="light"] .border-white\/\[0\.05\],
-html[data-theme="light"] .border-white\/\[0\.035\] {
-  border-color: rgba(15, 23, 42, 0.08) !important;
-}
-
-html[data-theme="light"] .bg-black\/30,
-html[data-theme="light"] .bg-black\/60 {
-  background-color: rgba(15, 23, 42, 0.06) !important;
-}
-
-/* ---------- Reduced motion: stop all non-essential movement ---------- */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

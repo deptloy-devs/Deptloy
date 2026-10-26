@@ -1,4 +1,3 @@
-import { useId } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { brand } from "@/lib/site";
@@ -11,58 +10,82 @@ interface LogoProps {
 }
 
 const sizes = {
-  sm: { height: 22, width: 30, text: "text-lg" },
-  md: { height: 28, width: 38, text: "text-xl" },
-  lg: { height: 34, width: 46, text: "text-2xl" },
+  sm: { width: 22, height: 25, text: "text-lg", gap: "gap-2" },
+  md: { width: 28, height: 32, text: "text-2xl", gap: "gap-2.5" },
+  lg: { width: 34, height: 39, text: "text-3xl", gap: "gap-3" },
 } as const;
 
-/** Official Deptloy mark (speed lines + play-arrow D) with the wordmark. Directly sourced from deploy-logos. */
-export function Logo({ className, href = "/", showText = true, size = "md" }: LogoProps) {
-  const id = useId().replace(/:/g, "");
-  const dGradId = `dGrad-${id}`;
-  const lineGradId = `lineGrad-${id}`;
+/**
+ * Deptloy Hexagonal 3D Portal Mark & Wordmark
+ * Derived from the official design system:
+ * - Top facet: #8478e0 (lavender)
+ * - Left facet: #15134a (deep navy)
+ * - Right upper facet: #5750a8 (iris purple)
+ * - Right lower facet: #ef7a5e (coral)
+ * - Inner portal: #f7f5ff
+ * - Inner cavity: #15134a
+ * - Upward launch arrow: #fd9150 (orange)
+ */
+export function Logo({
+  className,
+  href = "/",
+  showText = true,
+  size = "md",
+}: LogoProps) {
   const s = sizes[size];
 
   return (
     <Link
       href={href}
-      className={cn("group inline-flex items-center gap-2.5 rounded-md transition-opacity hover:opacity-90", className)}
+      className={cn(
+        "group inline-flex items-center transition-transform duration-200 active:scale-95",
+        s.gap,
+        className
+      )}
       aria-label={`${brand.name} home`}
     >
       <svg
         width={s.width}
         height={s.height}
-        viewBox="275 380 295 220"
+        viewBox="-140 -160 280 320"
         fill="none"
         aria-hidden="true"
         className="shrink-0 transition-transform duration-300 group-hover:scale-105"
       >
-        <defs>
-          <linearGradient id={dGradId} gradientUnits="userSpaceOnUse" x1="362" y1="400" x2="560" y2="560">
-            <stop offset="0%" stopColor="#5440F2" />
-            <stop offset="55%" stopColor="#2F7DF8" />
-            <stop offset="100%" stopColor="#14BBFF" />
-          </linearGradient>
-          <linearGradient id={lineGradId} gradientUnits="userSpaceOnUse" x1="285" y1="440" x2="404" y2="540">
-            <stop offset="0%" stopColor="#5143F0" />
-            <stop offset="100%" stopColor="#4466F4" />
-          </linearGradient>
-        </defs>
-
-        {/* Speed lines */}
-        <rect x="315" y="442" width="81" height="22" rx="11" fill={`url(#${lineGradId})`} />
-        <rect x="285" y="481" width="103" height="21" rx="10.5" fill={`url(#${lineGradId})`} />
-        <rect x="332" y="520" width="72" height="21" rx="10.5" fill={`url(#${lineGradId})`} />
-
-        {/* D mark with play-arrow cutout */}
-        <path
-          fill={`url(#${dGradId})`}
-          d="M 372,390 H 460 A 100,100 0 0 1 460,590 H 380 Q 370,590 370,580 V 565 Q 370,555 380,555 H 424 Q 431,555 437,550 L 500,498 Q 508,490 500,482 L 437,431 Q 431,425 424,425 H 372 Q 362,425 362,415 V 400 Q 362,390 372,390 Z"
+        {/* Top facet */}
+        <polygon points="0,-150 130,-75 0,0 -130,-75" fill="#8478e0" />
+        {/* Left facet */}
+        <polygon points="-130,-75 0,0 0,150 -130,75" fill="#15134a" />
+        {/* Right upper facet */}
+        <polygon points="0,0 130,-75 130,0 0,75" fill="#5750a8" />
+        {/* Right lower facet */}
+        <polygon points="0,75 130,0 130,75 0,150" fill="#ef7a5e" />
+        {/* Inner portal frame */}
+        <polygon
+          points="-84,-44 0,-92 84,-44 84,38 4,86 -84,36"
+          fill="#f7f5ff"
+        />
+        {/* Inner shadow/cavity */}
+        <polygon
+          points="-48,-8 0,-36 46,-8 46,26 -48,28"
+          fill="#15134a"
+        />
+        {/* Upward launcher arrow */}
+        <polygon
+          points="0,-6 36,28 16,28 16,106 -16,106 -16,28 -36,28"
+          fill="#fd9150"
         />
       </svg>
 
       {showText && (
-        <span className={cn("font-display font-semibold tracking-tight text-fg", s.text)}>{brand.name}</span>
+        <span
+          className={cn(
+            "font-archivo font-extrabold tracking-[-0.04em] text-[var(--deep)] dark:text-white transition-colors",
+            s.text
+          )}
+        >
+          {brand.name}
+        </span>
       )}
     </Link>
   );

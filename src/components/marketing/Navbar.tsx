@@ -14,18 +14,15 @@ import { cn } from "@/lib/cn";
 const isActive = (pathname: string, href: string) =>
   href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 
-const linkBase =
-  "rounded-control px-3 py-2 text-sm font-medium transition-colors duration-150 hover:bg-white/[0.05] hover:text-fg";
-
 export function Navbar() {
   const pathname = usePathname();
   const [servicesOpen, setServicesOpen] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [scrolled, setScrolled] = React.useState(false);
+  const [scrollProgress, setScrollProgress] = React.useState(0);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const servicesButtonRef = React.useRef<HTMLButtonElement>(null);
 
-  // Close menus when the route changes (render-time state sync, no effect needed).
+  // Close menus when route changes
   const [lastPath, setLastPath] = React.useState(pathname);
   if (pathname !== lastPath) {
     setLastPath(pathname);
@@ -33,15 +30,18 @@ export function Navbar() {
     setMobileOpen(false);
   }
 
-  // Slightly stronger header background once the page scrolls.
+  // Reading progress bar & scroll detection
   React.useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
+    const onScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = totalHeight > 0 ? window.scrollY / totalHeight : 0;
+      setScrollProgress(Math.min(1, Math.max(0, progress)));
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Services dropdown: close on outside click or Escape (focus returns to the trigger).
+  // Services dropdown outside click & Escape
   React.useEffect(() => {
     if (!servicesOpen) return;
     const onPointer = (e: PointerEvent) => {
@@ -61,211 +61,238 @@ export function Navbar() {
     };
   }, [servicesOpen]);
 
-  // Mobile menu: Escape closes it, and the page behind does not scroll.
+  // Mobile menu scroll lock
   React.useEffect(() => {
     if (!mobileOpen) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMobileOpen(false);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prev;
-      document.removeEventListener("keydown", onKey);
     };
   }, [mobileOpen]);
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 w-full border-b backdrop-blur-xl transition-colors duration-200",
-        scrolled || mobileOpen ? "border-line bg-canvas/90" : "border-transparent bg-canvas/60"
-      )}
-    >
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-[70] focus:rounded-control focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:text-fg"
-      >
-        Skip to content
-      </a>
+    <>
+      {/* Top Reading Progress Bar */}
+      <div
+        id="bar"
+        style={{ transform: `scaleX(${scrollProgress})` }}
+        aria-hidden="true"
+      />
 
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:h-[72px] lg:px-8">
-        <Logo size="md" />
+      <header className="fixed top-0 left-0 right-0 z-40 pt-3 sm:pt-4 px-3 sm:px-6">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-[70] focus:rounded-full focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:text-fg"
+        >
+          Skip to content
+        </a>
 
-        {/* Desktop navigation */}
-        <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
-          {mainNav.map((item) =>
-            item.href === "/services" ? (
-              <div
-                key={item.href}
-                ref={dropdownRef}
-                className="relative"
-                onPointerEnter={(e) => e.pointerType === "mouse" && setServicesOpen(true)}
-                onPointerLeave={(e) => e.pointerType === "mouse" && setServicesOpen(false)}
-              >
-                <button
-                  ref={servicesButtonRef}
-                  type="button"
-                  onClick={() => setServicesOpen((o) => !o)}
-                  aria-expanded={servicesOpen}
-                  aria-controls="services-menu"
-                  className={cn(
-                    linkBase,
-                    "inline-flex cursor-pointer items-center gap-1",
-                    isActive(pathname, "/services") ? "text-fg" : "text-fg-muted"
-                  )}
-                >
-                  Services
-                  <ChevronDown
-                    aria-hidden="true"
-                    className={cn("h-4 w-4 transition-transform duration-200", servicesOpen && "rotate-180")}
-                  />
-                </button>
+        <div className="max-w-7xl mx-auto">
+          <div className="navpill">
+            {/* Logo */}
+            <Logo size="md" />
 
-                {servicesOpen && (
-                  <div id="services-menu" className="absolute left-1/2 top-full w-64 -translate-x-1/2 pt-2">
-                    <div className="animate-fade-in rounded-xl border border-line bg-card/95 p-1.5 shadow-raised backdrop-blur-xl">
-                      <ul className="space-y-0.5">
-                        {services.map((srv) => (
-                          <li key={srv.slug}>
+            {/* Desktop Navigation */}
+            <nav
+              aria-label="Main"
+              className="hidden lg:flex items-center gap-1 text-[14.5px] font-semibold"
+            >
+              {mainNav.map((item) =>
+                item.href === "/services" ? (
+                  <div
+                    key={item.href}
+                    ref={dropdownRef}
+                    className="relative"
+                    onPointerEnter={(e) =>
+                      e.pointerType === "mouse" && setServicesOpen(true)
+                    }
+                    onPointerLeave={(e) =>
+                      e.pointerType === "mouse" && setServicesOpen(false)
+                    }
+                  >
+                    <button
+                      ref={servicesButtonRef}
+                      type="button"
+                      onClick={() => setServicesOpen((o) => !o)}
+                      aria-expanded={servicesOpen}
+                      aria-controls="services-menu"
+                      className={cn(
+                        "inline-flex cursor-pointer items-center gap-1.5 px-3.5 py-2 rounded-full transition-colors",
+                        isActive(pathname, "/services")
+                          ? "bg-[var(--mist)] dark:bg-[var(--raised)] text-fg"
+                          : "text-fg-soft hover:bg-[var(--mist)] dark:hover:bg-[var(--raised)] hover:text-fg"
+                      )}
+                    >
+                      Services
+                      <ChevronDown
+                        aria-hidden="true"
+                        className={cn(
+                          "h-3.5 w-3.5 transition-transform duration-200",
+                          servicesOpen && "rotate-180"
+                        )}
+                      />
+                    </button>
+
+                    {servicesOpen && (
+                      <div
+                        id="services-menu"
+                        className="absolute left-1/2 top-full w-64 -translate-x-1/2 pt-2"
+                      >
+                        <div className="rounded-2xl border border-line bg-card/95 p-2 shadow-raised backdrop-blur-xl">
+                          <ul className="space-y-1">
+                            {services.map((srv) => (
+                              <li key={srv.slug}>
+                                <Link
+                                  href={srv.href}
+                                  onClick={() => setServicesOpen(false)}
+                                  className={cn(
+                                    "group flex items-center justify-between rounded-xl px-3 py-2 text-sm font-medium transition-colors hover:bg-raised",
+                                    pathname === srv.href
+                                      ? "text-fg bg-raised/70"
+                                      : "text-fg-soft hover:text-fg"
+                                  )}
+                                >
+                                  <div className="flex items-center gap-2.5 min-w-0">
+                                    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg border border-line bg-surface text-[var(--pur)] dark:text-[var(--peri)]">
+                                      <ServiceIcon
+                                        slug={srv.slug}
+                                        className="h-3.5 w-3.5"
+                                      />
+                                    </span>
+                                    <span className="truncate">{srv.title}</span>
+                                  </div>
+                                  <ArrowRight
+                                    className="h-3.5 w-3.5 shrink-0 opacity-0 -translate-x-1 text-[var(--or)] transition-all group-hover:opacity-100 group-hover:translate-x-0"
+                                    aria-hidden="true"
+                                  />
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="mt-2 border-t border-line px-2.5 pt-2 flex items-center justify-between">
                             <Link
-                              href={srv.href}
-                              aria-current={pathname === srv.href ? "page" : undefined}
-                              className={cn(
-                                "group flex items-center justify-between rounded-lg px-2.5 py-2 text-sm font-medium transition-colors hover:bg-raised",
-                                pathname === srv.href ? "text-fg bg-raised/70" : "text-fg-soft hover:text-fg"
-                              )}
+                              href="/services"
+                              onClick={() => setServicesOpen(false)}
+                              className="flex items-center gap-1 text-xs font-bold text-[var(--pur)] dark:text-[var(--peri)] hover:text-[var(--or)] transition-colors"
                             >
-                              <div className="flex items-center gap-2.5 min-w-0">
-                                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md border border-line bg-surface text-brand-300 transition-colors group-hover:border-brand-400/40">
-                                  <ServiceIcon slug={srv.slug} className="h-3.5 w-3.5" />
-                                </span>
-                                <span className="truncate">{srv.title}</span>
-                              </div>
-                              <ArrowRight className="h-3.5 w-3.5 shrink-0 opacity-0 -translate-x-1 text-brand-300 transition-all group-hover:opacity-100 group-hover:translate-x-0" aria-hidden="true" />
+                              <span>Explore All</span>
+                              <ArrowRight className="h-3 w-3" aria-hidden="true" />
                             </Link>
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="mt-1 border-t border-line px-2 pt-1.5 pb-0.5 flex items-center justify-between">
-                        <Link
-                          href="/services"
-                          className="flex items-center gap-1 text-xs font-semibold text-brand-300 hover:text-brand-200 transition-colors"
-                        >
-                          <span>All Services</span>
-                          <ArrowRight className="h-3 w-3" aria-hidden="true" />
-                        </Link>
-                        {/* Brand watermark: transparent logo for light & dark mode */}
-                        <div className="relative flex items-center h-3.5 w-16 shrink-0 opacity-40 hover:opacity-80 transition-opacity">
-                          <img
-                            src="/deptloy_Icon_transparent.svg"
-                            alt="Deptloy"
-                            className="h-full w-auto object-contain select-none pointer-events-none hidden [html[data-theme='dark']_&]:block"
-                          />
-                          <img
-                            src="/deptloy_transparent.svg"
-                            alt="Deptloy"
-                            className="h-full w-auto object-contain select-none pointer-events-none block [html[data-theme='dark']_&]:hidden"
-                          />
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
-                )}
-              </div>
-            ) : (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-current={isActive(pathname, item.href) ? "page" : undefined}
-                className={cn(linkBase, isActive(pathname, item.href) ? "text-fg" : "text-fg-muted")}
-              >
-                {item.label}
-              </Link>
-            )
-          )}
-        </nav>
-
-        <div className="flex items-center gap-2 sm:gap-2.5">
-          {/* Theme appearance switcher (Sun when dark, Moon when light) */}
-          <ThemeToggle />
-
-          {/* Wrappers control visibility — Button's own display class can't be overridden via className */}
-          <span className="hidden lg:block">
-            <Button href="/demo" variant="ghost" size="sm">
-              Try the AI demo
-            </Button>
-          </span>
-          <span className="hidden sm:block">
-            <Button href="/contact" variant="primary" size="sm">
-              Book a Consultation
-            </Button>
-          </span>
-          <button
-            type="button"
-            onClick={() => setMobileOpen((o) => !o)}
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-menu"
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            className="grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-control border border-line bg-raised text-fg transition-colors hover:bg-raised-hover lg:hidden cursor-pointer"
-          >
-            {mobileOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div
-          id="mobile-menu"
-          className="animate-fade-in max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-canvas lg:hidden"
-        >
-          <nav aria-label="Mobile" className="mx-auto max-w-7xl px-4 pb-8 pt-4 sm:px-6">
-            <ul className="flex flex-col">
-              {mainNav.map((item) => (
-                <li key={item.href}>
+                ) : (
                   <Link
+                    key={item.href}
                     href={item.href}
                     aria-current={isActive(pathname, item.href) ? "page" : undefined}
                     className={cn(
-                      "flex h-12 items-center rounded-control px-3 text-base font-medium hover:bg-white/[0.05]",
-                      isActive(pathname, item.href) ? "text-fg" : "text-fg-soft"
+                      "px-3.5 py-2 rounded-full transition-colors",
+                      isActive(pathname, item.href)
+                        ? "bg-[var(--mist)] dark:bg-[var(--raised)] text-fg"
+                        : "text-fg-soft hover:bg-[var(--mist)] dark:hover:bg-[var(--raised)] hover:text-fg"
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              )}
+            </nav>
+
+            {/* Header Right Actions */}
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+
+              <span className="hidden sm:inline-flex">
+                <Button href="/contact" variant="primary" size="sm">
+                  Get a Quote
+                </Button>
+              </span>
+
+              {/* Mobile hamburger */}
+              <button
+                type="button"
+                onClick={() => setMobileOpen((o) => !o)}
+                aria-expanded={mobileOpen}
+                aria-controls="mobile-menu"
+                aria-label={mobileOpen ? "Close menu" : "Open menu"}
+                className="grid h-9 w-9 place-items-center rounded-full border border-line bg-raised text-fg transition-colors hover:bg-raised-hover lg:hidden cursor-pointer"
+              >
+                {mobileOpen ? (
+                  <X className="h-4 w-4" aria-hidden="true" />
+                ) : (
+                  <Menu className="h-4 w-4" aria-hidden="true" />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile menu dropdown */}
+        {mobileOpen && (
+          <div
+            id="mobile-menu"
+            className="mt-2 rounded-3xl border border-line bg-card/95 p-5 shadow-raised backdrop-blur-2xl lg:hidden max-h-[calc(100dvh-5.5rem)] overflow-y-auto"
+          >
+            <nav aria-label="Mobile" className="flex flex-col gap-1">
+              {mainNav.map((item) => (
+                <div key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      "flex h-11 items-center rounded-2xl px-3.5 text-base font-bold",
+                      isActive(pathname, item.href)
+                        ? "bg-[var(--mist)] dark:bg-[var(--raised)] text-fg"
+                        : "text-fg-soft hover:text-fg"
                     )}
                   >
                     {item.label}
                   </Link>
                   {item.href === "/services" && (
-                    <ul className="mb-2 ml-3 border-l border-line pl-3">
+                    <div className="my-1 ml-4 border-l-2 border-line pl-3 space-y-1">
                       {services.map((srv) => (
-                        <li key={srv.slug}>
-                          <Link
-                            href={srv.href}
-                            className="flex h-11 items-center gap-3 rounded-control px-2 text-sm text-fg-muted hover:bg-white/[0.05] hover:text-fg"
-                          >
-                            <ServiceIcon slug={srv.slug} className="h-4 w-4 text-brand-300" />
-                            {srv.title}
-                          </Link>
-                        </li>
+                        <Link
+                          key={srv.slug}
+                          href={srv.href}
+                          onClick={() => setMobileOpen(false)}
+                          className="flex h-9 items-center gap-2.5 rounded-xl px-2 text-sm font-medium text-fg-muted hover:text-fg"
+                        >
+                          <ServiceIcon slug={srv.slug} className="h-3.5 w-3.5 text-[var(--pur)] dark:text-[var(--peri)]" />
+                          <span>{srv.title}</span>
+                        </Link>
                       ))}
-                    </ul>
+                    </div>
                   )}
-                </li>
+                </div>
               ))}
-            </ul>
-            <div className="mt-6 flex flex-col gap-3 border-t border-line pt-6">
-              <div className="flex items-center justify-between rounded-control border border-line bg-card/60 px-3.5 py-2">
-                <span className="text-sm font-medium text-fg">Appearance</span>
-                <ThemeToggle />
+              <div className="mt-4 pt-4 border-t border-line flex flex-col gap-2.5">
+                <Button
+                  href="/contact"
+                  variant="primary"
+                  size="md"
+                  className="w-full"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Get a Quote
+                </Button>
+                <Button
+                  href="/demo"
+                  variant="secondary"
+                  size="md"
+                  className="w-full"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Try AI Demo
+                </Button>
               </div>
-              <Button href="/contact" variant="primary" size="lg" className="w-full">
-                Book a Consultation
-              </Button>
-              <Button href="/demo" variant="secondary" size="lg" className="w-full">
-                Try the AI demo
-              </Button>
-            </div>
-          </nav>
-        </div>
-      )}
-    </header>
+            </nav>
+          </div>
+        )}
+      </header>
+    </>
   );
 }

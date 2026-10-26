@@ -1,19 +1,29 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Outfit } from "next/font/google";
+import { Archivo, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-// Body text
-const geist = Geist({
-  variable: "--font-geist",
+// Display / Headings — bold engineered geometric character
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
   display: "swap",
+  weight: ["500", "600", "700", "800", "900"],
 });
 
-// Headings — geometric, close to the logo wordmark
-const outfit = Outfit({
-  variable: "--font-outfit",
+// Primary Body text
+const ibmPlexSans = IBM_Plex_Sans({
+  variable: "--font-ibm-sans",
   subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+// Monospace — metrics, tags, badges, telemetry
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-mono",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -61,10 +71,10 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#070a12" },
-    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
+    { media: "(prefers-color-scheme: dark)", color: "#0c0b28" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f3fb" },
   ],
-  colorScheme: "dark light",
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({
@@ -76,7 +86,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${geist.variable} ${outfit.variable} h-full dark`}
+      className={`${archivo.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable} h-full`}
       suppressHydrationWarning
     >
       <head>

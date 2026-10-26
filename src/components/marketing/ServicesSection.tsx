@@ -148,7 +148,7 @@ export function ServicesSection() {
           type="button"
           onClick={prevCard}
           aria-label="Previous service"
-          className="shrink-0 grid h-11 w-11 sm:h-12 sm:w-12 lg:h-13 lg:w-13 place-items-center rounded-full border border-line bg-card/95 text-fg shadow-raised backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-brand-400/50 hover:bg-raised hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 cursor-pointer z-30"
+          className="shrink-0 grid h-11 w-11 sm:h-12 sm:w-12 lg:h-13 lg:w-13 place-items-center rounded-full border border-line bg-card/95 text-fg shadow-raised backdrop-blur-md transition-all duration-200 hover:scale-105 hover:bg-[var(--or)] hover:text-[var(--deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--or)] cursor-pointer z-30"
         >
           <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
         </button>
@@ -218,14 +218,14 @@ export function ServicesSection() {
                 <div>
                   {/* Top Bar: Icon, Badge, Step Counter */}
                   <div className="flex items-center justify-between gap-3">
-                    <span className="grid h-10 w-10 place-items-center rounded-control border border-brand-400/25 bg-brand-500/10 text-brand-300 shadow-sm">
+                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[var(--mist)] dark:bg-[var(--raised)] text-[var(--pur)] dark:text-[var(--peri)] shadow-sm">
                       <ServiceIcon slug={srv.slug} className="h-5 w-5" />
                     </span>
                     <div className="flex items-center gap-2">
                       {srv.badge && (
-                        <Badge size="sm" variant={idx === 0 ? "brand" : "default"}>
+                        <span className="rounded-full bg-[var(--or)]/15 px-2.5 py-0.5 text-[11px] font-bold text-[var(--or)]">
                           {srv.badge}
-                        </Badge>
+                        </span>
                       )}
                       <span className="font-mono text-xs font-semibold text-fg-subtle">
                         0{idx + 1} / 0{total}
@@ -234,10 +234,10 @@ export function ServicesSection() {
                   </div>
 
                   {/* Heading & Crisp Tagline */}
-                  <h3 className="mt-4 font-display text-xl sm:text-2xl font-bold tracking-tight text-fg group-hover:text-brand-300 transition-colors">
+                  <h3 className="mt-4 font-archivo text-xl sm:text-2xl font-bold tracking-tight text-[var(--deep)] dark:text-white group-hover:text-[var(--or)] transition-colors">
                     {srv.title}
                   </h3>
-                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-fg-soft font-medium">
+                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-[var(--mute)] dark:text-[var(--fg-muted)] font-medium">
                     {srv.short}
                   </p>
 
@@ -296,7 +296,7 @@ export function ServicesSection() {
                         e.preventDefault();
                       }
                     }}
-                    className="group relative flex h-full flex-col justify-between rounded-panel border bg-card/95 p-5 sm:p-6 backdrop-blur-xl transition-[border-color,box-shadow] duration-300 border-brand-400/40 shadow-glow ring-1 ring-brand-400/20 hover:border-brand-400/60 block cursor-pointer"
+                    className="group relative flex h-full flex-col justify-between rounded-3xl border bg-card/95 p-5 sm:p-6 backdrop-blur-xl transition-[border-color,box-shadow] duration-300 border-[var(--lav)]/50 shadow-card ring-1 ring-[var(--lav)]/20 hover:border-[var(--or)] block cursor-pointer"
                   >
                     {CardBody}
                   </Link>
@@ -308,7 +308,7 @@ export function ServicesSection() {
                       if (diff === 1) nextCard();
                       else if (diff === -1) prevCard();
                     }}
-                    className="relative flex h-full flex-col justify-between rounded-panel border bg-card/95 p-5 sm:p-6 backdrop-blur-xl transition-[border-color,box-shadow] duration-300 border-line shadow-card hover:border-brand-400/30 cursor-pointer"
+                    className="relative flex h-full flex-col justify-between rounded-3xl border bg-card/95 p-5 sm:p-6 backdrop-blur-xl transition-[border-color,box-shadow] duration-300 border-line shadow-card hover:border-[var(--lav)]/40 cursor-pointer"
                   >
                     {CardBody}
                   </article>
@@ -323,7 +323,7 @@ export function ServicesSection() {
           type="button"
           onClick={nextCard}
           aria-label="Next service"
-          className="shrink-0 grid h-11 w-11 sm:h-12 sm:w-12 lg:h-13 lg:w-13 place-items-center rounded-full border border-line bg-card/95 text-fg shadow-raised backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-brand-400/50 hover:bg-raised hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 cursor-pointer z-30"
+          className="shrink-0 grid h-11 w-11 sm:h-12 sm:w-12 lg:h-13 lg:w-13 place-items-center rounded-full border border-line bg-card/95 text-fg shadow-raised backdrop-blur-md transition-all duration-200 hover:scale-105 hover:bg-[var(--or)] hover:text-[var(--deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--or)] cursor-pointer z-30"
         >
           <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
         </button>
@@ -341,14 +341,14 @@ export function ServicesSection() {
               className={cn(
                 "h-2 rounded-full transition-all duration-300 cursor-pointer",
                 idx === activeIndex
-                  ? "w-8 bg-brand-400 shadow-glow"
+                  ? "w-8 bg-[var(--or)] shadow-sm"
                   : "w-2 bg-line-strong hover:bg-fg-muted"
               )}
             />
           ))}
         </div>
         <p className="flex items-center gap-2 font-mono text-[11px] text-fg-subtle">
-          <Sparkles className="h-3 w-3 text-brand-400" />
+          <Sparkles className="h-3 w-3 text-[var(--or)]" />
           <span>Click active card to view page • Swipe or use side arrows</span>
         </p>
       </div>

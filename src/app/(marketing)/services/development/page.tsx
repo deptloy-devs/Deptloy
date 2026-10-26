@@ -1,211 +1,212 @@
-import {
-  Code2,
-  Layout,
-  Smartphone,
-  Globe,
-  Terminal,
-} from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+"use client";
 
-export function generateMetadata() {
-  return {
-    title: "Custom Web & App Development Services",
-    description: "Bespoke digital platforms, high-conversion marketing websites, customer booking portals, and custom SaaS dashboards built with Next.js, React, and TypeScript.",
-    alternates: { canonical: "/services/development" },
-  };
-}
+import * as React from "react";
+import Link from "next/link";
+import {
+  Globe,
+  Code2,
+  Smartphone,
+  Gauge,
+  CheckCircle2,
+  Layers,
+  ArrowRight,
+  Server,
+  Sparkles,
+  Lock,
+  LayoutDashboard,
+  Shield,
+} from "lucide-react";
+
+const devModules = [
+  {
+    title: "High-Converting Next.js Websites",
+    desc: "Bespoke digital front doors engineered for lightning speed, mobile ergonomics, and maximum inquiry conversion. Zero bloated WordPress templates.",
+    metric: "99+ Lighthouse Score",
+  },
+  {
+    title: "Self-Service Client Portals",
+    desc: "Empower patients and clients to book appointments, review service history, download receipts, and update intake forms in 30 seconds.",
+    metric: "4x Faster Intake",
+  },
+  {
+    title: "Internal Operations & Dispatch Dashboards",
+    desc: "Custom administrative software that gives your team live visibility over daily appointments, dispatch routes, call metrics, and staff workload.",
+    metric: "Real-Time Telemetry",
+  },
+  {
+    title: "Bespoke APIs & Database Architectures",
+    desc: "Engineered backends that bridge your existing software, EHRs, payment gateways, and carrier phone lines into one cohesive system.",
+    metric: "99.99% Uptime",
+  },
+];
+
+const devFeatures = [
+  {
+    icon: Gauge,
+    title: "Sub-Second Global Edge Delivery",
+    desc: "Built on modern Next.js App Router, React 19, and edge caching. Pages render instantaneously worldwide for superior SEO and user retention.",
+  },
+  {
+    icon: Smartphone,
+    title: "Mobile-First Ergonomics",
+    desc: "Over 70% of appointment bookings occur on mobile devices. Our booking interfaces are designed for frictionless one-thumb interaction.",
+  },
+  {
+    icon: Lock,
+    title: "Enterprise Security & Privacy",
+    desc: "Bank-grade data encryption, CSRF protection, secure OAuth credential storage, and strict database query parameterization.",
+  },
+  {
+    icon: LayoutDashboard,
+    title: "Admin Tools Staff Actually Use",
+    desc: "We replace slow, confusing legacy software with minimal, high-contrast dashboards designed around how your coordinators work.",
+  },
+  {
+    icon: Server,
+    title: "Custom PostgreSQL & Redis Backends",
+    desc: "Full data sovereignty. You own your schemas, tables, and backups. No proprietary vendor lock-in or sudden pricing shifts.",
+  },
+  {
+    icon: Code2,
+    title: "Clean, Documented Codebases",
+    desc: "TypeScript strict mode, automated CI/CD deployment pipelines, and thorough architectural documentation built to outlast industry trends.",
+  },
+];
 
 export default function DevelopmentServicePage() {
-  const capabilities = [
-    {
-      title: "Conversion-Focused Agency & SaaS Websites",
-      desc: "Ultra-fast marketing platforms with dark-mode aesthetic, micro-interactions, responsive typography, and sub-second Lighthouse scores.",
-      icon: <Globe className="h-5 w-5 text-brand-400" />,
-      tags: ["Next.js 16", "Tailwind CSS", "TypeScript", "SEO Optimization"],
-    },
-    {
-      title: "Custom Client & Booking Portals",
-      desc: "Self-service client dashboards allowing customers to view appointments, manage invoices, download treatment notes, and message staff directly.",
-      icon: <Layout className="h-5 w-5 text-brand-300" />,
-      tags: ["OAuth Auth", "Real-Time Sync", "Stripe Checkout", "Role Permissions"],
-    },
-    {
-      title: "Internal Business Tools & Dashboards",
-      desc: "Replace clumsy spreadsheets with elegant, high-throughput administrative web applications tailored to your specific dispatch, inventory, or billing logic.",
-      icon: <Terminal className="h-5 w-5 text-success" />,
-      tags: ["PostgreSQL", "REST & GraphQL", "Audit Logging", "Custom Filters"],
-    },
-    {
-      title: "Mobile-First Progressive Web Apps",
-      desc: "Fast, installable web experiences that look and feel like native iOS and Android apps without the overhead of app-store review delays.",
-      icon: <Smartphone className="h-5 w-5 text-brand-300" />,
-      tags: ["PWA", "Offline Sync", "Push Notifications", "Touch Ergonomics"],
-    },
-  ];
-
-  const devProcess = [
-    {
-      step: "01",
-      title: "Architecture & User Journey",
-      desc: "Wireframing, database schema design, and defining exact technical constraints before writing a single line of code.",
-    },
-    {
-      step: "02",
-      title: "Component-Driven Build",
-      desc: "Clean React/Next.js architecture with atomic design tokens, type-safe APIs, and responsive mobile layouts.",
-    },
-    {
-      step: "03",
-      title: "API & Voice Agent Integration",
-      desc: "Connecting telephony webhooks, payment gateways, calendar OAuth providers, and automated CRM pipelines.",
-    },
-    {
-      step: "04",
-      title: "Audit, Security & Global Deployment",
-      desc: "Automated test suites, accessibility auditing, edge-caching configuration, and zero-downtime production launch.",
-    },
-  ];
-
   return (
-    <div className="flex flex-col">
-      {/* Hero */}
-      <section className="relative pt-14 sm:pt-20 pb-section-sm overflow-hidden">
-        <div className="glow-brand" />
-        <div className="glow-accent" />
-
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center flex flex-col items-center">
-            <Badge variant="brand" dot className="mb-4">
-              Full-Stack Engineering
-            </Badge>
-
-            <h1 className="text-h1 font-semibold mb-6">
-              Custom Software That Matches How You Operate
-            </h1>
-
-            <p className="text-lg text-fg-soft leading-relaxed mb-8">
-              We design and engineer bespoke web applications, high-converting digital portals, and administrative dashboards that give your business a permanent technological edge.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-              <Button href="/contact" variant="primary" size="lg" leftIcon={<Code2 className="h-4 w-4" />}>
-                Start a Development Project
-              </Button>
-              <Button href="/demo" variant="outline" size="lg">
-                Explore Interactive Demo
-              </Button>
-            </div>
-          </div>
-
-          {/* Interactive Code & Interface Mockup */}
-          <div className="mt-16 rounded-panel bg-card border border-line p-6 sm:p-10 shadow-raised">
-            <div className="flex items-center justify-between pb-4 border-b border-line mb-6">
-              <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-danger/80" />
-                <span className="h-3 w-3 rounded-full bg-warning/80" />
-                <span className="h-3 w-3 rounded-full bg-success/80" />
-                <span className="ml-2 text-xs font-mono text-fg-muted">deptloy-app-v2.tsx</span>
-              </div>
-              <Badge variant="accent" size="sm">
-                TypeScript • Next.js
-              </Badge>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center font-mono text-xs">
-              <div className="lg:col-span-7 bg-surface p-5 rounded-card border border-line space-y-2 text-fg-soft overflow-x-auto">
-                <p><span className="text-brand-400">export async function</span> <span className="text-brand-300">handleAppointmentWebhook</span>(req: <span className="text-brand-300">Request</span>) &#123;</p>
-                <p className="pl-4 text-fg-subtle">{"// 1. Validate cryptographic webhook signature"}</p>
-                <p className="pl-4"><span className="text-brand-400">const</span> signature = req.headers.<span className="text-brand-300">get</span>(<span className="text-success">&quot;x-deptloy-signature&quot;</span>);</p>
-                <p className="pl-4"><span className="text-brand-400">const</span> payload = <span className="text-brand-400">await</span> req.<span className="text-brand-300">json</span>();</p>
-                <p className="pl-4 text-fg-subtle">{"// 2. Reserve provider slot with zero race conditions"}</p>
-                <p className="pl-4"><span className="text-brand-400">const</span> reservation = <span className="text-brand-400">await</span> calendar.<span className="text-brand-300">lockSlot</span>(payload);</p>
-                <p className="pl-4 text-fg-subtle">{"// 3. Dispatch SMS & trigger CRM record creation"}</p>
-                <p className="pl-4"><span className="text-brand-400">await</span> Promise.<span className="text-brand-300">all</span>([</p>
-                <p className="pl-8">smsClient.<span className="text-brand-300">sendConfirmation</span>(payload.phone),</p>
-                <p className="pl-8">crm.<span className="text-brand-300">upsertContact</span>(payload.customer),</p>
-                <p className="pl-4">]);</p>
-                <p className="pl-4"><span className="text-brand-400">return</span> Response.<span className="text-brand-300">json</span>(&#123; success: <span className="text-brand-300">true</span>, reservation &#125;);</p>
-                <p>&#125;</p>
-              </div>
-
-              <div className="lg:col-span-5 flex flex-col gap-3 font-sans">
-                <div className="p-4 rounded-control bg-raised border border-line">
-                  <span className="text-xs font-bold text-fg block mb-1">Production-Ready Architecture</span>
-                  <p className="text-xs text-fg-muted leading-relaxed">
-                    Zero tech debt. Strict TypeScript typing, automated CI/CD pipelines, and high-concurrency database queries.
-                  </p>
-                </div>
-                <div className="p-4 rounded-control bg-raised border border-line">
-                  <span className="text-xs font-bold text-fg block mb-1">Sub-Second Global Edge Latency</span>
-                  <p className="text-xs text-fg-muted leading-relaxed">
-                    Deployed across global edge networks to ensure rapid page load times for prospective customers worldwide.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-          </div>
+    <div className="py-24 sm:py-32">
+      <div className="wrap">
+        {/* Breadcrumb */}
+        <div className="mb-6 flex items-center gap-2 text-xs font-mono text-[var(--mute)]">
+          <Link href="/services" className="hover:text-[var(--deep)]">
+            Services
+          </Link>
+          <span>/</span>
+          <span className="text-[var(--pur)] font-bold">Web & App Development</span>
         </div>
-      </section>
 
-      {/* Capabilities */}
-      <section className="py-20 bg-surface border-t border-line">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow="Specializations"
-            title="What We Engineer for Growing Businesses"
-            align="center"
-            className="mb-14"
-          />
+        {/* Hero Section */}
+        <span className="k">Engineering & Digital Front Doors</span>
+        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[var(--deep)] max-w-3xl">
+          High-performance web and mobile interfaces built to convert.
+        </h1>
+        <p className="lead2 max-w-2xl">
+          Your digital front door should work seamlessly with your phone lines, calendar, and CRM. Deptloy engineers bespoke web applications, customer portals, and internal dashboards that turn visitors into loyal clients.
+        </p>
+
+        {/* Hero CTAs */}
+        <div className="mt-8 flex flex-wrap gap-4 items-center">
+          <Link href="/contact" className="btn">
+            Build Your Custom Application
+          </Link>
+          <Link href="/projects" className="btn ghost">
+            View Client Case Studies
+          </Link>
+        </div>
+
+        {/* Dev Modules Grid */}
+        <div
+          className="mt-16 bg-white border border-[rgba(21,19,74,0.14)] p-8 sm:p-10 shadow-[0_20px_50px_rgba(87,80,168,0.1)]"
+          style={{
+            borderTop: "5px solid #ef7a5e",
+            clipPath: "polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%)",
+          }}
+        >
+          <div className="flex items-center justify-between flex-wrap gap-4 mb-8 pb-4 border-b border-[var(--mist)]">
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--pur)]">
+                Bespoke Software Architecture
+              </span>
+              <h2 className="text-xl font-bold text-[var(--deep)] mt-0.5">
+                Front-End & Back-End Application Stack
+              </h2>
+            </div>
+            <div className="text-xs font-mono bg-[var(--paper)] px-3 py-1.5 border border-[var(--peri)]">
+              Next.js 16 • React 19 • TypeScript • Tailwind CSS
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {capabilities.map((cap, idx) => (
-              <div key={idx} className="p-7 rounded-card bg-card border border-line flex flex-col justify-between">
-                <div>
-                  <div className="rounded-control bg-raised p-3 w-fit border border-line mb-4">
-                    {cap.icon}
+            {devModules.map((mod) => (
+              <div
+                key={mod.title}
+                className="p-6 bg-[var(--paper)] border border-[var(--peri)] space-y-3"
+              >
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display font-bold text-base text-[var(--deep)]">
+                    {mod.title}
+                  </h3>
+                  <span className="text-[11px] font-mono font-bold px-2 py-0.5 bg-[#ef7a5e]/15 text-[#ef7a5e]">
+                    {mod.metric}
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-[var(--mute)] leading-relaxed">
+                  {mod.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 6 Capabilities Grid */}
+        <div className="mt-24">
+          <span className="k">Engineering Standards</span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--deep)] mb-4">
+            Custom code that outlasts framework hype.
+          </h2>
+          <p className="lead2 max-w-2xl mb-12">
+            We write clean, modular software that connects natively to your business operations. Fast to load, easy for staff to operate, and built to scale for years.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {devFeatures.map((feat) => {
+              const FeatIcon = feat.icon;
+              return (
+                <div
+                  key={feat.title}
+                  className="bg-white border border-[rgba(21,19,74,0.12)] p-7 space-y-3 shadow-[0_12px_30px_rgba(87,80,168,0.06)]"
+                  style={{
+                    clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%)",
+                  }}
+                >
+                  <div className="w-10 h-10 rounded-sm bg-[#ef7a5e]/15 text-[#ef7a5e] flex items-center justify-center">
+                    <FeatIcon className="w-5 h-5" />
                   </div>
-                  <h3 className="text-lg font-bold text-fg mb-2">{cap.title}</h3>
-                  <p className="text-sm text-fg-muted leading-relaxed mb-6">{cap.desc}</p>
+                  <h3 className="font-display font-bold text-lg text-[var(--deep)]">
+                    {feat.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[var(--mute)] leading-relaxed">
+                    {feat.desc}
+                  </p>
                 </div>
-                <div className="pt-4 border-t border-line flex flex-wrap gap-2">
-                  {cap.tags.map((tag, tIdx) => (
-                    <span key={tIdx} className="text-xs px-2.5 py-1 rounded-md bg-white/5 border border-line text-fg-soft">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
-      </section>
 
-      {/* Process */}
-      <section className="py-20 bg-canvas border-t border-line">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow="Delivery Methodology"
-            title="How We Build & Ship Software"
-            align="center"
-            className="mb-14"
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {devProcess.map((proc, idx) => (
-              <div key={idx} className="p-6 rounded-card bg-card border border-line flex flex-col justify-between">
-                <div>
-                  <span className="text-2xl font-bold font-mono text-brand-400 mb-2 block">{proc.step}</span>
-                  <h3 className="text-base font-bold text-fg mb-2">{proc.title}</h3>
-                  <p className="text-xs text-fg-muted leading-relaxed">{proc.desc}</p>
-                </div>
-              </div>
-            ))}
+        {/* Bottom CTA Card */}
+        <div
+          className="mt-20 p-8 sm:p-12 bg-[var(--deep)] text-white flex flex-col md:flex-row items-center justify-between gap-8"
+          style={{
+            clipPath: "polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%)",
+          }}
+        >
+          <div className="space-y-2 max-w-2xl">
+            <span className="text-xs font-mono text-[var(--peri)] uppercase">Turnkey Application Development</span>
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
+              Need a bespoke client portal or modern web application?
+            </h3>
+            <p className="text-xs sm:text-sm text-[#cfd2ee] leading-relaxed">
+              We design, build, and deploy production-grade software that seamlessly connects to your phone lines and CRM.
+            </p>
           </div>
+
+          <Link href="/contact" className="btn" style={{ background: "var(--or)", color: "var(--deep)" }}>
+            Request Application Scope
+          </Link>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

@@ -14,26 +14,27 @@ export function Footer() {
         <div>
           <Logo />
           <p style={{ color: "var(--mute)", maxWidth: "22em", margin: "14px 0 0", fontSize: "14.5px" }}>
-            Lasting software for businesses that run on calls, leads and customers.
+            Software built to outlast the hype. Unified systems for businesses that run on calls, leads and customers.
           </p>
         </div>
 
         <div>
           <h4>Services</h4>
-          <Link href="/#services">AI receptionist</Link>
-          <Link href="/#services">Custom CRM</Link>
-          <Link href="/#services">Workflow automation</Link>
-          <Link href="/#services">Web &amp; apps</Link>
-          <Link href="/services">All services overview</Link>
+          <Link href="/services/ai-receptionist">AI Receptionist</Link>
+          <Link href="/services/crm">Custom CRM</Link>
+          <Link href="/services/automation">Workflow Automation</Link>
+          <Link href="/services/development">Web &amp; Apps</Link>
+          <Link href="/services" style={{ color: "var(--or)", fontWeight: 700 }}>
+            All Services Scope →
+          </Link>
         </div>
 
         <div>
           <h4>Company</h4>
-          <Link href="/#why">Why Deptloy</Link>
-          <Link href="/#about">About studio</Link>
-          <Link href="/#faq">FAQ</Link>
-          <Link href="/blogs">AI &amp; Tech Blogs</Link>
-          <Link href="/#contact">Contact</Link>
+          <Link href="/projects">Projects &amp; Case Studies</Link>
+          <Link href="/about">About Studio</Link>
+          <Link href="/blogs">Engineering Blogs</Link>
+          <Link href="/contact">Contact &amp; Book</Link>
           <a href="mailto:deptloy@gmail.com">deptloy@gmail.com</a>
         </div>
 
@@ -63,12 +64,12 @@ export function Footer() {
         onClose={() => setActiveModal(null)}
         title="Privacy Policy"
       >
-        <div className="space-y-4 text-sm text-mute">
+        <div className="space-y-4 text-sm text-[var(--mute)] leading-relaxed">
           <p>
-            Deptloy is dedicated to safeguarding your personal and business data. We collect only necessary information required to communicate regarding project scopes, architecture, and service delivery.
+            At Deptloy, we take data sovereignty and privacy seriously. Customer and patient records ingested by our AI receptionists, CRMs, and automations are never sold, rented, or used to train third-party public AI models.
           </p>
           <p>
-            We do not sell, rent, or trade your data to third parties. Customer call data and CRM records are processed within encrypted, dedicated infrastructure adhering to modern data security standards.
+            All phone recordings, call transcripts, and customer intake details are secured with TLS 1.3 encryption in transit and AES-256 encryption at rest. Inquiries submitted through our website are routed directly to our engineering team at <strong>deptloy@gmail.com</strong>.
           </p>
         </div>
       </Modal>
@@ -78,12 +79,12 @@ export function Footer() {
         onClose={() => setActiveModal(null)}
         title="Terms of Service"
       >
-        <div className="space-y-4 text-sm text-mute">
+        <div className="space-y-4 text-sm text-[var(--mute)] leading-relaxed">
           <p>
-            By accessing or engaging Deptloy software systems and consulting services, you agree to these Terms. All intellectual property developed specifically for custom client contracts is transferred upon full settlement of project milestones.
+            Deptloy provides turnkey software engineering, voice AI orchestration, and system maintenance services. Every client deployment begins with a mutual technical discovery process and fixed project architectural scope.
           </p>
           <p>
-            Systems developed by Deptloy come with defined care and maintenance provisions to ensure long-term stability and platform compatibility.
+            Unless explicitly agreed otherwise under a separate enterprise agreement, you retain complete ownership of your proprietary customer databases, CRM tables, and intellectual property.
           </p>
         </div>
       </Modal>

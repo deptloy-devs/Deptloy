@@ -1,6 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, ShieldCheck, Cpu, RefreshCw, Layers } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  ShieldCheck,
+  Cpu,
+  RefreshCw,
+  Layers,
+  Sparkles,
+  Users,
+  Compass,
+  Code2,
+} from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About Deptloy — Software built to outlast the hype",
@@ -13,30 +24,42 @@ const pillars = [
   {
     icon: Layers,
     title: "Systems, not tools",
+    color: "#8478e0",
     desc: "A bolted-on chatbot solves one problem and creates three more. We map out the entire operational flow first so every component connects natively to your calendar, CRM, and team workflows.",
   },
   {
     icon: Cpu,
     title: "Plain-spoken engineering",
+    color: "#5750a8",
     desc: "No jargon, no buzzwords, and no speculative hype. You always know what we are building, why it was chosen, and how many hours or lost leads it reclaims for your business every week.",
   },
   {
     icon: ShieldCheck,
     title: "Production hardened",
+    color: "#fd9150",
     desc: "Our AI receptionists operate with sub-500ms voice latency, zero training data retention, and strict CRM write rules so hallucinations never compromise customer relationships.",
   },
   {
     icon: RefreshCw,
     title: "We stay after launch",
+    color: "#ef7a5e",
     desc: "Launch is only day one. We continuously monitor API connections, tune response parameters against real customer inquiries, and extend your system as your company scales.",
   },
+];
+
+const processSteps = [
+  { step: "01", name: "Discover", desc: "Audit phone lines, booking flows, and bottlenecks." },
+  { step: "02", name: "Design", desc: "Architect one unified operational blueprint." },
+  { step: "03", name: "Build", desc: "Engineer voice agents, database pipelines, and UI." },
+  { step: "04", name: "Launch", desc: "Deploy with close initial monitoring and staff onboarding." },
+  { step: "05", name: "Care", desc: "Weekly prompt tuning, API health checks, and upgrades." },
 ];
 
 export default function AboutPage() {
   return (
     <div className="py-24 sm:py-32">
       <div className="wrap">
-        <span className="k">About Deptloy</span>
+        <span className="k">About Deptloy Studio</span>
         <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[var(--deep)] max-w-3xl">
           A software studio for businesses that run on calls, leads and customers.
         </h1>
@@ -87,14 +110,14 @@ export default function AboutPage() {
             </ul>
 
             <div className="pt-4 border-t border-[rgba(21,19,74,0.1)]">
-              <Link href="/#contact" className="btn w-full justify-center">
+              <Link href="/contact" className="btn w-full justify-center">
                 Book a consultation
               </Link>
             </div>
           </div>
         </div>
 
-        {/* 4 Pillars Grid */}
+        {/* 4 Core Pillars Grid */}
         <div className="mt-20">
           <span className="k">How we operate</span>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-[var(--deep)] mb-10">
@@ -107,8 +130,9 @@ export default function AboutPage() {
               return (
                 <div
                   key={pillar.title}
-                  className="bg-white border border-[rgba(21,19,74,0.14)] p-8 transition-transform duration-300 hover:-translate-y-1"
+                  className="bg-white border border-[rgba(21,19,74,0.14)] p-8 transition-transform duration-300 hover:-translate-y-1 shadow-[0_12px_30px_rgba(87,80,168,0.06)]"
                   style={{
+                    borderTop: `4px solid ${pillar.color}`,
                     clipPath: "polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)",
                   }}
                 >
@@ -125,6 +149,49 @@ export default function AboutPage() {
               );
             })}
           </div>
+        </div>
+
+        {/* The 5-Step Delivery Lifecycle */}
+        <div className="mt-24 bg-white border border-[rgba(21,19,74,0.12)] p-8 sm:p-12 shadow-[0_16px_40px_rgba(87,80,168,0.08)]">
+          <span className="k">Engagement Process</span>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--deep)] mb-2">
+            How we partner with you
+          </h2>
+          <p className="text-sm text-[var(--mute)] max-w-2xl mb-8">
+            From initial operational discovery to ongoing prompt maintenance, our team handles the heavy lifting.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {processSteps.map((s) => (
+              <div key={s.step} className="p-4 bg-[var(--paper)] border border-[var(--peri)] space-y-1.5">
+                <div className="font-mono text-sm font-bold text-[var(--or)]">{s.step}</div>
+                <div className="font-bold text-sm text-[var(--deep)]">{s.name}</div>
+                <p className="text-xs text-[var(--mute)] leading-relaxed">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom CTA */}
+        <div
+          className="mt-20 p-8 sm:p-12 bg-[var(--deep)] text-white flex flex-col md:flex-row items-center justify-between gap-8"
+          style={{
+            clipPath: "polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%)",
+          }}
+        >
+          <div className="space-y-2 max-w-2xl">
+            <span className="text-xs font-mono text-[var(--peri)] uppercase">Direct Engineering Consultation</span>
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
+              Let’s talk about how your business operates today.
+            </h3>
+            <p className="text-xs sm:text-sm text-[#cfd2ee] leading-relaxed">
+              We’ll show you how a custom, unified system could eliminate manual bottlenecks and capture every inbound opportunity.
+            </p>
+          </div>
+
+          <Link href="/contact" className="btn" style={{ background: "var(--or)", color: "var(--deep)" }}>
+            Schedule Architecture Call
+          </Link>
         </div>
       </div>
     </div>

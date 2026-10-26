@@ -1,9 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-140 -160 280 320" width="32" height="32">
-  <polygon points="0,-150 130,-75 0,0 -130,-75" fill="#8478e0"/>
-  <polygon points="-130,-75 0,0 0,150 -130,75" fill="#15134a"/>
-  <polygon points="0,0 130,-75 130,0 0,75" fill="#5750a8"/>
-  <polygon points="0,75 130,0 130,75 0,150" fill="#ef7a5e"/>
-  <polygon points="-84,-44 0,-92 84,-44 84,38 4,86 -84,36" fill="#f7f5ff"/>
-  <polygon points="-48,-8 0,-36 46,-8 46,26 -48,28" fill="#15134a"/>
-  <polygon points="0,-6 36,28 16,28 16,106 -16,106 -16,28 -36,28" fill="#fd9150"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-140 -160 280 320" width="280" height="320">
+  <!-- Top Facet (Lavender) -->
+  <polygon points="0,-150 130,-75 0,0 -130,-75" fill="#8478e0" />
+  <!-- Left Facet (Deep Navy) -->
+  <polygon points="-130,-75 0,0 0,150 -130,75" fill="#15134a" />
+  <!-- Upper Right Facet (Purple) -->
+  <polygon points="0,0 130,-75 130,0 0,75" fill="#5750a8" />
+  <!-- Lower Right Facet (Coral) -->
+  <polygon points="0,75 130,0 130,75 0,150" fill="#ef7a5e" />
+  <!-- Inner Hexagon Cutout (White / Pale Cream) -->
+  <polygon points="-84,-44 0,-92 84,-44 84,38 4,86 -84,36" fill="#f7f5ff" />
+  <!-- Inner Navy Shadow Cutout -->
+  <polygon points="-48,-8 0,-36 46,-8 46,26 -48,28" fill="#15134a" />
+  <!-- Upward Arrow (Vibrant Orange) -->
+  <polygon points="0,-6 36,28 16,28 16,106 -16,106 -16,28 -36,28" fill="#fd9150" />
 </svg>

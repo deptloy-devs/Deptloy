@@ -1,10 +1,20 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/marketing/Hero";
-import { WhyChooseUs } from "@/components/marketing/WhyChooseUs";
-import { ServicesSection } from "@/components/marketing/ServicesSection";
-import { Testimonials } from "@/components/marketing/Testimonials";
+import { AssemblyTrack } from "@/components/marketing/AssemblyTrack";
+import { Marquee } from "@/components/marketing/Marquee";
+import { ServicesModule } from "@/components/marketing/ServicesModule";
+import { SolutionsSection } from "@/components/marketing/SolutionsSection";
+import { StoryTimeline } from "@/components/marketing/StoryTimeline";
+import { WhyDeptloySection } from "@/components/marketing/WhyDeptloySection";
+import { ProcessSection } from "@/components/marketing/ProcessSection";
+import { AboutStudioSection } from "@/components/marketing/AboutStudioSection";
+import { FaqSection } from "@/components/marketing/FaqSection";
+import { FinalContactSection } from "@/components/marketing/FinalContactSection";
 
 export const metadata: Metadata = {
+  title: "Deptloy – Software built to outlast the hype",
+  description:
+    "We combine AI, CRM, automation and custom apps into one system built around your business, then maintain it so it keeps working for years.",
   alternates: { canonical: "/" },
 };
 
@@ -12,9 +22,16 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <WhyChooseUs />
-      <ServicesSection />
-      <Testimonials />
+      <AssemblyTrack />
+      <Marquee />
+      <ServicesModule />
+      <SolutionsSection />
+      <StoryTimeline />
+      <WhyDeptloySection />
+      <ProcessSection />
+      <AboutStudioSection />
+      <FaqSection />
+      <FinalContactSection />
     </>
   );
 }

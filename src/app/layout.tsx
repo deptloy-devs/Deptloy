@@ -2,38 +2,31 @@ import type { Metadata, Viewport } from "next";
 import { Archivo, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-// Display / Headings — bold engineered geometric character
 const archivo = Archivo({
   variable: "--font-archivo",
   subsets: ["latin"],
   display: "swap",
-  weight: ["500", "600", "700", "800", "900"],
 });
 
-// Primary Body text
-const ibmPlexSans = IBM_Plex_Sans({
+const ibmSans = IBM_Plex_Sans({
   variable: "--font-ibm-sans",
   subsets: ["latin"],
-  display: "swap",
   weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
-// Monospace — metrics, tags, badges, telemetry
-const ibmPlexMono = IBM_Plex_Mono({
+const ibmMono = IBM_Plex_Mono({
   variable: "--font-ibm-mono",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
   display: "swap",
-  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://deptloy.com"),
-  title: {
-    default: "Deptloy — AI-Powered Business Solutions Agency",
-    template: "%s | Deptloy AI",
-  },
+  title: "Deptloy – Software built to outlast the hype",
   description:
-    "Deptloy helps businesses automate customer interactions, manage appointments, streamline operations, improve CRM workflows, and build custom digital products.",
+    "We combine AI, CRM, automation and custom apps into one system built around your business, then maintain it so it keeps working for years.",
   keywords: [
     "AI receptionist",
     "business automation",
@@ -44,19 +37,13 @@ export const metadata: Metadata = {
     "workflow automation",
   ],
   authors: [{ name: "Deptloy AI Solutions" }],
-  // favicon.ico, apple-icon.png, opengraph-image.png and twitter-image.png live in
-  // src/app and are picked up automatically; the SVG is the sharp version for modern browsers.
   icons: {
-    icon: [
-      { url: "/deptloy_icon.svg", type: "image/svg+xml" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
-    // Declared explicitly: setting `icons` here stops Next from auto-linking app/apple-icon.png.
-    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/favicon.svg", type: "image/svg+xml" }],
   },
   openGraph: {
-    title: "Deptloy — Premium AI Automation Agency",
-    description: "Let AI Handle the Busywork. You Build the Business.",
+    title: "Deptloy – Software built to outlast the hype",
+    description: "We combine AI, CRM, automation and custom apps into one system built around your business.",
     url: "https://deptloy.com",
     siteName: "Deptloy",
     locale: "en_US",
@@ -64,17 +51,15 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Deptloy — Premium AI Automation Agency",
-    description: "Let AI Handle the Busywork. You Build the Business.",
+    title: "Deptloy – Software built to outlast the hype",
+    description: "We combine AI, CRM, automation and custom apps into one system built around your business.",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0c0b28" },
-    { media: "(prefers-color-scheme: light)", color: "#f4f3fb" },
-  ],
-  colorScheme: "light dark",
+  themeColor: "#f4f3fb",
+  colorScheme: "light",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -85,32 +70,19 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-scroll-behavior="smooth"
-      className={`${archivo.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable} h-full`}
-      suppressHydrationWarning
+      className={`${archivo.variable} ${ibmSans.variable} ${ibmMono.variable} h-full`}
     >
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){
-              try {
-                var stored = localStorage.getItem('deptloy-theme');
-                var prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-                var theme = stored ? stored : (prefersLight ? 'light' : 'dark');
-                document.documentElement.setAttribute('data-theme', theme);
-                if (theme === 'light') {
-                  document.documentElement.classList.add('light');
-                  document.documentElement.classList.remove('dark');
-                } else {
-                  document.documentElement.classList.add('dark');
-                  document.documentElement.classList.remove('light');
-                }
-              } catch(e){}
-            })();`,
-          }}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+          rel="stylesheet"
         />
       </head>
-      <body className="min-h-full font-sans transition-colors duration-200">{children}</body>
+      <body className="min-h-full font-sans antialiased text-[#15134a] selection:bg-[#fd9150]/30 selection:text-[#15134a]">
+        {children}
+      </body>
     </html>
   );
 }

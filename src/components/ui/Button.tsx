@@ -7,6 +7,7 @@ type Variant = "primary" | "secondary" | "outline" | "ghost" | "danger" | "glow"
 type Size = "sm" | "md" | "lg";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  /** "glow" is kept as an alias of "primary" for older call sites. */
   variant?: Variant;
   size?: Size;
   href?: string;
@@ -16,32 +17,29 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const base =
-  "group/btn relative inline-flex items-center justify-center whitespace-nowrap font-bold rounded-full select-none cursor-pointer " +
-  "transition-all duration-200 ease-out " +
+  "group/btn relative inline-flex items-center justify-center whitespace-nowrap font-semibold rounded-control select-none cursor-pointer " +
+  "transition-[background,box-shadow,border-color,color,transform] duration-200 ease-out-soft " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas " +
-  "active:scale-95 disabled:opacity-50 disabled:pointer-events-none aria-disabled:opacity-50 aria-disabled:pointer-events-none";
+  "active:translate-y-px disabled:opacity-50 disabled:pointer-events-none aria-disabled:opacity-50 aria-disabled:pointer-events-none";
 
+// Heights: 40 / 44 / 48px — md and lg meet the 44px touch-target guideline.
 const sizes: Record<Size, string> = {
-  sm: "h-9 px-4 text-xs tracking-wide gap-1.5",
-  md: "h-11 px-6 text-sm gap-2",
-  lg: "h-12 px-7 text-base gap-2.5",
+  sm: "h-10 px-4 text-sm gap-1.5",
+  md: "h-11 px-5 text-sm gap-2",
+  lg: "h-12 px-6 text-base gap-2",
 };
 
+// White text stays >= 5.2:1 on every primary fill (normal and hover).
 const primary =
-  "bg-[var(--deep)] text-white dark:bg-white dark:text-[var(--deep)] " +
-  "hover:!bg-[var(--or)] hover:!text-[var(--deep)] hover:shadow-[0_10px_35px_rgba(253,145,80,0.45)] hover:-translate-y-0.5";
+  "bg-gradient-brand text-white shadow-glow hover:bg-gradient-brand-strong hover:shadow-[0_14px_36px_-12px_rgb(72_64_245/0.7)]";
 
 const variants: Record<Variant, string> = {
   primary,
   glow: primary,
-  secondary:
-    "bg-raised text-fg border border-line hover:bg-raised-hover hover:border-line-strong",
-  outline:
-    "bg-transparent text-fg border border-line-strong hover:border-[var(--pur)] hover:bg-surface",
-  ghost:
-    "bg-transparent text-fg-soft hover:text-fg hover:bg-raised/70 border border-transparent",
-  danger:
-    "bg-danger/15 text-danger border border-danger/30 hover:bg-danger/25",
+  secondary: "bg-raised text-fg border border-line hover:bg-raised-hover hover:border-line-strong",
+  outline: "bg-transparent text-fg border border-line-strong hover:border-brand-400/60 hover:bg-white/[0.04]",
+  ghost: "bg-transparent text-fg-soft hover:text-fg hover:bg-white/[0.06]",
+  danger: "bg-danger/15 text-danger border border-danger/30 hover:bg-danger/25",
 };
 
 const isExternal = (href: string) => /^(https?:|mailto:|tel:)/.test(href);

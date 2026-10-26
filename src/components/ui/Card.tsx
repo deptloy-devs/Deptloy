@@ -24,9 +24,9 @@ const paddings = {
 } as const;
 
 const tones = {
-  card: "border-line bg-card/90",
-  raised: "border-line bg-raised/80",
-  highlight: "border-[var(--pur)]/25 bg-card/90 bg-gradient-to-br from-[var(--mist)]/50 to-card dark:from-[var(--pur)]/15",
+  card: "border-line bg-card",
+  raised: "border-line bg-raised",
+  highlight: "border-brand-400/20 bg-card bg-gradient-to-br from-brand-950/40 to-card",
 } as const;
 
 /** Standard surface for content blocks. */

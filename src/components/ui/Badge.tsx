@@ -14,14 +14,8 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 const variants: Record<Variant, { badge: string; dot: string }> = {
   default: { badge: "bg-raised text-fg-soft border-line", dot: "bg-fg-muted" },
-  brand: {
-    badge: "bg-[var(--pur)]/12 text-[var(--pur)] dark:text-[var(--peri)] border-[var(--pur)]/25",
-    dot: "bg-[var(--pur)] dark:bg-[var(--peri)]",
-  },
-  accent: {
-    badge: "bg-[var(--or)]/15 text-[var(--or)] border-[var(--or)]/30",
-    dot: "bg-[var(--or)]",
-  },
+  brand: { badge: "bg-brand-500/12 text-brand-300 border-brand-400/25", dot: "bg-brand-300" },
+  accent: { badge: "bg-electric-400/10 text-electric-300 border-electric-400/25", dot: "bg-electric-400" },
   success: { badge: "bg-success/10 text-success border-success/25", dot: "bg-success" },
   warning: { badge: "bg-warning/10 text-warning border-warning/25", dot: "bg-warning" },
   outline: { badge: "bg-transparent text-fg-muted border-line-strong", dot: "bg-fg-subtle" },

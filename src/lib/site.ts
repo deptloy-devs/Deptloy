@@ -1,7 +1,5 @@
 import type {
   Stat,
-  Testimonial,
-  TeamMember,
   ServiceItem,
   IndustryItem,
   CaseStudyItem,
@@ -368,76 +366,4 @@ export const mainNav = [
   { href: "/about", label: "About" },
   { href: "/blogs", label: "Blogs" },
   { href: "/contact", label: "Contact" },
-];
-
-/**
- * Headline numbers for the proof strip. Each figure already appears elsewhere
- * in this file (service metrics / FAQ) — confirm they are accurate before launch.
- */
-export const proofStats: Stat[] = [
-  { value: "24/7", label: "Calls and messages answered" },
-  { value: "< 2.4s", label: "Average inquiry response time" },
-  { value: "3–7 days", label: "Typical AI receptionist rollout" },
-  { value: "22+ hrs", label: "Admin hours saved each week" },
-];
-
-/** PLACEHOLDERS — replace with real client logos (SVG preferred) before launch. */
-export const clientLogos = [
-  { name: "Client logo", isPlaceholder: true as const },
-  { name: "Client logo", isPlaceholder: true as const },
-  { name: "Client logo", isPlaceholder: true as const },
-  { name: "Client logo", isPlaceholder: true as const },
-  { name: "Client logo", isPlaceholder: true as const },
-];
-
-/** PLACEHOLDERS — replace with real, approved client quotes before launch. */
-export const testimonials: Testimonial[] = [
-  {
-    quote: "Replace with a real client quote about the result they saw — for example, how many after-hours calls are now booked automatically.",
-    name: "Client name",
-    role: "Practice manager",
-    company: "Clinic name",
-    isPlaceholder: true,
-  },
-  {
-    quote: "Replace with a real client quote about time saved — for example, the admin work the team no longer does by hand.",
-    name: "Client name",
-    role: "Owner",
-    company: "Salon or studio name",
-    isPlaceholder: true,
-  },
-  {
-    quote: "Replace with a real client quote about working with Deptloy — the process, communication, or support after launch.",
-    name: "Client name",
-    role: "Managing broker",
-    company: "Brokerage name",
-    isPlaceholder: true,
-  },
-];
-
-/** About page — DRAFT copy for review. */
-export const companyValues = [
-  {
-    title: "Built around your rules",
-    description: "Every assistant and workflow is configured to your services, hours, pricing and brand tone — not a generic template.",
-  },
-  {
-    title: "Honest by default",
-    description: "Demos are labelled as demos, and we scope only what we can deliver, test and support.",
-  },
-  {
-    title: "Measured outcomes",
-    description: "We agree on the numbers that matter — missed calls, response time, hours saved — before we build.",
-  },
-  {
-    title: "Partners after launch",
-    description: "We tune, extend and support what we build as your business changes.",
-  },
-];
-
-/** PLACEHOLDERS — replace with real team photos, names and bios. */
-export const team: TeamMember[] = [
-  { name: "Team member", role: "Founder & Strategy", bio: "Short bio: background and what they lead at Deptloy.", initials: "TM", isPlaceholder: true },
-  { name: "Team member", role: "AI & Automation Lead", bio: "Short bio: background and what they lead at Deptloy.", initials: "TM", isPlaceholder: true },
-  { name: "Team member", role: "Engineering Lead", bio: "Short bio: background and what they lead at Deptloy.", initials: "TM", isPlaceholder: true },
 ];

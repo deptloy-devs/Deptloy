@@ -40,25 +40,6 @@ export interface CaseStudyItem {
   isDemonstration: boolean;
 }
 
-/** Content the client still needs to supply. Rendered with a visible "Placeholder" marker. */
-export interface Placeholder {
-  isPlaceholder: true;
-}
-
-export interface Testimonial extends Partial<Placeholder> {
-  quote: string;
-  name: string;
-  role: string;
-  company: string;
-}
-
-export interface TeamMember extends Partial<Placeholder> {
-  name: string;
-  role: string;
-  bio: string;
-  initials: string;
-}
-
 export interface Stat {
   value: string;
   label: string;

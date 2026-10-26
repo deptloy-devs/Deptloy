@@ -134,9 +134,7 @@ export function SolutionsSection() {
                       }}
                     />
                     <circle className="pl" cx="150" cy="126" r="28" />
-                    <g transform="translate(136, 110) scale(0.1)">
-                      <LogoMark />
-                    </g>
+                    <use href="#mk" x="138" y="111" width="24" height="28" />
                   </svg>
                 </div>
               </div>

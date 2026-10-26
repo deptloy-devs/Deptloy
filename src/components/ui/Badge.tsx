@@ -6,19 +6,17 @@ type Variant = "default" | "brand" | "accent" | "success" | "warning" | "outline
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: Variant;
   size?: "sm" | "md";
-  /** Small leading dot. */
   dot?: boolean;
-  /** Animate the dot — reserve for genuinely "live" states. */
   pulse?: boolean;
 }
 
 const variants: Record<Variant, { badge: string; dot: string }> = {
-  default: { badge: "bg-raised text-fg-soft border-line", dot: "bg-fg-muted" },
-  brand: { badge: "bg-brand-500/12 text-brand-300 border-brand-400/25", dot: "bg-brand-300" },
-  accent: { badge: "bg-electric-400/10 text-electric-300 border-electric-400/25", dot: "bg-electric-400" },
-  success: { badge: "bg-success/10 text-success border-success/25", dot: "bg-success" },
-  warning: { badge: "bg-warning/10 text-warning border-warning/25", dot: "bg-warning" },
-  outline: { badge: "bg-transparent text-fg-muted border-line-strong", dot: "bg-fg-subtle" },
+  default: { badge: "bg-[var(--mist)] text-[var(--deep)] border-[var(--peri)]", dot: "bg-[var(--deep)]" },
+  brand: { badge: "bg-[var(--peri)]/50 text-[var(--pur)] border-[var(--lav)]/40 font-mono", dot: "bg-[var(--pur)]" },
+  accent: { badge: "bg-[var(--peach)] text-[var(--deep)] border-[var(--or)]/40 font-mono", dot: "bg-[var(--or)]" },
+  success: { badge: "bg-emerald-50 text-emerald-800 border-emerald-200 font-mono", dot: "bg-emerald-500" },
+  warning: { badge: "bg-amber-50 text-amber-800 border-amber-200 font-mono", dot: "bg-amber-500" },
+  outline: { badge: "bg-transparent text-[var(--mute)] border-[rgba(21,19,74,0.18)] font-mono", dot: "bg-[var(--mute)]" },
 };
 
 export function Badge({
@@ -35,7 +33,7 @@ export function Badge({
     <span
       className={cn(
         "inline-flex items-center rounded-full border font-medium whitespace-nowrap",
-        size === "sm" ? "px-2 py-0.5 text-xs gap-1" : "px-3 py-1 text-caption gap-1.5",
+        size === "sm" ? "px-2 py-0.5 text-xs gap-1" : "px-3 py-1 text-xs gap-1.5",
         v.badge,
         className
       )}

@@ -142,9 +142,7 @@ export function AboutStudioSection() {
 
                 <g className="hb2">
                   <circle cx="260" cy="165" r="34" />
-                  <g transform="translate(245, 147) scale(0.11)">
-                    <LogoMark />
-                  </g>
+                  <use href="#mk" x="245" y="147" width="30" height="35" />
                 </g>
               </svg>
 

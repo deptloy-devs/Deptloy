@@ -21,25 +21,15 @@ export function LogoMark({ className = "w-7 h-8" }: { className?: string }) {
   return (
     <svg
       viewBox="-140 -160 280 320"
+      width={28}
+      height={32}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={cn("shrink-0", className)}
+      style={{ width: "28px", height: "32px", display: "inline-block" }}
       aria-hidden="true"
     >
-      {/* Top face: lavender */}
-      <polygon points="0,-150 130,-75 0,0 -130,-75" fill="#8478e0" />
-      {/* Left lower face: deep navy */}
-      <polygon points="-130,-75 0,0 0,150 -130,75" fill="#15134a" />
-      {/* Right upper facet: purple */}
-      <polygon points="0,0 130,-75 130,0 0,75" fill="#5750a8" />
-      {/* Right lower facet: coral */}
-      <polygon points="0,75 130,0 130,75 0,150" fill="#ef7a5e" />
-      {/* Inner negative space facet: off-white */}
-      <polygon points="-84,-44 0,-92 84,-44 84,38 4,86 -84,36" fill="#f7f5ff" />
-      {/* Inner dark core */}
-      <polygon points="-48,-8 0,-36 46,-8 46,26 -48,28" fill="#15134a" />
-      {/* Orange arrow pointing UP */}
-      <polygon points="0,-6 36,28 16,28 16,106 -16,106 -16,28 -36,28" fill="#fd9150" />
+      <use href="#mk" />
     </svg>
   );
 }

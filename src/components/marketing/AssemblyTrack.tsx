@@ -40,10 +40,12 @@ export function AssemblyTrack() {
 
     const updatePaths = () => {
       if (!gridRef.current || !linesRef.current) return;
+      const g = gridRef.current;
+      if (g.offsetWidth === 0 || g.offsetHeight === 0) return;
+
       const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
       if (cards.length < 4) return;
 
-      const g = gridRef.current;
       const cx = g.offsetWidth / 2;
       const cy = g.offsetHeight / 2;
       linesRef.current.setAttribute("viewBox", `0 0 ${g.offsetWidth} ${g.offsetHeight}`);
@@ -86,7 +88,7 @@ export function AssemblyTrack() {
 
       const W = window.innerWidth;
       const H = window.innerHeight;
-      const m = W < 980 ? 0.35 : 1;
+      const m = W < 640 ? 0.15 : W < 980 ? 0.3 : 1;
 
       cardRefs.current.forEach((h, i) => {
         if (!h) return;
@@ -341,7 +343,7 @@ export function AssemblyTrack() {
 
           <div className="hub" ref={hubRef} id="hub">
             <svg width="34" height="38" viewBox="-140 -160 280 320">
-              <LogoMark />
+              <use href="#mk" />
             </svg>
           </div>
         </div>

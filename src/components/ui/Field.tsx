@@ -8,18 +8,13 @@ interface FieldBaseProps {
   helperText?: string;
 }
 
-/** Shared control styles — 48px tall, visible focus ring, danger border on error. */
 const control = (error?: string) =>
   cn(
-    "w-full rounded-control border bg-raised text-fg text-base sm:text-sm placeholder:text-fg-subtle",
-    "transition-[border-color,box-shadow] duration-150 focus:outline-none focus:ring-2 focus:ring-ring/50 focus:border-brand-400",
-    error ? "border-danger/70 focus:ring-danger/40" : "border-line hover:border-line-strong"
+    "w-full border bg-[var(--paper)] text-[var(--deep)] text-base sm:text-sm placeholder:text-[var(--mute)]/70",
+    "transition-colors duration-150 focus:outline-none focus:border-[var(--pur)] focus:bg-white",
+    error ? "border-red-500 focus:border-red-500" : "border-[var(--peri)] hover:border-[var(--pur)]"
   );
 
-/**
- * Label + control + message. The message is linked to the control with
- * aria-describedby and aria-invalid, so screen readers announce errors.
- */
 function FieldShell({
   id,
   label,
@@ -36,10 +31,10 @@ function FieldShell({
   const hasMessage = Boolean(error || helperText);
   return (
     <div className="flex w-full flex-col gap-1.5">
-      <label htmlFor={id} className="text-sm font-medium text-fg-soft">
+      <label htmlFor={id} className="text-sm font-semibold text-[var(--deep)]">
         {label}
         {required && (
-          <span className="ml-0.5 text-brand-300" aria-hidden="true">
+          <span className="ml-0.5 text-[var(--or)]" aria-hidden="true">
             *
           </span>
         )}
@@ -49,12 +44,12 @@ function FieldShell({
         "aria-describedby": hasMessage ? messageId : undefined,
       })}
       {error ? (
-        <p id={messageId} className="flex items-center gap-1.5 text-caption font-medium text-danger">
+        <p id={messageId} className="flex items-center gap-1.5 text-xs font-medium text-red-600">
           <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
           {error}
         </p>
       ) : helperText ? (
-        <p id={messageId} className="text-caption text-fg-muted">
+        <p id={messageId} className="text-xs text-[var(--mute)]">
           {helperText}
         </p>
       ) : null}
@@ -70,7 +65,15 @@ export const Input = React.forwardRef<HTMLInputElement, FieldProps>(
     const inputId = id || generatedId;
     return (
       <FieldShell id={inputId} label={label} error={error} helperText={helperText} required={props.required}>
-        {(a11y) => <input id={inputId} ref={ref} className={cn(control(error), "h-12 px-4", className)} {...a11y} {...props} />}
+        {(a11y) => (
+          <input
+            ref={ref}
+            id={inputId}
+            className={cn(control(error), "h-11 px-3.5", className)}
+            {...a11y}
+            {...props}
+          />
+        )}
       </FieldShell>
     );
   }
@@ -82,15 +85,15 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ label, error, helperText, className, id, rows = 4, ...props }, ref) => {
     const generatedId = React.useId();
-    const textareaId = id || generatedId;
+    const inputId = id || generatedId;
     return (
-      <FieldShell id={textareaId} label={label} error={error} helperText={helperText} required={props.required}>
+      <FieldShell id={inputId} label={label} error={error} helperText={helperText} required={props.required}>
         {(a11y) => (
           <textarea
-            id={textareaId}
             ref={ref}
+            id={inputId}
             rows={rows}
-            className={cn(control(error), "min-h-28 resize-y px-4 py-3", className)}
+            className={cn(control(error), "p-3.5 resize-none", className)}
             {...a11y}
             {...props}
           />
@@ -101,29 +104,27 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 );
 Textarea.displayName = "Textarea";
 
-export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement>, FieldBaseProps {
-  children: React.ReactNode;
-}
+export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement>, FieldBaseProps {}
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   ({ label, error, helperText, className, id, children, ...props }, ref) => {
     const generatedId = React.useId();
-    const selectId = id || generatedId;
+    const inputId = id || generatedId;
     return (
-      <FieldShell id={selectId} label={label} error={error} helperText={helperText} required={props.required}>
+      <FieldShell id={inputId} label={label} error={error} helperText={helperText} required={props.required}>
         {(a11y) => (
-          <div className="relative">
+          <div className="relative w-full">
             <select
-              id={selectId}
               ref={ref}
-              className={cn(control(error), "h-12 cursor-pointer appearance-none pl-4 pr-10", className)}
+              id={inputId}
+              className={cn(control(error), "h-11 appearance-none px-3.5 pr-10 cursor-pointer", className)}
               {...a11y}
               {...props}
             >
               {children}
             </select>
             <ChevronDown
-              className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-muted"
+              className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--mute)]"
               aria-hidden="true"
             />
           </div>

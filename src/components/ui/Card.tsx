@@ -5,16 +5,12 @@ type CardElement = "div" | "article" | "li";
 
 export interface CardProps extends React.HTMLAttributes<HTMLElement> {
   as?: CardElement;
-  /** Lift + brand border on hover. Use when the whole card is clickable. */
   interactive?: boolean;
   padding?: "none" | "sm" | "md" | "lg" | "xl";
-  /** card = default surface, raised = nested surface, highlight = brand-tinted callout. */
   tone?: "card" | "raised" | "highlight";
   radius?: "card" | "panel";
 }
 
-// Note: cn() concatenates (no class merging), so variants live here instead of
-// being overridden through className.
 const paddings = {
   none: "",
   sm: "p-4",
@@ -24,12 +20,11 @@ const paddings = {
 } as const;
 
 const tones = {
-  card: "border-line bg-card",
-  raised: "border-line bg-raised",
-  highlight: "border-brand-400/20 bg-card bg-gradient-to-br from-brand-950/40 to-card",
+  card: "border-[rgba(21,19,74,0.14)] bg-white text-[var(--deep)]",
+  raised: "border-[rgba(21,19,74,0.14)] bg-[var(--paper)] text-[var(--deep)]",
+  highlight: "border-[var(--pur)] bg-white text-[var(--deep)] shadow-[0_14px_40px_rgba(87,80,168,0.12)]",
 } as const;
 
-/** Standard surface for content blocks. */
 export function Card({
   as: Tag = "div",
   interactive = false,
@@ -42,12 +37,11 @@ export function Card({
   return (
     <Tag
       className={cn(
-        "relative border shadow-card",
-        radius === "panel" ? "rounded-panel" : "rounded-card",
+        "relative border",
         tones[tone],
         paddings[padding],
         interactive &&
-          "transition-[transform,border-color,box-shadow] duration-200 ease-out-soft hover:-translate-y-0.5 hover:border-brand-400/35 hover:shadow-raised focus-within:border-brand-400/35",
+          "transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-[var(--pur)] hover:shadow-lg focus-within:border-[var(--pur)]",
         className
       )}
       {...props}

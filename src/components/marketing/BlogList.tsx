@@ -2,35 +2,13 @@
 
 import * as React from "react";
 import Link from "next/link";
-import {
-  Clock,
-  Calendar,
-  ArrowRight,
-  CheckCircle2,
-  Sparkles,
-  BookOpen,
-  Filter,
-} from "lucide-react";
-import { Badge } from "@/components/ui/Badge";
-import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { Clock, Calendar, ArrowRight, CheckCircle2, Filter } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
-import { cn } from "@/lib/cn";
 import type { BlogPost } from "@/types";
 
 interface BlogListProps {
   posts: BlogPost[];
 }
-
-const categoryVariants: Record<
-  BlogPost["category"],
-  "brand" | "accent" | "success" | "warning"
-> = {
-  "Voice AI": "brand",
-  Automation: "accent",
-  Architecture: "success",
-  Security: "warning",
-};
 
 export function BlogList({ posts }: BlogListProps) {
   const [selectedCategory, setSelectedCategory] = React.useState<string>("All");
@@ -46,9 +24,9 @@ export function BlogList({ posts }: BlogListProps) {
   return (
     <div className="space-y-10">
       {/* Category Filter Pills */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[rgba(21,19,74,0.15)] pb-4">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-fg-subtle mr-2">
+          <span className="flex items-center gap-1.5 text-xs font-mono font-medium uppercase tracking-wider text-[var(--mute)] mr-2">
             <Filter className="h-3.5 w-3.5" aria-hidden="true" />
             Topic:
           </span>
@@ -64,21 +42,17 @@ export function BlogList({ posts }: BlogListProps) {
                 key={cat}
                 type="button"
                 onClick={() => setSelectedCategory(cat)}
-                className={cn(
-                  "cursor-pointer inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-150",
+                className={`cursor-pointer inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-mono transition-all duration-200 ${
                   isSelected
-                    ? "bg-brand-600 text-white shadow-sm font-semibold"
-                    : "border border-line bg-card/60 text-fg-soft hover:bg-raised hover:text-fg"
-                )}
+                    ? "bg-[var(--deep)] text-white font-semibold"
+                    : "bg-white text-[var(--deep)] border border-[rgba(21,19,74,0.15)] hover:bg-[var(--mist)]"
+                }`}
               >
-                {cat}
+                <span>{cat}</span>
                 <span
-                  className={cn(
-                    "text-[10px] px-1.5 py-0.2 rounded-full",
-                    isSelected
-                      ? "bg-white/20 text-white"
-                      : "bg-raised text-fg-muted"
-                  )}
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                    isSelected ? "bg-white/20 text-white" : "bg-[var(--mist)] text-[var(--mute)]"
+                  }`}
                 >
                   {count}
                 </span>
@@ -87,143 +61,94 @@ export function BlogList({ posts }: BlogListProps) {
           })}
         </div>
 
-        <p className="text-xs text-fg-muted hidden sm:block">
-          Showing <span className="font-semibold text-fg">{filteredPosts.length}</span> curated {filteredPosts.length === 1 ? "brief" : "briefs"}
-        </p>
+        <span className="text-xs font-mono text-[var(--mute)]">
+          Showing {filteredPosts.length} of {posts.length} briefs
+        </span>
       </div>
 
-      {/* Grid of Minimal Insight Cards */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {filteredPosts.map((post) => {
-          const variant = categoryVariants[post.category];
-
-          return (
-            <Card
-              key={post.slug}
-              as="article"
-              interactive
-              padding="lg"
-              className="flex flex-col justify-between group cursor-pointer transition-all duration-200"
-              onClick={() => setActivePost(post)}
-            >
-              <div>
-                {/* Meta Row: Category Badge + Date + Read Time */}
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <Badge variant={variant} size="sm" dot>
-                    {post.category}
-                  </Badge>
-                  <div className="flex items-center gap-3 text-caption text-fg-subtle">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" aria-hidden="true" />
-                      {post.date}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" aria-hidden="true" />
-                      {post.readTime}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Title */}
-                <h2 className="mt-4 font-display text-lg font-semibold tracking-tight text-fg transition-colors group-hover:text-brand-300 sm:text-xl">
-                  {post.title}
-                </h2>
-
-                {/* Excerpt / Summary */}
-                <p className="mt-2.5 text-sm leading-relaxed text-fg-muted">
-                  {post.summary}
-                </p>
-
-                {/* Key Takeaways Box */}
-                <div className="mt-5 rounded-card border border-line bg-surface/70 p-3.5">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-fg-subtle flex items-center gap-1 mb-2">
-                    <Sparkles className="h-3 w-3 text-brand-400" aria-hidden="true" />
-                    Key Takeaways
-                  </p>
-                  <ul className="space-y-1.5">
-                    {post.keyTakeaways.slice(0, 2).map((takeaway, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-start gap-2 text-xs text-fg-soft leading-snug"
-                      >
-                        <CheckCircle2
-                          className="h-3.5 w-3.5 shrink-0 text-emerald-500 mt-0.5"
-                          aria-hidden="true"
-                        />
-                        <span>{takeaway}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {/* Action Trigger */}
-              <div className="mt-6 flex items-center justify-between border-t border-line pt-4">
-                <span className="text-xs font-medium text-brand-300 group-hover:text-brand-200 inline-flex items-center gap-1">
-                  Read complete brief
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-                </span>
-                <span className="text-[11px] text-fg-subtle">Instant breakdown</span>
-              </div>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Accessible Reading Modal */}
-      {activePost && (
-        <Modal
-          isOpen={Boolean(activePost)}
-          onClose={() => setActivePost(null)}
-          maxWidth="2xl"
-        >
-          <div className="space-y-6">
-            {/* Header info */}
+      {/* Grid of Briefs */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredPosts.map((post) => (
+          <article
+            key={post.slug}
+            className="group flex flex-col justify-between bg-white border border-[rgba(21,19,74,0.14)] p-6 transition-all duration-300 hover:shadow-[0_16px_40px_rgba(87,80,168,0.14)] hover:-translate-y-1"
+            style={{
+              clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%)",
+            }}
+          >
             <div>
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-                <Badge variant={categoryVariants[activePost.category]} size="sm" dot>
-                  {activePost.category}
-                </Badge>
-                <span className="text-xs text-fg-subtle">•</span>
-                <span className="text-xs text-fg-subtle">{activePost.date}</span>
-                <span className="text-xs text-fg-subtle">•</span>
-                <span className="text-xs text-fg-subtle">{activePost.readTime}</span>
+              {/* Meta row */}
+              <div className="flex items-center justify-between gap-2 text-xs font-mono mb-4 text-[var(--mute)]">
+                <span className="font-semibold text-[var(--pur)] uppercase tracking-wider">
+                  {post.category}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5" />
+                  {post.readTime}
+                </span>
               </div>
-              <h1 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight text-fg">
-                {activePost.title}
-              </h1>
-              <p className="mt-3 text-base leading-relaxed text-fg-soft">
-                {activePost.summary}
+
+              {/* Title */}
+              <h3 className="font-display font-bold text-xl text-[var(--deep)] tracking-tight leading-snug group-hover:text-[var(--or)] transition-colors">
+                {post.title}
+              </h3>
+
+              {/* Summary */}
+              <p className="mt-3 text-sm text-[var(--mute)] leading-relaxed line-clamp-3">
+                {post.summary}
               </p>
             </div>
 
-            {/* Actionable Takeaways Strip */}
-            <div className="rounded-panel border border-brand-400/25 bg-brand-500/[0.06] p-4 sm:p-5">
-              <div className="flex items-center gap-2 mb-2.5">
-                <Sparkles className="h-4 w-4 text-brand-400" aria-hidden="true" />
-                <h3 className="text-xs font-bold uppercase tracking-wider text-brand-300">
-                  Key Architectural Takeaways
-                </h3>
-              </div>
-              <ul className="space-y-2">
-                {activePost.keyTakeaways.map((takeaway, idx) => (
-                  <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-fg-soft">
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500 mt-0.5" aria-hidden="true" />
-                    <span>{takeaway}</span>
-                  </li>
-                ))}
-              </ul>
+            {/* Bottom action */}
+            <div className="mt-6 pt-4 border-t border-[rgba(21,19,74,0.1)] flex items-center justify-between">
+              <span className="text-xs font-mono text-[var(--mute)]">
+                {post.date}
+              </span>
+              <button
+                type="button"
+                onClick={() => setActivePost(post)}
+                className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-[var(--deep)] hover:text-[var(--or)] transition-colors cursor-pointer"
+              >
+                Read brief <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {/* Modal reader for concise briefs */}
+      {activePost && (
+        <Modal
+          isOpen={!!activePost}
+          onClose={() => setActivePost(null)}
+          title={activePost.title}
+        >
+          <div className="space-y-6 max-w-2xl">
+            <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[var(--mute)] border-b border-[rgba(21,19,74,0.12)] pb-3">
+              <span className="font-bold text-[var(--pur)] uppercase">
+                {activePost.category}
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1">
+                <Clock className="w-3.5 h-3.5" />
+                {activePost.readTime}
+              </span>
+              <span>•</span>
+              <span>{activePost.date}</span>
             </div>
 
-            {/* Structured Sections */}
-            <div className="space-y-6 border-t border-line pt-6">
-              {activePost.content.map((sec, idx) => (
-                <div key={idx} className="space-y-2.5">
-                  <h2 className="font-display text-lg font-semibold text-fg">
-                    {sec.heading}
-                  </h2>
-                  {sec.body.map((p, pIdx) => (
-                    <p key={pIdx} className="text-sm leading-relaxed text-fg-muted">
+            <p className="text-base font-medium text-[var(--deep)] leading-relaxed">
+              {activePost.summary}
+            </p>
+
+            <div className="space-y-6">
+              {activePost.content.map((section, idx) => (
+                <div key={idx} className="space-y-2">
+                  <h4 className="font-display font-bold text-lg text-[var(--deep)]">
+                    {section.heading}
+                  </h4>
+                  {section.body.map((p, pIdx) => (
+                    <p key={pIdx} className="text-sm leading-relaxed text-[var(--mute)]">
                       {p}
                     </p>
                   ))}
@@ -231,23 +156,26 @@ export function BlogList({ posts }: BlogListProps) {
               ))}
             </div>
 
-            {/* Footer action */}
-            <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 border-t border-line pt-5">
-              <button
-                type="button"
-                onClick={() => setActivePost(null)}
-                className="cursor-pointer text-xs font-medium text-fg-muted hover:text-fg transition-colors"
-              >
-                Close brief
-              </button>
-              <div className="flex items-center gap-3">
-                <Button href="/contact" size="sm" variant="primary">
-                  Discuss Implementation
-                </Button>
-                <Button href="/demo" size="sm" variant="ghost">
-                  Try AI Demo
-                </Button>
+            {activePost.keyTakeaways && activePost.keyTakeaways.length > 0 && (
+              <div className="p-4 bg-[var(--paper)] border border-[var(--peri)] rounded-xl space-y-2">
+                <p className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--pur)]">
+                  Key Takeaways
+                </p>
+                <ul className="space-y-1.5 text-xs text-[var(--deep)]">
+                  {activePost.keyTakeaways.map((point, pIdx) => (
+                    <li key={pIdx} className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-[#3ccf91] shrink-0 mt-0.5" />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
+            )}
+
+            <div className="pt-4 border-t border-[rgba(21,19,74,0.12)] flex justify-end">
+              <Link href="/#contact" className="btn sm" onClick={() => setActivePost(null)}>
+                Discuss Architecture with Us
+              </Link>
             </div>
           </div>
         </Modal>

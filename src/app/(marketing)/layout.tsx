@@ -10,13 +10,9 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
     <DepChatProvider>
       <ScrollProgress />
       <InteractiveCursor />
-      <div className="flex min-h-full flex-col">
-        <Navbar />
-        <main id="top" className="flex-1">
-          {children}
-        </main>
-        <Footer />
-      </div>
+      <Navbar />
+      <main id="top">{children}</main>
+      <Footer />
     </DepChatProvider>
   );
 }

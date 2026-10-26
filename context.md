@@ -171,9 +171,10 @@ Deptloy/
     │   │   ├── layout.tsx        # Marketing shell (Navbar, Footer, Cursor, DepChat)
     │   │   ├── about/page.tsx    # Studio overview & 4 core pillars
     │   │   ├── blogs/page.tsx    # Technical architecture articles & insights
-    │   │   ├── services/page.tsx # Detailed 4 building blocks
-    │   │   ├── projects/page.tsx # Case studies & blueprints
-    │   │   ├── contact/page.tsx  # Canonical redirect to /#contact
+    │   │   ├── how-it-works/page.tsx # End-to-end engineering expertise, lifecycle & SRE
+    │   │   ├── services/page.tsx # Seamless redirect to /how-it-works
+    │   │   ├── projects/page.tsx # Interconnected enterprise case studies & blueprints
+    │   │   ├── contact/page.tsx  # Direct quote form & appointment scheduler
     │   │   └── demo/page.tsx     # Interactive AI receptionist simulator
     │   ├── api/
     │   │   └── contact/route.ts  # Quote ingestion & dispatch to deptloy@gmail.com

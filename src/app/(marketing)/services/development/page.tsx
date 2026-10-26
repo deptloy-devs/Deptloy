@@ -79,8 +79,8 @@ export default function DevelopmentServicePage() {
       <div className="wrap">
         {/* Breadcrumb */}
         <div className="mb-6 flex items-center gap-2 text-xs font-mono text-[var(--mute)]">
-          <Link href="/services" className="hover:text-[var(--deep)]">
-            Services
+          <Link href="/how-it-works" className="hover:text-[var(--deep)]">
+            How It Works
           </Link>
           <span>/</span>
           <span className="text-[var(--pur)] font-bold">Web & App Development</span>

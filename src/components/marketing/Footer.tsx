@@ -19,13 +19,13 @@ export function Footer() {
         </div>
 
         <div>
-          <h4>Services</h4>
-          <Link href="/services/ai-receptionist">AI Receptionist</Link>
-          <Link href="/services/crm">Custom CRM</Link>
-          <Link href="/services/automation">Workflow Automation</Link>
-          <Link href="/services/development">Web &amp; Apps</Link>
-          <Link href="/services" style={{ color: "var(--or)", fontWeight: 700 }}>
-            All Services Scope →
+          <h4>How It Works</h4>
+          <Link href="/how-it-works">Architecture &amp; Scope</Link>
+          <Link href="/how-it-works#architecture">Building Blocks</Link>
+          <Link href="/how-it-works">Lifecycle &amp; Maintenance</Link>
+          <Link href="/demo">Voice AI Staging Sandbox</Link>
+          <Link href="/how-it-works" style={{ color: "var(--or)", fontWeight: 700 }}>
+            Explore Methodology →
           </Link>
         </div>
 

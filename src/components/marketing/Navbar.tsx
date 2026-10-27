@@ -7,11 +7,15 @@ import { usePathname } from "next/navigation";
 export function Navbar() {
   const [open, setOpen] = React.useState(false);
   const pathname = usePathname();
+  const prevPathnameRef = React.useRef(pathname);
 
   // Close menus on route change
   React.useEffect(() => {
-    setOpen(false);
-    document.body.classList.remove("open");
+    if (prevPathnameRef.current !== pathname) {
+      prevPathnameRef.current = pathname;
+      setOpen(false);
+      document.body.classList.remove("open");
+    }
   }, [pathname]);
 
   const toggleMenu = () => {

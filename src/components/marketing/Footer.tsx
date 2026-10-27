@@ -14,15 +14,15 @@ export function Footer() {
         <div>
           <Logo />
           <p style={{ color: "var(--mute)", maxWidth: "22em", margin: "14px 0 0", fontSize: "14.5px" }}>
-            Software built to outlast the hype. Unified systems for businesses that run on calls, leads and customers.
+            Software built to outlast the hype. Custom products, intelligent workflows and connected systems engineered around your business.
           </p>
         </div>
 
         <div>
           <h4>How It Works</h4>
-          <Link href="/how-it-works">Architecture &amp; Scope</Link>
-          <Link href="/how-it-works#architecture">Building Blocks</Link>
-          <Link href="/how-it-works">Lifecycle &amp; Maintenance</Link>
+          <Link href="/how-it-works">Our Approach</Link>
+          <Link href="/how-it-works#process">The Five Stages</Link>
+          <Link href="/projects">Solution Blueprints</Link>
           <Link href="/demo">Voice AI Staging Sandbox</Link>
           <Link href="/how-it-works" style={{ color: "var(--or)", fontWeight: 700 }}>
             Explore Methodology →
@@ -31,7 +31,7 @@ export function Footer() {
 
         <div>
           <h4>Company</h4>
-          <Link href="/projects">Projects &amp; Case Studies</Link>
+          <Link href="/projects">Projects &amp; Blueprints</Link>
           <Link href="/about">About Studio</Link>
           <Link href="/blogs">Engineering Blogs</Link>
           <Link href="/contact">Contact &amp; Book</Link>

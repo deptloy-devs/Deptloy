@@ -58,9 +58,9 @@ export function SolutionsSection() {
     <section id="solutions" style={{ paddingTop: 0 }}>
       <div className="wrap">
         <span className="k">Solutions</span>
-        <h2>Built for businesses that run on people and phones.</h2>
+        <h2>Software shaped by the industry, not a template.</h2>
         <p className="lead2">
-          Pick an industry to see the kind of system we set up. Don’t see yours? The pattern is the same.
+          Explore example workflows from different industries. Every product starts with the unique needs of the business behind it.
         </p>
 
         <div className="sol" id="sol">

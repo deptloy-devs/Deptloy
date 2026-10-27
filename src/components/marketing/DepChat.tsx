@@ -84,36 +84,15 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
   const msgsEndRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const openChat = React.useCallback((initialMsg?: string) => {
-    setIsOpen(true);
-    if (initialMsg) {
-      handleUserSend(initialMsg);
-    }
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 300);
-  }, []);
-
-  const closeChat = React.useCallback(() => {
-    setIsOpen(false);
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
-  }, []);
-
-  React.useEffect(() => {
-    msgsEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping]);
-
-  const speakText = (text: string) => {
+  const speakText = React.useCallback((text: string) => {
     if (!voiceEnabled || typeof window === "undefined" || !("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 1.05;
     window.speechSynthesis.speak(utterance);
-  };
+  }, [voiceEnabled]);
 
-  const handleUserSend = (text: string) => {
+  const handleUserSend = React.useCallback((text: string) => {
     const trimmed = text.trim();
     if (!trimmed) return;
 
@@ -138,13 +117,49 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
       setIsTyping(false);
       speakText(reply);
     }, 600);
-  };
+  }, [speakText]);
+
+  const openChat = React.useCallback((initialMsg?: string) => {
+    setIsOpen(true);
+    if (initialMsg) {
+      handleUserSend(initialMsg);
+    }
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 300);
+  }, [handleUserSend]);
+
+  const closeChat = React.useCallback(() => {
+    setIsOpen(false);
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  }, []);
+
+  React.useEffect(() => {
+    msgsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isTyping]);
 
   const handleMicToggle = () => {
     if (typeof window === "undefined") return;
-    const SpeechRecognition =
-      (window as unknown as { SpeechRecognition?: any; webkitSpeechRecognition?: any }).SpeechRecognition ||
-      (window as unknown as { webkitSpeechRecognition?: any }).webkitSpeechRecognition;
+    interface SpeechEvent {
+      results: Array<Array<{ transcript: string }>>;
+    }
+    interface SpeechInstance {
+      lang: string;
+      interimResults: boolean;
+      onstart: () => void;
+      onend: () => void;
+      onerror: () => void;
+      onresult: (event: SpeechEvent) => void;
+      start: () => void;
+    }
+    type SpeechCtor = new () => SpeechInstance;
+    const win = window as unknown as {
+      SpeechRecognition?: SpeechCtor;
+      webkitSpeechRecognition?: SpeechCtor;
+    };
+    const SpeechRecognition = win.SpeechRecognition || win.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
       alert("Speech recognition is not supported in this browser.");
@@ -160,15 +175,15 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
       recognition.onend = () => setIsListening(false);
       recognition.onerror = () => setIsListening(false);
 
-      recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
+      recognition.onresult = (event: SpeechEvent) => {
+        const transcript = event.results[0]?.[0]?.transcript;
         if (transcript) {
           handleUserSend(transcript);
         }
       };
 
       recognition.start();
-    } catch (e) {
+    } catch {
       setIsListening(false);
     }
   };

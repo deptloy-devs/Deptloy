@@ -147,10 +147,10 @@ export function AssemblyTrack() {
   return (
     <div className="track" ref={trackRef} id="track">
       <div className="stage">
-        <h2>Different services, assembled into one custom system.</h2>
+        <h2>Different capabilities, engineered into one custom product.</h2>
 
         <div className="phase" id="phase">
-          <span className={phaseIndex === 0 ? "on" : ""}>Separate services</span>
+          <span className={phaseIndex === 0 ? "on" : ""}>Specialist capabilities</span>
           <span className={phaseIndex === 1 ? "on" : ""}>Integrating</span>
           <span className={phaseIndex === 2 ? "on" : ""}>Your system</span>
         </div>

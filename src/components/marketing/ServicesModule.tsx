@@ -15,64 +15,64 @@ interface ServiceItem {
 
 const services: ServiceItem[] = [
   {
-    n: "AI receptionist",
-    s: "Never miss a call again",
+    n: "AI & intelligent systems",
+    s: "Intelligence with a purpose",
     c: "#8478e0",
     pc: "#d5cffa",
-    t: "Answers every call and message in your brand’s voice, day and night.",
+    t: "Practical AI features woven into the product, only where they help.",
     l: [
-      "Books, reschedules and cancels appointments",
-      "Answers questions using your own business knowledge",
-      "Qualifies leads and sends urgent calls to a person",
-      "Saves every conversation to your CRM",
+      "Conversational agents for calls, messages and support",
+      "AI-assisted search and knowledge workflows",
+      "Human review and clear escalation rules",
+      "Relevant context connected to your own data",
     ],
     f: ["Caller", "AI answers", "Books", "CRM record", "Text sent"],
-    x: ["CRM", "Automation", "Web & apps"],
+    x: ["Data & platform architecture", "Automation & integration", "Custom software & apps"],
   },
   {
-    n: "Custom CRM",
-    s: "Every customer in one place",
+    n: "Data & platform architecture",
+    s: "One reliable source of truth",
     c: "#5750a8",
     pc: "#ece8ff",
-    t: "A customer system shaped around how your team actually sells and serves.",
+    t: "The database, APIs and foundations that make a product dependable.",
     l: [
-      "Pipeline and full contact history in one view",
-      "Call transcripts, notes and tasks attached automatically",
-      "Views and permissions for each team member",
-      "Reports on leads, bookings and follow-ups",
+      "Custom data models built around your workflows",
+      "Secure APIs and role-based access",
+      "Shared records across teams and touchpoints",
+      "Clear reporting and operational dashboards",
     ],
     f: ["New lead", "Qualified", "Booked", "Served", "Review asked"],
-    x: ["AI receptionist", "Automation", "Web & apps"],
+    x: ["AI & intelligent systems", "Automation & integration", "Custom software & apps"],
   },
   {
-    n: "Automation",
-    s: "The busywork, handled",
+    n: "Automation & integration",
+    s: "Connect the moving parts",
     c: "#fd9150",
     pc: "#ffd8be",
-    t: "Quiet workflows that do the repetitive work reliably, in the background.",
+    t: "Reliable integrations and workflows that keep complex operations moving.",
     l: [
-      "Instant follow-ups after every call or form",
-      "Reminders, confirmations and review requests",
-      "Handoffs between tools, staff and customers",
-      "Alerts when something needs a human",
+      "Connect existing tools and internal platforms",
+      "Automate repeatable approvals and updates",
+      "Coordinate handoffs across teams and systems",
+      "Track failures and route exceptions to people",
     ],
     f: ["Trigger", "Check rules", "Act", "Notify", "Log"],
-    x: ["AI receptionist", "CRM", "Web & apps"],
+    x: ["AI & intelligent systems", "Data & platform architecture", "Custom software & apps"],
   },
   {
-    n: "Web & app development",
-    s: "Where customers meet your system",
+    n: "Custom software & apps",
+    s: "Built around your people",
     c: "#ef7a5e",
     pc: "#f7b8c9",
-    t: "Websites and apps your customers use and your team can rely on.",
+    t: "Digital products tailored to the work, not squeezed into a template.",
     l: [
-      "Fast, on-brand websites built to convert",
-      "Booking flows, customer portals and mobile apps",
-      "Admin dashboards for your team",
-      "APIs that link everything to your system",
+      "Internal tools and business platforms",
+      "Client portals, SaaS products and web applications",
+      "Thoughtful user journeys and responsive interfaces",
+      "Dashboards, integrations and scalable foundations",
     ],
     f: ["Visitor", "Books online", "CRM record", "Reminder", "Returns"],
-    x: ["AI receptionist", "CRM", "Automation"],
+    x: ["AI & intelligent systems", "Data & platform architecture", "Automation & integration"],
   },
 ];
 
@@ -81,8 +81,7 @@ export function ServicesModule() {
   const cur = services[activeIdx];
 
   const handlePlugClick = (name: string) => {
-    const target = name.split(" ")[0].toLowerCase();
-    const foundIdx = services.findIndex((s) => s.n.toLowerCase().includes(target));
+    const foundIdx = services.findIndex((s) => s.n === name);
     if (foundIdx !== -1) {
       setActiveIdx(foundIdx);
     }
@@ -91,10 +90,10 @@ export function ServicesModule() {
   return (
     <section id="services">
       <div className="wrap">
-        <span className="k">What we build</span>
-        <h2>The building blocks of your system.</h2>
+        <span className="k">Our capabilities</span>
+        <h2>The expertise behind your product.</h2>
         <p className="lead2">
-          We combine these services into one custom, long-lasting system that runs your business. Start with the piece that matters most; everything is designed to connect.
+          You bring the challenge. We bring together the right mix of engineering, design, AI and integrations to build a product around it.
         </p>
 
         <div className="mods">
@@ -129,7 +128,7 @@ export function ServicesModule() {
             style={{ "--c": cur.c } as React.CSSProperties}
           >
             <div className="sh2">
-              <span>Module</span>
+              <span>Capability</span>
               <b>{cur.n}</b>
             </div>
 
@@ -229,7 +228,7 @@ export function ServicesModule() {
                       <i></i>
                       <i></i>
                     </div>
-                    <div className="hh">Book in 30 seconds</div>
+                    <div className="hh">Your customer portal</div>
                     <div className="cc">
                       <i></i>
                       <i></i>
@@ -237,7 +236,7 @@ export function ServicesModule() {
                     </div>
                   </div>
                   <div className="ph">
-                    <b>Pick a time</b>
+                    <b>Choose an action</b>
                     <div className="sl">
                       <i>9:00</i>
                       <i>10:30</i>
@@ -258,7 +257,7 @@ export function ServicesModule() {
             </ul>
 
             <div className="plug">
-              <span>Plugs into</span>
+              <span>Works with</span>
               {cur.x.map((plugName) => (
                 <button
                   key={plugName}

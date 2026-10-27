@@ -8,13 +8,11 @@ type TurnstileOptions = {
   theme?: "light" | "dark" | "auto";
   appearance?: "always" | "execute" | "interaction-only";
   callback?: (token: string) => void;
-  "expired-callback"?: () => void;
   "error-callback"?: () => void;
 };
 
 type TurnstileApi = {
   render(container: HTMLElement, options: TurnstileOptions): string;
-  reset(widgetId: string): void;
   remove(widgetId: string): void;
 };
 
@@ -25,6 +23,8 @@ declare global {
 }
 
 const SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+/** Long enough for a visitor to tick the box if Cloudflare asks. */
+const CHECK_TIMEOUT_MS = 45_000;
 let scriptLoading: Promise<void> | null = null;
 
 function loadTurnstile(): Promise<void> {
@@ -44,52 +44,55 @@ function loadTurnstile(): Promise<void> {
 }
 
 /**
- * Cloudflare Turnstile in "only show if needed" mode. Most visitors never see it.
- * Tokens work once, so call `reset()` after each use.
+ * Cloudflare Turnstile, loaded only when a visitor starts a call.
+ * Most visitors never see it; it shows a checkbox in `containerRef` only if Cloudflare needs one.
  */
-export function useTurnstile(siteKey: string | undefined) {
+export function useTurnstile(siteKey: string | undefined, theme: "light" | "dark") {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const widgetRef = React.useRef<string | null>(null);
-  const [token, setToken] = React.useState<string | null>(null);
-  const [failed, setFailed] = React.useState(false);
 
-  React.useEffect(() => {
-    if (!siteKey) return;
-    let cancelled = false;
-    loadTurnstile()
-      .then(() => {
-        if (cancelled || !containerRef.current || !window.turnstile) return;
-        widgetRef.current = window.turnstile.render(containerRef.current, {
-          sitekey: siteKey,
-          action: "voice_demo",
-          theme: "dark",
-          appearance: "interaction-only",
-          callback: (t) => {
-            setToken(t);
-            setFailed(false);
-          },
-          "expired-callback": () => setToken(null),
-          "error-callback": () => {
-            setToken(null);
-            setFailed(true);
-          },
-        });
-      })
-      .catch(() => {
-        if (!cancelled) setFailed(true);
-      });
-
-    return () => {
-      cancelled = true;
-      if (widgetRef.current) window.turnstile?.remove(widgetRef.current);
-      widgetRef.current = null;
-    };
-  }, [siteKey]);
-
-  const reset = React.useCallback(() => {
-    setToken(null);
-    if (widgetRef.current) window.turnstile?.reset(widgetRef.current);
+  const clear = React.useCallback(() => {
+    if (!widgetRef.current) return;
+    try {
+      window.turnstile?.remove(widgetRef.current);
+    } catch {
+      // Already gone.
+    }
+    widgetRef.current = null;
   }, []);
 
-  return { containerRef, token, failed, reset };
+  React.useEffect(() => clear, [clear]);
+
+  /** Runs a fresh check and resolves with its token. Tokens work once, so every call gets a new one. */
+  const getToken = React.useCallback(async (): Promise<string> => {
+    if (!siteKey) throw new Error("Turnstile is not configured");
+    await loadTurnstile();
+    const container = containerRef.current;
+    const api = window.turnstile;
+    if (!container || !api) throw new Error("Turnstile is not available");
+    clear();
+
+    return new Promise<string>((resolve, reject) => {
+      const timer = setTimeout(() => {
+        clear();
+        reject(new Error("Turnstile timed out"));
+      }, CHECK_TIMEOUT_MS);
+      widgetRef.current = api.render(container, {
+        sitekey: siteKey,
+        action: "voice_demo",
+        theme,
+        appearance: "interaction-only",
+        callback: (token) => {
+          clearTimeout(timer);
+          resolve(token);
+        },
+        "error-callback": () => {
+          clearTimeout(timer);
+          reject(new Error("Turnstile check failed"));
+        },
+      });
+    });
+  }, [siteKey, theme, clear]);
+
+  return { containerRef, getToken };
 }

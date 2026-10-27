@@ -29,13 +29,36 @@ export function checkCallClock(input: ClockInput): { remaining: number; action: 
 
 export type TranscriptLine = { id: number; role: "agent" | "caller"; text: string };
 
-/** Transcripts arrive in small pieces; join pieces from the same speaker into one line. */
-export function addTranscript(lines: TranscriptLine[], role: TranscriptLine["role"], text: string): TranscriptLine[] {
+/**
+ * Transcripts arrive in small pieces; join pieces from the same speaker into one line.
+ * `newTurn` starts a fresh line even when the same speaker talks again (e.g. after a tool call).
+ */
+export function addTranscript(
+  lines: TranscriptLine[],
+  role: TranscriptLine["role"],
+  text: string,
+  { newTurn = false }: { newTurn?: boolean } = {},
+): TranscriptLine[] {
   if (!text) return lines;
   const last = lines.at(-1);
   const next =
-    last && last.role === role
+    last && last.role === role && !newTurn
       ? [...lines.slice(0, -1), { ...last, text: last.text + text }]
       : [...lines, { id: (last?.id ?? 0) + 1, role, text }];
   return next.slice(-MAX_TRANSCRIPT_LINES);
+}
+
+/** 161 -> "2:41" */
+export function formatClock(seconds: number): string {
+  const s = Math.max(0, Math.floor(seconds));
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+}
+
+/** The end of a long caption, cut at a word, so a small speech bubble shows the newest words. */
+export function captionTail(text: string, maxChars: number): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (clean.length <= maxChars) return clean;
+  const tail = clean.slice(clean.length - maxChars);
+  const firstSpace = tail.indexOf(" ");
+  return "…" + (firstSpace >= 0 && firstSpace < 20 ? tail.slice(firstSpace + 1) : tail);
 }

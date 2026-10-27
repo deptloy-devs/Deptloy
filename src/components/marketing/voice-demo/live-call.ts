@@ -1,10 +1,9 @@
-import type { LiveServerMessage, Session } from "@google/genai";
-import type { DemoIndustryId } from "@/types";
+import type { FunctionCall, LiveServerMessage, Session } from "@google/genai";
 import { base64ToFloat32, downsampleToPcm16, pcm16ToBase64, rmsLevel } from "@/lib/voice-demo/audio";
 import { addTranscript, checkCallClock, type TranscriptLine } from "@/lib/voice-demo/call-state";
 import type { IssuedSession } from "@/lib/voice-demo/gatekeeper";
 import { CALL_CONNECTED_NOTE, WRAP_UP_NOTE } from "@/lib/voice-demo/prompts";
-import { runVoiceTool, type ConfirmedBooking } from "@/lib/voice-demo/tools";
+import type { ToolCall, ToolResult } from "@/lib/voice-demo/tools";
 
 export type CallStatus = "connecting" | "listening" | "speaking" | "ended" | "error";
 export type EndReason = "hangup" | "time" | "silence" | "dropped" | "error";
@@ -13,9 +12,11 @@ export type LiveCallEvents = {
   onStatus(status: CallStatus): void;
   onTranscript(lines: TranscriptLine[]): void;
   onRemaining(seconds: number): void;
-  onBooking(booking: ConfirmedBooking): void;
   onEnd(reason: EndReason): void;
 };
+
+/** Answers the agent's tool calls: sample data on /demo, a real request to the team for Dep. */
+export type ToolHandler = (call: ToolCall, session: { sessionId: string }) => Promise<ToolResult> | ToolResult;
 
 /** What Dep reads every frame for lip sync. */
 export type VoiceLevels = { agent(): number; caller(): number };
@@ -47,6 +48,8 @@ export class LiveCall {
   private startedAt = 0;
   private lastActivityAt = 0;
   private wrapUpSent = false;
+  /** The agent finished a turn, so its next words start a new transcript line. */
+  private agentTurnDone = false;
   private muted = false;
   private ended = false;
   private status: CallStatus = "connecting";
@@ -54,9 +57,9 @@ export class LiveCall {
 
   constructor(
     private readonly issued: IssuedSession,
-    private readonly choice: { industry: DemoIndustryId; serviceId: string },
     private readonly audio: CallAudio,
     private readonly events: LiveCallEvents,
+    private readonly handleTool: ToolHandler,
   ) {}
 
   readonly levels: VoiceLevels = {
@@ -166,20 +169,36 @@ export class LiveCall {
       if (part.inlineData?.data) this.play(base64ToFloat32(part.inlineData.data));
     }
     if (content?.inputTranscription?.text) this.addLine("caller", content.inputTranscription.text);
-    if (content?.outputTranscription?.text) this.addLine("agent", content.outputTranscription.text);
-
-    if (msg.toolCall?.functionCalls?.length) {
-      const functionResponses = msg.toolCall.functionCalls.map((call) => {
-        const result = runVoiceTool(call, { ...this.choice, newReference });
-        if (result.status === "confirmed") this.events.onBooking(result as ConfirmedBooking);
-        return { id: call.id, name: call.name, response: result };
-      });
-      this.session?.sendToolResponse({ functionResponses });
+    if (content?.outputTranscription?.text) {
+      this.addLine("agent", content.outputTranscription.text, this.agentTurnDone);
+      this.agentTurnDone = false;
     }
+    if (content?.turnComplete || content?.interrupted) this.agentTurnDone = true;
+
+    if (msg.toolCall?.functionCalls?.length) void this.answerTools(msg.toolCall.functionCalls);
   }
 
-  private addLine(role: TranscriptLine["role"], text: string) {
-    this.transcript = addTranscript(this.transcript, role, text);
+  private async answerTools(calls: FunctionCall[]) {
+    this.lastActivityAt = Date.now();
+    const functionResponses = await Promise.all(
+      calls.map(async (call) => {
+        let response: ToolResult;
+        try {
+          response = await this.handleTool(call, { sessionId: this.issued.sessionId });
+        } catch {
+          response = { status: "error", message: "That didn't work. Apologise and offer another way." };
+        }
+        return { id: call.id, name: call.name, response };
+      }),
+    );
+    if (this.ended) return;
+    // A slow tool (like sending an email) isn't silence.
+    this.lastActivityAt = Date.now();
+    this.session?.sendToolResponse({ functionResponses });
+  }
+
+  private addLine(role: TranscriptLine["role"], text: string, newTurn = false) {
+    this.transcript = addTranscript(this.transcript, role, text, { newTurn });
     this.events.onTranscript(this.transcript);
   }
 
@@ -258,8 +277,4 @@ export class LiveCall {
     analyser.getFloatTimeDomainData(this.frame);
     return rmsLevel(this.frame);
   }
-}
-
-function newReference(): string {
-  return `BK-${Math.floor(100000 + Math.random() * 900000)}`;
 }

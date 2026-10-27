@@ -14,7 +14,7 @@ export type ToolContext = {
   newReference(): string;
 };
 
-export type ToolResult = { status: "ok" | "confirmed" | "error"; [key: string]: unknown };
+export type ToolResult = { status: "ok" | "confirmed" | "requested" | "error"; [key: string]: unknown };
 
 export type ConfirmedBooking = {
   status: "confirmed";

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addTranscript, checkCallClock, type TranscriptLine } from "./call-state";
+import { addTranscript, captionTail, checkCallClock, formatClock, type TranscriptLine } from "./call-state";
 
 describe("checkCallClock", () => {
   const base = { startedAt: 0, maxCallSeconds: 180, silenceSeconds: 20, wrapUpSent: false };
@@ -32,6 +32,12 @@ describe("addTranscript", () => {
     expect(lines).toEqual([{ id: 1, role: "agent", text: "Hello! How can I help?" }]);
   });
 
+  it("starts a new line for a new turn by the same speaker", () => {
+    let lines = addTranscript([], "agent", "Let me send that.");
+    lines = addTranscript(lines, "agent", "Done!", { newTurn: true });
+    expect(lines.map((l) => l.text)).toEqual(["Let me send that.", "Done!"]);
+  });
+
   it("starts a new line when the other side speaks", () => {
     let lines = addTranscript([], "agent", "Hi.");
     lines = addTranscript(lines, "caller", "Book me in");
@@ -49,5 +55,23 @@ describe("addTranscript", () => {
     for (let i = 0; i < 30; i++) lines = addTranscript(lines, i % 2 ? "agent" : "caller", `line ${i}`);
     expect(lines).toHaveLength(20);
     expect(lines.at(-1)?.text).toBe("line 29");
+  });
+});
+
+describe("formatClock", () => {
+  it("shows minutes and seconds", () => {
+    expect(formatClock(161)).toBe("2:41");
+    expect(formatClock(9)).toBe("0:09");
+    expect(formatClock(-3)).toBe("0:00");
+  });
+});
+
+describe("captionTail", () => {
+  it("keeps short captions and trims long ones to the newest words", () => {
+    expect(captionTail("  Hi   there ", 20)).toBe("Hi there");
+    // The last 30 characters start mid-word ("tom software…"), so the cut moves to the next word.
+    expect(captionTail("We build AI receptionists and custom software for growing teams", 30)).toBe(
+      "…software for growing teams",
+    );
   });
 });

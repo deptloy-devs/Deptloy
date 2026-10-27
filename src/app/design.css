@@ -618,7 +618,7 @@ h1 span:nth-child(3) b {
   box-shadow: 0 0 0 4px rgba(60, 207, 145, 0.2);
 }
 
-.grid {
+.asm-grid {
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2672,7 +2672,7 @@ footer a:hover {
     font-size: 10.5px;
   }
   .hc .ill, .hide-m { display: none; }
-  .grid { gap: 30px 22px; }
+  .asm-grid { gap: 30px 22px; }
   .hc h4 { font-size: 13px; }
   .stage h2 { font-size: 24px; }
   .phase span { font-size: 11px; padding: 6px 10px; }

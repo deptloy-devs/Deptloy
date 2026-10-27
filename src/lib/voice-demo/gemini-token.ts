@@ -1,13 +1,14 @@
 import { GoogleGenAI, Modality, Type, type FunctionDeclaration, type LiveConnectConstraints } from "@google/genai";
-import type { DemoIndustryId } from "@/types";
-import { buildSystemInstruction, RECEPTIONIST_PERSONAS } from "./prompts";
+import type { VoiceAgent } from "./agents";
+import { buildDepInstruction, buildSystemInstruction, DEP_PERSONA, RECEPTIONIST_PERSONAS } from "./prompts";
 
 /** The SDK supports ephemeral tokens on v1alpha only. */
 const API_VERSION = "v1alpha";
 /** The browser has this long to open the call after getting the token. */
 const START_WINDOW_MS = 60_000;
 
-const TOOLS: FunctionDeclaration[] = [
+/** The /demo receptionists' tools. Answered in the browser with sample data. */
+const RECEPTIONIST_TOOLS: FunctionDeclaration[] = [
   {
     name: "check_availability",
     description: "Lists open appointment times for a day. Call this before offering times.",
@@ -35,23 +36,57 @@ const TOOLS: FunctionDeclaration[] = [
   },
 ];
 
+/** Dep's tool. The browser forwards it to /api/voice-demo/book, which emails the team. */
+const DEP_TOOLS: FunctionDeclaration[] = [
+  {
+    name: "book_discovery_call",
+    description:
+      "Sends the visitor's discovery call request to the Deptloy team, who email them to confirm a time. Call only after reading the details back and getting a yes. Call at most once.",
+    parameters: {
+      type: Type.OBJECT,
+      properties: {
+        name: { type: Type.STRING, description: "The visitor's full name." },
+        email: { type: Type.STRING, description: "The visitor's email exactly as confirmed, e.g. ana.ruiz@example.com." },
+        topic: { type: Type.STRING, description: "What they want to build or fix, in one or two sentences." },
+        preferred_time: {
+          type: Type.STRING,
+          description: "Preferred day and time with time zone, as the visitor said it, e.g. Tuesday afternoon, Eastern time.",
+        },
+        company: { type: Type.STRING, description: "Their company or business name, if they gave one." },
+      },
+      required: ["name", "email", "topic", "preferred_time"],
+    },
+  },
+];
+
 type TokenRequest = {
   apiKey: string;
   model: string;
-  industry: DemoIndustryId;
-  serviceId: string;
+  agent: VoiceAgent;
   expiresAt: Date;
   now: number;
 };
 
-function liveConstraints(model: string, industry: DemoIndustryId, serviceId: string, maxCallSeconds: number) {
+function agentSetup(agent: VoiceAgent, maxCallSeconds: number) {
+  if (agent.kind === "dep") {
+    return { instruction: buildDepInstruction(maxCallSeconds), tools: DEP_TOOLS, voice: DEP_PERSONA.voice };
+  }
+  return {
+    instruction: buildSystemInstruction(agent.industry, agent.serviceId, maxCallSeconds),
+    tools: RECEPTIONIST_TOOLS,
+    voice: RECEPTIONIST_PERSONAS[agent.industry].voice,
+  };
+}
+
+function liveConstraints(model: string, agent: VoiceAgent, maxCallSeconds: number) {
+  const { instruction, tools, voice } = agentSetup(agent, maxCallSeconds);
   return {
     model,
     config: {
       responseModalities: [Modality.AUDIO],
-      systemInstruction: buildSystemInstruction(industry, serviceId, maxCallSeconds),
-      tools: [{ functionDeclarations: TOOLS }],
-      speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: RECEPTIONIST_PERSONAS[industry].voice } } },
+      systemInstruction: instruction,
+      tools: [{ functionDeclarations: tools }],
+      speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } },
       inputAudioTranscription: {},
       outputAudioTranscription: {},
     },
@@ -71,7 +106,7 @@ export async function createGeminiLiveToken(req: TokenRequest): Promise<string> 
       uses: 1,
       expireTime: req.expiresAt.toISOString(),
       newSessionExpireTime: new Date(req.now + START_WINDOW_MS).toISOString(),
-      liveConnectConstraints: liveConstraints(req.model, req.industry, req.serviceId, maxCallSeconds),
+      liveConnectConstraints: liveConstraints(req.model, req.agent, maxCallSeconds),
       // Empty list: lock every field set above, so the browser can't change them.
       lockAdditionalFields: [],
       httpOptions: { apiVersion: API_VERSION },

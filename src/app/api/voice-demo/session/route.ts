@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
     {
       origin: req.headers.get("origin"),
       ip,
+      agent: body.agent,
       industry: body.industry,
       serviceId: body.serviceId,
       turnstileToken: body.turnstileToken,

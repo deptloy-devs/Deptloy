@@ -1,4 +1,6 @@
 import { Redis } from "@upstash/redis";
+import { readMailSettings, sendLeadEmail } from "@/lib/lead-email";
+import type { BookDeps } from "./booking";
 import type { VoiceDemoConfig } from "./config";
 import type { GateDeps } from "./gatekeeper";
 import { createGeminiLiveToken } from "./gemini-token";
@@ -29,16 +31,30 @@ export function gateDeps(config: VoiceDemoConfig): GateDeps {
     config,
     store: getVoiceDemoStore(config),
     verifyHuman: (token, ip) => verifyTurnstile({ secret: config.turnstileSecret ?? "", token, ip }),
-    createToken: ({ industry, serviceId, expiresAt }) =>
+    createToken: ({ agent, expiresAt }) =>
       createGeminiLiveToken({
         apiKey: config.geminiApiKey ?? "",
         model: config.model,
-        industry,
-        serviceId,
+        agent,
         expiresAt,
         now: Date.now(),
       }),
     now: Date.now,
     newSessionId: () => crypto.randomUUID(),
+  };
+}
+
+export function bookingDeps(config: VoiceDemoConfig): BookDeps {
+  const mail = readMailSettings();
+  return {
+    config,
+    store: getVoiceDemoStore(config),
+    sendLead: mail
+      ? async (lead) => {
+          await sendLeadEmail(lead, mail);
+        }
+      : null,
+    now: Date.now,
+    newReference: () => `CAL-${Math.floor(100000 + Math.random() * 900000)}`,
   };
 }

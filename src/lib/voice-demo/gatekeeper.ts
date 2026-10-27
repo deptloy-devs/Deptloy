@@ -1,5 +1,4 @@
-import { demoIndustries } from "@/lib/site";
-import type { DemoIndustryId } from "@/types";
+import { parseVoiceAgent, type VoiceAgent } from "./agents";
 import { isAllowedOrigin, type VoiceDemoConfig } from "./config";
 import type { RefusalReason } from "./messages";
 import type { VoiceDemoStore } from "./store";
@@ -15,7 +14,7 @@ export type GateDeps = {
   store: VoiceDemoStore | null;
   verifyHuman(token: string, ip: string): Promise<boolean>;
   /** Creates the Gemini token. Returns the token's name. */
-  createToken(request: { industry: DemoIndustryId; serviceId: string; expiresAt: Date }): Promise<string>;
+  createToken(request: { agent: VoiceAgent; expiresAt: Date }): Promise<string>;
   now(): number;
   newSessionId(): string;
 };
@@ -23,8 +22,10 @@ export type GateDeps = {
 export type StartInput = {
   origin: string | null;
   ip: string;
-  industry: unknown;
-  serviceId: unknown;
+  /** "dep" for Dep. Leave out (or "receptionist") for a /demo receptionist picked by industry and service. */
+  agent?: unknown;
+  industry?: unknown;
+  serviceId?: unknown;
   turnstileToken: unknown;
 };
 
@@ -47,7 +48,8 @@ const DAY = 86400;
 const SLOT_GRACE_SECONDS = 30;
 const BUSY_RETRY_SECONDS = 60;
 
-const keys = {
+/** Redis keys. Shared with the booking check, which needs the live call's slot. */
+export const keys = {
   block: (ip: string) => `vd:block:${ip}`,
   strikes: (ip: string) => `vd:strikes:${ip}`,
   hour: (ip: string) => `vd:hour:${ip}`,
@@ -55,6 +57,9 @@ const keys = {
   ipCall: (ip: string) => `vd:call:${ip}`,
   lines: "vd:lines",
   budget: (date: string) => `vd:budget:${date}`,
+  /** Set for Dep calls only: this call may send one call request to the team. */
+  canBook: (sessionId: string) => `vd:canbook:${sessionId}`,
+  booked: (sessionId: string) => `vd:booked:${sessionId}`,
 };
 
 const PACIFIC = "America/Los_Angeles";
@@ -80,11 +85,6 @@ function refuse(status: number, reason: RefusalReason, retryAfter?: number): Sta
   return retryAfter === undefined ? { ok: false, status, reason } : { ok: false, status, reason, retryAfter };
 }
 
-function validChoice(industry: unknown, serviceId: unknown): industry is DemoIndustryId {
-  const match = demoIndustries.find((i) => i.id === industry);
-  return Boolean(match && match.services.some((s) => s.id === serviceId));
-}
-
 /** Counts a strike against the IP and blocks it once it has too many. */
 async function strike(store: VoiceDemoStore, ip: string, config: VoiceDemoConfig) {
   const { strikesBeforeBlock, blockSeconds } = config.limits;
@@ -102,8 +102,9 @@ export async function startSession(input: StartInput, deps: GateDeps): Promise<S
   if (!isAllowedOrigin(input.origin, config)) return refuse(403, "origin");
   if (!config.geminiApiKey || !config.turnstileSecret || !store) return refuse(503, "not_configured");
 
-  const { ip, industry, serviceId, turnstileToken } = input;
-  if (!validChoice(industry, serviceId) || typeof serviceId !== "string") return refuse(400, "bad_request");
+  const { ip, turnstileToken } = input;
+  const agent = parseVoiceAgent(input);
+  if (!agent) return refuse(400, "bad_request");
   if (typeof turnstileToken !== "string" || !turnstileToken) return refuse(400, "bad_request");
 
   if (await store.getString(keys.block(ip))) {
@@ -157,7 +158,7 @@ export async function startSession(input: StartInput, deps: GateDeps): Promise<S
 
   let token: string;
   try {
-    token = await deps.createToken({ industry, serviceId, expiresAt });
+    token = await deps.createToken({ agent, expiresAt });
   } catch {
     await release();
     return refuse(502, "token_failed");
@@ -165,6 +166,7 @@ export async function startSession(input: StartInput, deps: GateDeps): Promise<S
 
   await store.incrBy(keys.hour(ip), 1, HOUR);
   await store.incrBy(keys.day(ip), 1, DAY);
+  if (agent.kind === "dep") await store.set(keys.canBook(sessionId), "1", slotSeconds);
 
   return {
     ok: true,

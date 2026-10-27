@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { demoIndustries } from "@/lib/site";
+import { demoIndustries, services } from "@/lib/site";
 import { createGeminiLiveToken } from "./gemini-token";
-import { buildSystemInstruction, RECEPTIONIST_PERSONAS } from "./prompts";
+import { buildDepInstruction, buildSystemInstruction, DEP_PERSONA, RECEPTIONIST_PERSONAS } from "./prompts";
 
 const { create, ctorArgs } = vi.hoisted(() => ({
   create: vi.fn(),
@@ -39,6 +39,19 @@ describe("buildSystemInstruction", () => {
   });
 });
 
+describe("buildDepInstruction", () => {
+  it("knows Deptloy's services, greets first and books discovery calls", () => {
+    const text = buildDepInstruction(180);
+
+    expect(text).toContain("You are Dep");
+    expect(text).toContain(DEP_PERSONA.greeting);
+    for (const service of services) expect(text).toContain(service.title);
+    expect(text).toContain("book_discovery_call");
+    expect(text).toContain("3 minutes");
+    expect(text).toMatch(/spell/i);
+  });
+});
+
 describe("createGeminiLiveToken", () => {
   beforeEach(() => {
     create.mockReset();
@@ -53,8 +66,7 @@ describe("createGeminiLiveToken", () => {
     const token = await createGeminiLiveToken({
       apiKey: "server-key",
       model: "gemini-3.8-live",
-      industry: "clinic",
-      serviceId: "srv-clean",
+      agent: { kind: "receptionist", industry: "clinic", serviceId: "srv-clean" },
       expiresAt,
       now,
     });
@@ -80,14 +92,33 @@ describe("createGeminiLiveToken", () => {
     expect(constraints.config.outputAudioTranscription).toEqual({});
   });
 
+  it("gives Dep its own voice, prompt and booking tool", async () => {
+    create.mockResolvedValue({ name: "auth_tokens/dep" });
+    const now = Date.now();
+    await createGeminiLiveToken({
+      apiKey: "k",
+      model: "m",
+      agent: { kind: "dep" },
+      expiresAt: new Date(now + 180_000),
+      now,
+    });
+
+    const constraints = create.mock.calls[0][0].config.liveConnectConstraints;
+    expect(constraints.config.systemInstruction).toContain("You are Dep");
+    expect(constraints.config.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName).toBe(DEP_PERSONA.voice);
+    const tool = constraints.config.tools[0].functionDeclarations[0];
+    expect(constraints.config.tools[0].functionDeclarations).toHaveLength(1);
+    expect(tool.name).toBe("book_discovery_call");
+    expect(tool.parameters.required).toEqual(["name", "email", "topic", "preferred_time"]);
+  });
+
   it("fails when Gemini returns no token", async () => {
     create.mockResolvedValue({});
     await expect(
       createGeminiLiveToken({
         apiKey: "k",
         model: "m",
-        industry: "clinic",
-        serviceId: "srv-clean",
+        agent: { kind: "receptionist", industry: "clinic", serviceId: "srv-clean" },
         expiresAt: new Date(),
         now: Date.now(),
       }),

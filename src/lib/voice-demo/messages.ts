@@ -14,8 +14,8 @@ export type RefusalReason =
 
 export const REFUSAL_MESSAGES: Record<RefusalReason, string> = {
   origin: "The voice demo only runs on deptloy.com.",
-  not_configured: "The voice demo isn't available right now. The text simulator still works.",
-  bad_request: "Pick an industry and a service, then try again.",
+  not_configured: "Voice calls aren't available right now. You can still chat by text.",
+  bad_request: "Something went wrong starting the call. Refresh the page and try again.",
   blocked: "Too many attempts from your network. Please try again later, or book a call with us.",
   turnstile: "We couldn't confirm you're human. Refresh the page and try again.",
   rate_hour: "You've used this hour's demo calls. Try again later, or book a call with us.",

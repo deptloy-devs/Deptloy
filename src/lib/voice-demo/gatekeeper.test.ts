@@ -27,7 +27,10 @@ function setup(env: Record<string, string> = {}, overrides: Partial<GateDeps> = 
   const advance = (seconds: number) => {
     clock += seconds * 1000;
   };
-  const start = (ip = "1.1.1.1", body: Partial<{ industry: string; serviceId: string; turnstileToken: string }> = {}) =>
+  const start = (
+    ip = "1.1.1.1",
+    body: Partial<{ agent: string; industry: string; serviceId: string; turnstileToken: string }> = {},
+  ) =>
     startSession(
       { origin: ORIGIN, ip, industry: "clinic", serviceId: "srv-clean", turnstileToken: "ts-token", ...body },
       deps,
@@ -59,10 +62,27 @@ describe("startSession", () => {
     });
     expect(deps.verifyHuman).toHaveBeenCalledWith("ts-token", "1.1.1.1");
     expect(deps.createToken).toHaveBeenCalledWith({
-      industry: "clinic",
-      serviceId: "srv-clean",
+      agent: { kind: "receptionist", industry: "clinic", serviceId: "srv-clean" },
       expiresAt: new Date(START + 180_000),
     });
+  });
+
+  it("starts a call with Dep, Deptloy's own assistant, without an industry", async () => {
+    const { deps, start } = setup();
+    const result = await start("1.1.1.1", { agent: "dep", industry: undefined, serviceId: undefined });
+
+    expect(result).toMatchObject({ ok: true });
+    expect(deps.createToken).toHaveBeenCalledWith({ agent: { kind: "dep" }, expiresAt: new Date(START + 180_000) });
+  });
+
+  it("shares one set of limits between Dep and the receptionists", async () => {
+    const { deps, call } = setup();
+    await call();
+    await call();
+    const dep = await startSession({ origin: ORIGIN, ip: "1.1.1.1", agent: "dep", turnstileToken: "t" }, deps);
+    expect(dep).toMatchObject({ ok: true });
+    if (dep.ok) await endSession({ origin: ORIGIN, ip: "1.1.1.1", sessionId: dep.session.sessionId }, deps);
+    expect(await call()).toMatchObject({ reason: "rate_hour" });
   });
 
   it("rejects requests from other sites before doing any work", async () => {
@@ -88,6 +108,7 @@ describe("startSession", () => {
     expect(await start("1.1.1.1", { industry: "casino" })).toMatchObject({ status: 400, reason: "bad_request" });
     expect(await start("1.1.1.1", { serviceId: "srv-cut" })).toMatchObject({ status: 400, reason: "bad_request" });
     expect(await start("1.1.1.1", { turnstileToken: "" })).toMatchObject({ status: 400, reason: "bad_request" });
+    expect(await start("1.1.1.1", { agent: "hal9000" })).toMatchObject({ status: 400, reason: "bad_request" });
     expect(deps.verifyHuman).not.toHaveBeenCalled();
   });
 

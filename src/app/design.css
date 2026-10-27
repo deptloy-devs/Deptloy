@@ -52,9 +52,17 @@ a {
   text-decoration: none;
 }
 
-button, input, textarea {
-  font: inherit;
-  color: inherit;
+@layer base {
+  button, input, textarea {
+    font: inherit;
+    color: inherit;
+  }
+}
+
+/* Ensure active dark buttons and pills have guaranteed crisp white text across all browsers */
+button[aria-pressed="true"],
+.pill-active {
+  color: #ffffff !important;
 }
 
 :focus-visible {
@@ -516,9 +524,9 @@ h1 span:nth-child(3) b {
 .fc:nth-of-type(2) { top: 58%; left: -2%; animation-delay: -1.5s; }
 .fc:nth-of-type(3) { top: 36%; right: -3%; animation-delay: -3s; }
 
-/* Interactive Assembly Track */
+/* Interactive Assembly Track - Snappy responsive scroll */
 .track {
-  height: 200vh;
+  height: 160vh;
   position: relative;
 }
 

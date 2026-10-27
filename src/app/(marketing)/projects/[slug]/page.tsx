@@ -29,33 +29,33 @@ export default async function BlueprintPage({ params }: PageProps) {
   if (!project) notFound();
 
   return (
-    <div className="py-24 sm:py-32">
+    <div className="py-14 sm:py-20">
       <div className="wrap">
-        <Link href="/projects" className="inline-flex items-center gap-2 text-xs font-mono uppercase font-bold text-[var(--pur)] hover:text-[var(--deep)] mb-10">
+        <Link href="/projects" className="inline-flex items-center gap-2 text-xs font-mono uppercase font-bold text-[var(--pur)] hover:text-[var(--deep)] mb-6">
           <ArrowLeft size={14} /> All blueprints
         </Link>
         <span className="k">{project.categoryLabel} / Engineering concept</span>
-        <h1 className="text-4xl sm:text-6xl font-extrabold text-[var(--deep)] leading-tight max-w-5xl">{project.title}</h1>
-        <p className="lead2 max-w-3xl">{project.solution}</p>
-        <div className="mt-7 mb-12 bg-white border-l-4 border-[var(--or)] p-4 text-sm text-[var(--mute)]">
-          Illustrative solution blueprint. This is not a completed client case study, product demo, or statement of measured outcomes.
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-[var(--deep)] leading-tight max-w-5xl mt-1">{project.title}</h1>
+        <p className="lead2 max-w-3xl text-sm sm:text-base mt-2">{project.solution}</p>
+        <div className="mt-5 mb-8 bg-white border-l-4 border-[var(--or)] p-3.5 text-xs sm:text-sm text-[var(--mute)] shadow-sm">
+          <strong>Illustrative Solution Blueprint:</strong> This is a conceptual product architecture demonstrating how specialized applications communicate. It is not a completed client case study or statement of measured outcomes.
         </div>
         <ArchitectureStage modules={project.modules} title="One connected product" accent={project.accent} eyebrow="INTERACTIVE ARCHITECTURE" />
-        <div className="grid md:grid-cols-2 gap-10 lg:gap-20 mt-20">
-          <section>
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-14 mt-12">
+          <section className="bg-white p-6 sm:p-8 border border-[rgba(21,19,74,0.12)]">
             <span className="k">The problem to solve</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--deep)] mt-2 mb-5">Software should follow the work.</h2>
-            <p className="text-[var(--mute)] leading-relaxed">{project.challenge}</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--deep)] mt-1 mb-3">Software should follow the work.</h2>
+            <p className="text-sm text-[var(--mute)] leading-relaxed">{project.challenge}</p>
           </section>
-          <section>
+          <section className="bg-white p-6 sm:p-8 border border-[rgba(21,19,74,0.12)]">
             <span className="k">The connected approach</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--deep)] mt-2 mb-5">One product. Clear handoffs.</h2>
-            <p className="text-[var(--mute)] leading-relaxed">{project.solution}</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--deep)] mt-1 mb-3">One product. Clear handoffs.</h2>
+            <p className="text-sm text-[var(--mute)] leading-relaxed">{project.solution}</p>
           </section>
         </div>
-        <section className="mt-20">
+        <section className="mt-14">
           <span className="k">A possible workflow</span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--deep)] mt-2 mb-8">From first action to finished outcome.</h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--deep)] mt-1 mb-6">From first action to finished outcome.</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {project.journey.map((step, index) => (
               <div key={step} className="bg-white border border-[var(--peri)] p-6">

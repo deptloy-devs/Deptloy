@@ -23,7 +23,7 @@ export function Footer() {
           <Link href="/how-it-works">Our Approach</Link>
           <Link href="/how-it-works#process">The Five Stages</Link>
           <Link href="/projects">Solution Blueprints</Link>
-          <Link href="/demo">Voice AI Staging Sandbox</Link>
+          <Link href="/demo">AI Receptionist Demo</Link>
           <Link href="/how-it-works" style={{ color: "var(--or)", fontWeight: 700 }}>
             Explore Methodology →
           </Link>
@@ -41,20 +41,18 @@ export function Footer() {
         <div className="cp flex flex-wrap items-center justify-between gap-4">
           <div>© 2026 Deptloy. All rights reserved.</div>
           <div className="flex items-center gap-6 text-sm">
-            <button
-              type="button"
-              onClick={() => setActiveModal("privacy")}
-              className="text-mute hover:text-deep cursor-pointer"
+            <Link
+              href="/privacy"
+              className="text-mute hover:text-deep"
             >
               Privacy Policy
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveModal("terms")}
-              className="text-mute hover:text-deep cursor-pointer"
+            </Link>
+            <Link
+              href="/terms"
+              className="text-mute hover:text-deep"
             >
               Terms of Service
-            </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -62,30 +60,46 @@ export function Footer() {
       <Modal
         isOpen={activeModal === "privacy"}
         onClose={() => setActiveModal(null)}
-        title="Privacy Policy"
+        title="Privacy &amp; Data Governance Overview"
       >
         <div className="space-y-4 text-sm text-[var(--mute)] leading-relaxed">
+          <p className="text-xs bg-[var(--paper)] p-2.5 border border-[var(--peri)]">
+            <strong>Studio Policy Overview:</strong> This summary describes standard studio practices. Executed Master Services Agreements include customized Data Processing Addenda.
+          </p>
           <p>
-            At Deptloy, we take data sovereignty and privacy seriously. Customer and patient records ingested by our AI receptionists, CRMs, and automations are never sold, rented, or used to train third-party public AI models.
+            At Deptloy, we take data isolation and privacy seriously. Customer and patient records ingested by our AI receptionists, CRMs, and automations are never sold, rented, or used to train third-party public commercial AI models.
           </p>
           <p>
             All phone recordings, call transcripts, and customer intake details are secured with TLS 1.3 encryption in transit and AES-256 encryption at rest. Inquiries submitted through our website are routed directly to our engineering team at <strong>deptloy@gmail.com</strong>.
           </p>
+          <div className="pt-2">
+            <Link href="/privacy" className="text-xs font-mono font-bold uppercase text-[var(--pur)] hover:underline" onClick={() => setActiveModal(null)}>
+              View Full Privacy Policy Page →
+            </Link>
+          </div>
         </div>
       </Modal>
 
       <Modal
         isOpen={activeModal === "terms"}
         onClose={() => setActiveModal(null)}
-        title="Terms of Service"
+        title="Terms of Service &amp; Engagement Overview"
       >
         <div className="space-y-4 text-sm text-[var(--mute)] leading-relaxed">
+          <p className="text-xs bg-[var(--paper)] p-2.5 border border-[var(--peri)]">
+            <strong>Studio Policy Overview:</strong> These terms summarize our engagement principles. Formal engineering deliverables are governed by mutually executed project agreements.
+          </p>
           <p>
             Deptloy provides turnkey software engineering, voice AI orchestration, and system maintenance services. Every client deployment begins with a mutual technical discovery process and fixed project architectural scope.
           </p>
           <p>
             Unless explicitly agreed otherwise under a separate enterprise agreement, you retain complete ownership of your proprietary customer databases, CRM tables, and intellectual property.
           </p>
+          <div className="pt-2">
+            <Link href="/terms" className="text-xs font-mono font-bold uppercase text-[var(--pur)] hover:underline" onClick={() => setActiveModal(null)}>
+              View Full Terms Page →
+            </Link>
+          </div>
         </div>
       </Modal>
     </footer>

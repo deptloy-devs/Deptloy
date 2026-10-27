@@ -36,7 +36,7 @@ const devModules = [
   {
     title: "Bespoke APIs & Database Architectures",
     desc: "Engineered backends that bridge your existing software, EHRs, payment gateways, and carrier phone lines into one cohesive system.",
-    metric: "99.99% Uptime",
+    metric: "High Availability",
   },
 ];
 
@@ -49,12 +49,12 @@ const devFeatures = [
   {
     icon: Smartphone,
     title: "Mobile-First Ergonomics",
-    desc: "Over 70% of appointment bookings occur on mobile devices. Our booking interfaces are designed for frictionless one-thumb interaction.",
+    desc: "A majority of appointment bookings occur on mobile devices. Our booking interfaces are designed for frictionless one-thumb interaction.",
   },
   {
     icon: Lock,
     title: "Enterprise Security & Privacy",
-    desc: "Bank-grade data encryption, CSRF protection, secure OAuth credential storage, and strict database query parameterization.",
+    desc: "Modern data encryption, CSRF protection, secure OAuth credential storage, and strict database query parameterization.",
   },
   {
     icon: LayoutDashboard,
@@ -64,7 +64,7 @@ const devFeatures = [
   {
     icon: Server,
     title: "Custom PostgreSQL & Redis Backends",
-    desc: "Full data sovereignty. You own your schemas, tables, and backups. No proprietary vendor lock-in or sudden pricing shifts.",
+    desc: "Complete data ownership. You control your schemas, tables, and backups without proprietary ecosystem locks.",
   },
   {
     icon: Code2,
@@ -75,7 +75,7 @@ const devFeatures = [
 
 export default function DevelopmentServicePage() {
   return (
-    <div className="py-24 sm:py-32">
+    <div className="py-14 sm:py-20">
       <div className="wrap">
         {/* Breadcrumb */}
         <div className="mb-6 flex items-center gap-2 text-xs font-mono text-[var(--mute)]">
@@ -83,25 +83,25 @@ export default function DevelopmentServicePage() {
             How It Works
           </Link>
           <span>/</span>
-          <span className="text-[var(--pur)] font-bold">Web & App Development</span>
+          <span className="text-[var(--pur)] font-bold">Web &amp; App Development</span>
         </div>
 
         {/* Hero Section */}
-        <span className="k">Engineering & Digital Front Doors</span>
-        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[var(--deep)] max-w-3xl">
+        <span className="k">Engineering &amp; Digital Front Doors</span>
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--deep)] max-w-3xl mt-1 leading-tight">
           High-performance web and mobile interfaces built to convert.
         </h1>
-        <p className="lead2 max-w-2xl">
+        <p className="lead2 max-w-2xl text-sm sm:text-base mt-2">
           Your digital front door should work seamlessly with your phone lines, calendar, and CRM. Deptloy engineers bespoke web applications, customer portals, and internal dashboards that turn visitors into loyal clients.
         </p>
 
         {/* Hero CTAs */}
         <div className="mt-8 flex flex-wrap gap-4 items-center">
-          <Link href="/contact" className="btn">
+          <Link href="/contact" className="btn" style={{ background: "var(--or)", color: "var(--deep)", fontWeight: 700 }}>
             Build Your Custom Application
           </Link>
           <Link href="/projects" className="btn ghost">
-            View Client Case Studies
+            View Solution Blueprints
           </Link>
         </div>
 

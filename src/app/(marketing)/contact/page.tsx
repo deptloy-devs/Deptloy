@@ -136,49 +136,55 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="py-24 sm:py-32">
+    <div className="py-14 sm:py-20">
       <div className="wrap">
-        <span className="k">Technical Inquiries & Appointments</span>
-        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[var(--deep)] max-w-3xl">
+        <span className="k">Technical Inquiries &amp; Appointments</span>
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--deep)] max-w-3xl">
           Let’s build something that lasts.
         </h1>
-        <p className="lead2 max-w-2xl">
-          Tell us what you want to build or improve. Request a quote, propose a discovery call, or email our team directly.
+        <p className="lead2 max-w-2xl text-sm sm:text-base mt-2">
+          Tell us what you want to build or improve. Request a custom quote, propose a discovery call, or email our engineering team directly.
         </p>
 
         {/* 2 Main Action Modes Toggle */}
-        <div className="mt-12 flex flex-wrap gap-3">
+        <div className="mt-8 flex flex-wrap gap-3" role="tablist" aria-label="Inquiry options">
           <button
             type="button"
+            role="tab"
+            aria-selected={activeTab === "quote"}
             onClick={() => setActiveTab("quote")}
             className={`px-5 py-3 rounded-full text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer border ${
               activeTab === "quote"
-                ? "bg-[var(--deep)] text-white border-[var(--deep)] shadow-md"
+                ? "bg-[var(--deep)] text-white border-[var(--deep)] shadow-md pill-active"
                 : "bg-white text-[var(--mute)] border-[var(--peri)] hover:text-[var(--deep)] hover:border-[var(--deep)]"
             }`}
+            style={{ color: activeTab === "quote" ? "#ffffff" : "var(--deep)" }}
           >
             Option 1: Request a Custom Quote
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={activeTab === "appointment"}
             id="appointment"
             onClick={() => setActiveTab("appointment")}
             className={`px-5 py-3 rounded-full text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer border flex items-center gap-2 ${
               activeTab === "appointment"
-                ? "bg-[var(--deep)] text-white border-[var(--deep)] shadow-md"
+                ? "bg-[var(--deep)] text-white border-[var(--deep)] shadow-md pill-active"
                 : "bg-white text-[var(--mute)] border-[var(--peri)] hover:text-[var(--deep)] hover:border-[var(--deep)]"
             }`}
+            style={{ color: activeTab === "appointment" ? "#ffffff" : "var(--deep)" }}
           >
             <Calendar className="w-3.5 h-3.5 text-[var(--or)]" />
             Option 2: Request a Discovery Call
           </button>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           {/* Left Column: Direct Engineering Channels & Quick Actions */}
           <div className="lg:col-span-5 space-y-6">
             <div
-              className="bg-white border border-[rgba(21,19,74,0.14)] p-8 space-y-6 shadow-[0_16px_40px_rgba(87,80,168,0.1)]"
+              className="bg-white border border-[rgba(21,19,74,0.14)] p-7 space-y-6 shadow-[0_16px_40px_rgba(87,80,168,0.1)]"
               style={{
                 clipPath: "polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)",
               }}
@@ -211,10 +217,10 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <span className="block text-[11px] font-mono font-semibold uppercase tracking-wider text-[var(--mute)]">
-                      Response SLA
+                      Response Timing
                     </span>
                     <span className="text-sm font-semibold text-[var(--deep)]">
-                      Monday – Friday • Sub-4 Hour Response
+                      Monday – Friday • Within 1 Business Day
                     </span>
                   </div>
                 </li>
@@ -228,7 +234,7 @@ export default function ContactPage() {
                       Scope Guarantee
                     </span>
                     <span className="text-sm font-semibold text-[var(--deep)]">
-                      Fixed Turnkey Architecture • Zero Hidden Fees
+                      Fixed Turnkey Architecture • Transparent Scope
                     </span>
                   </div>
                 </li>
@@ -244,7 +250,7 @@ export default function ContactPage() {
             >
               <div className="flex items-center gap-2 text-xs font-mono text-[var(--peri)] uppercase">
                 <Sparkles className="w-3.5 h-3.5 text-[var(--or)]" />
-                Want immediate voice testing?
+                Want to test the AI booking workflow?
               </div>
               <p className="text-xs text-[#cfd2ee] leading-relaxed">
                 Test our interactive AI booking agent simulation directly in your browser without booking a call.
@@ -447,7 +453,7 @@ export default function ContactPage() {
                         2. Suggest a Date and Time
                       </label>
                       <div className="grid sm:grid-cols-2 gap-3 mb-3">
-                        <input type="date" required value={selectedDate} min={new Date().toISOString().slice(0, 10)}
+                        <input type="date" required value={selectedDate} min="2026-10-25"
                           onChange={(e) => setSelectedDate(e.target.value)}
                           aria-label="Preferred call date"
                           className="w-full bg-[var(--paper)] border border-[var(--peri)] p-3 text-sm rounded-lg" />
@@ -525,6 +531,10 @@ export default function ContactPage() {
                       <textarea rows={3} value={apptNotes} onChange={(e) => setApptNotes(e.target.value)}
                         placeholder="What would you like to discuss?"
                         className="w-full bg-[var(--paper)] border border-[var(--peri)] p-3 text-sm rounded-lg focus:outline-none focus:border-[var(--pur)]" />
+                    </div>
+
+                    <div className="p-3 bg-[var(--paper)] border border-[var(--peri)] text-xs text-[var(--mute)] rounded-lg">
+                      <strong>Scheduling Notice:</strong> Your selected date and time window are a preferred request. An engineer will review calendar availability and confirm the final invite via email within 1 business day.
                     </div>
 
                     {apptStatus === "error" && (

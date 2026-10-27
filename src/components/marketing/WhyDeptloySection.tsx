@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react";
 
 export function WhyDeptloySection() {
   return (
-    <section className="dark" id="why" style={{ padding: "80px 0" }}>
+    <section className="dark" id="why" style={{ padding: "56px 0" }}>
       <div className="wrap">
         <span className="k">Why Custom Software</span>
         <h2>Why companies outgrow generic tools.</h2>
@@ -14,7 +14,7 @@ export function WhyDeptloySection() {
           Standard software forces your team to adapt to rigid templates. Deptloy builds intelligent systems designed around how your business actually operates.
         </p>
 
-        <div className="cmp" style={{ marginTop: "32px" }}>
+        <div className="cmp" style={{ marginTop: "28px" }}>
           {/* Column A: Generic software */}
           <div className="col a">
             <h3>Generic Software</h3>
@@ -53,14 +53,14 @@ export function WhyDeptloySection() {
             </div>
             <div>
               <b style={{ color: "var(--or)" }}>✓</b>
-              <span><strong>AI with real value:</strong> Sub-500ms voice intake and automations where they drive ROI.</span>
+              <span><strong>AI with real value:</strong> Conversational voice intake and automations where they drive measurable ROI.</span>
             </div>
           </div>
         </div>
 
         <div className="mt-8 pt-6 flex items-center justify-between flex-wrap gap-4 border-t border-white/10">
           <span className="text-xs font-mono text-[#d2cdf3]">
-            Sovereign PostgreSQL database · Zero vendor lock-in · Full engineering stewardship
+            Dedicated relational database · Open standard code architecture · Full engineering stewardship
           </span>
           <Link
             href="/how-it-works"

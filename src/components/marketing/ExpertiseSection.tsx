@@ -11,7 +11,7 @@ const capabilities = [
     accent: "#8478e0",
     icon: Bot,
     description:
-      "Sub-500ms voice agents and natural text intake that answer calls 24/7 in your brand's voice, reserve live calendar slots, and escalate urgent inquiries to staff.",
+      "Conversational voice agents and natural text intake that answer calls 24/7 in your brand's voice, reserve live calendar slots, and escalate urgent inquiries to staff.",
     badge: "Flagship Offering",
   },
   {
@@ -30,7 +30,7 @@ const capabilities = [
     icon: Database,
     description:
       "Normalized relational databases (PostgreSQL/Supabase) and role-based permissions where every customer record, call transcript, and deal status stays in sync.",
-    badge: "Data Sovereignty",
+    badge: "Data Architecture",
   },
   {
     title: "Automation & Integrations",
@@ -45,7 +45,7 @@ const capabilities = [
 
 export function ExpertiseSection() {
   return (
-    <section id="expertise" className="py-20 sm:py-28" style={{ borderTop: "1px solid var(--peri)" }}>
+    <section id="expertise" className="py-14 sm:py-20" style={{ borderTop: "1px solid var(--peri)" }}>
       <div className="wrap">
         <div className="max-w-3xl mb-12">
           <span className="k">Our Engineering Capabilities</span>

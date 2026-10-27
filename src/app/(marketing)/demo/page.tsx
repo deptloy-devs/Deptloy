@@ -1,25 +1,19 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import {
   Clock,
   CheckCircle2,
   RotateCcw,
   Send,
   ChevronRight,
-  ShieldAlert,
   ArrowRight,
-  Bot,
+  Sparkles,
+  Mic,
 } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Field";
-import { Badge } from "@/components/ui/Badge";
 import { demoIndustries } from "@/lib/site";
-import type {
-  DemoIndustryId,
-  ChatMessage,
-  DemoBookingState,
-} from "@/types";
+import type { DemoIndustryId, ChatMessage, DemoBookingState } from "@/types";
 
 let messageCounter = 100;
 function getNextId(prefix: string) {
@@ -28,12 +22,11 @@ function getNextId(prefix: string) {
 }
 
 export default function DemoPage() {
-  // Step state: 1: Industry, 2: Service, 3: Contact & Time, 4: Review/Confirm
+  // Stepper state: 1: Industry, 2: Service, 3: Contact & Time, 4: Review/Confirm
   const [currentStep, setCurrentStep] = React.useState<number>(1);
 
   // Selected industry
-  const [selectedIndustryId, setSelectedIndustryId] =
-    React.useState<DemoIndustryId>("clinic");
+  const [selectedIndustryId, setSelectedIndustryId] = React.useState<DemoIndustryId>("clinic");
 
   const currentIndustry =
     demoIndustries.find((i) => i.id === selectedIndustryId) || demoIndustries[0];
@@ -45,7 +38,7 @@ export default function DemoPage() {
     customerName: "",
     customerEmail: "",
     customerPhone: "",
-    selectedDate: "2026-10-24",
+    selectedDate: "2026-10-28",
     selectedTime: "10:30 AM",
     notes: "",
   });
@@ -100,7 +93,7 @@ export default function DemoPage() {
     "05:30 PM",
   ];
 
-  // Send message in interactive chat
+  // Send message in interactive chat simulator
   const handleSendMessage = (textToSend?: string) => {
     const text = (textToSend || inputMessage).trim();
     if (!text) return;
@@ -115,19 +108,25 @@ export default function DemoPage() {
     setMessages((prev) => [...prev, userMsg]);
     if (!textToSend) setInputMessage("");
 
-    // Simulate smart AI response
+    // Simulate smart receptionist reasoning
     setTimeout(() => {
-      let reply = "I understand. I can certainly help coordinate that. Would you like to reserve an available time slot right now?";
+      let reply =
+        "I understand. I can help coordinate that. Would you like to reserve an available time slot right now?";
       const lower = text.toLowerCase();
 
       if (lower.includes("hour") || lower.includes("open") || lower.includes("close")) {
-        reply = "We are open Monday through Friday from 8:00 AM to 6:00 PM, and Saturdays from 9:00 AM to 2:00 PM.";
+        reply =
+          "We are open Monday through Friday from 8:00 AM to 6:00 PM, and Saturdays from 9:00 AM to 2:00 PM. Would a morning or afternoon slot work better for you?";
       } else if (lower.includes("price") || lower.includes("cost") || lower.includes("fee")) {
-        reply = `For ${selectedService.name}, the standard rate is ${selectedService.price} with a scheduled duration of ${selectedService.duration}.`;
+        reply = `For ${selectedService.name}, the rate is ${selectedService.price} with an estimated duration of ${selectedService.duration}.`;
       } else if (lower.includes("reschedule") || lower.includes("cancel")) {
-        reply = "You can reschedule or modify bookings at any time up to 24 hours prior to your slot at no penalty.";
-      } else if (lower.includes("insurance") || lower.includes("delta")) {
-        reply = "We accept most major PPO insurance plans including Delta Dental, BlueCross, and Cigna. We can verify benefits prior to your appointment.";
+        reply =
+          "You can reschedule or modify bookings at any time up to 24 hours prior to your slot. Just reply to your confirmation SMS or call back.";
+      } else if (lower.includes("insurance") || lower.includes("delta") || lower.includes("payment")) {
+        reply =
+          "We accept most major PPO insurance plans and health benefit networks. We can collect your policy details during digital intake to verify coverage.";
+      } else if (lower.includes("book") || lower.includes("appointment") || lower.includes("schedule") || lower.includes("tomorrow")) {
+        reply = `I would be happy to schedule that for you. I have ${availableSlots[1]} or ${availableSlots[2]} open. Which one would you prefer?`;
       }
 
       setMessages((prev) => [
@@ -139,14 +138,26 @@ export default function DemoPage() {
           timestamp: "Just now",
         },
       ]);
-    }, 600);
+    }, 550);
   };
 
   React.useEffect(() => {
     chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Form Validation
+  // Quick prefill helper for rapid tester convenience
+  const handleFillDemoData = () => {
+    setBookingData((prev) => ({
+      ...prev,
+      customerName: "Alex Jordan",
+      customerEmail: "alex.jordan@example.com",
+      customerPhone: "+1 (555) 234-5678",
+      notes: "First-time consultation. Please send SMS reminder.",
+    }));
+    setFormErrors({});
+  };
+
+  // Form Validation for Step 3
   const validateStep3 = (): boolean => {
     const errs: Record<string, string> = {};
     if (!bookingData.customerName.trim()) {
@@ -155,7 +166,7 @@ export default function DemoPage() {
     if (!bookingData.customerEmail.trim()) {
       errs.customerEmail = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(bookingData.customerEmail)) {
-      errs.customerEmail = "Enter a valid email";
+      errs.customerEmail = "Enter a valid email address";
     }
     if (!bookingData.customerPhone.trim()) {
       errs.customerPhone = "Phone number is required";
@@ -187,11 +198,11 @@ export default function DemoPage() {
         {
           id: getNextId("conf"),
           sender: "assistant",
-          text: `Awesome news, ${bookingData.customerName}! Your appointment for "${selectedService.name}" on ${bookingData.selectedDate} at ${bookingData.selectedTime} is confirmed (Ref: ${ref}). A calendar invite and simulated SMS have been dispatched.`,
+          text: `Great news, ${bookingData.customerName}! Your simulated booking for "${selectedService.name}" on ${bookingData.selectedDate} at ${bookingData.selectedTime} is confirmed (Reference: ${ref}). In a live deployment, a calendar invite and confirmation SMS would now be dispatched.`,
           timestamp: "Just now",
         },
       ]);
-    }, 1000);
+    }, 800);
   };
 
   const handleStartAgain = () => {
@@ -203,7 +214,7 @@ export default function DemoPage() {
       customerName: "",
       customerEmail: "",
       customerPhone: "",
-      selectedDate: "2026-10-24",
+      selectedDate: "2026-10-28",
       selectedTime: "10:30 AM",
       notes: "",
     });
@@ -212,447 +223,530 @@ export default function DemoPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Header */}
-      <section className="relative pt-12 pb-8 lg:pt-16 lg:pb-10 border-b border-line bg-canvas">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
-          <Badge variant="brand" dot className="mb-3">
-            Interactive Frontend Prototype
-          </Badge>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-fg tracking-tight mb-3">
-            Experience the AI Receptionist
+    <div className="py-12 sm:py-16">
+      <div className="wrap">
+        {/* Header Section */}
+        <div className="max-w-3xl mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-[var(--paper)] text-[var(--pur)] border border-[var(--peri)] mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-[var(--or)]" />
+            Interactive Text-Based Simulation
+          </div>
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--deep)] leading-tight">
+            AI Receptionist Simulator
           </h1>
-          <p className="text-sm sm:text-base text-fg-soft">
-            Simulate how a customer interacts with our conversational booking engine across multiple industries in real time.
+          <p className="lead2 mt-2 text-sm sm:text-base">
+            Experience how a tailored AI receptionist handles customer inquiries, service catalogs, and calendar slot booking.
           </p>
 
-          {/* Persistent Honest Notice */}
-          <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-warning/10 border border-warning/20 text-brand-300 text-xs">
-            <ShieldAlert className="h-4 w-4 shrink-0 text-brand-300" />
-            <span>
-              <strong>Demonstration Prototype:</strong> This simulated workflow does not charge credit cards or add real entries to your personal calendar.
-            </span>
+          {/* Honest Prototype Notice & Distinction from Dep Mascot */}
+          <div className="mt-4 p-3 bg-white border-l-4 border-[var(--or)] text-xs text-[var(--mute)] shadow-sm space-y-1">
+            <div>
+              <strong>Demonstration Prototype:</strong> This is an interactive text simulation of our business receptionist system. Telephony voice streaming will be enabled in our next major release.
+            </div>
+            <div className="text-[11px] text-[var(--pur)] font-mono">
+              Note: This simulator represents the receptionist Deptloy builds for your company. Dep (in the lower corner) is Deptloy&apos;s own studio mascot.
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* Main Interactive Workspace: 2 Columns */}
-      <section className="py-10 bg-surface flex-1">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            {/* Left Column (7 cols): Step-by-Step Interactive Booking Engine */}
-            <div className="lg:col-span-7 flex flex-col gap-6">
-              
-              {/* Stepper Progress Indicator */}
-              <div className="rounded-card bg-card border border-line p-4 flex items-center justify-between text-xs">
-                {[
-                  { step: 1, label: "Industry" },
-                  { step: 2, label: "Service" },
-                  { step: 3, label: "Details & Time" },
-                  { step: 4, label: "Review & Confirm" },
-                ].map((s, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <span
-                      className={`h-6 w-6 rounded-full flex items-center justify-center font-bold text-xs ${
-                        isConfirmed
-                          ? "bg-success/20 text-success border border-success/30"
-                          : currentStep === s.step
-                          ? "bg-brand-600 text-fg shadow-md shadow-brand-600/40"
-                          : currentStep > s.step
-                          ? "bg-brand-500/20 text-brand-300"
-                          : "bg-raised-hover text-fg-subtle"
-                      }`}
-                    >
-                      {s.step}
-                    </span>
-                    <span
-                      className={`hidden sm:inline font-medium ${
-                        currentStep === s.step ? "text-fg" : "text-fg-subtle"
-                      }`}
-                    >
-                      {s.label}
-                    </span>
-                    {idx < 3 && <ChevronRight className="h-4 w-4 text-fg-subtle hidden sm:block" />}
+        {/* Stepper Progress Indicator */}
+        <div className="mb-8 p-3 sm:p-4 bg-white border border-[rgba(21,19,74,0.12)] shadow-sm flex items-center justify-between text-xs font-mono">
+          {[
+            { step: 1, label: "1. Industry" },
+            { step: 2, label: "2. Service" },
+            { step: 3, label: "3. Details & Time" },
+            { step: 4, label: "4. Confirm" },
+          ].map((s, idx) => (
+            <div key={idx} className="flex items-center gap-1.5 sm:gap-2">
+              <span
+                className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${
+                  isConfirmed
+                    ? "bg-[#16875b]/15 text-[#16875b] border border-[#16875b]/30"
+                    : currentStep === s.step
+                    ? "bg-[var(--deep)] text-white shadow-sm"
+                    : currentStep > s.step
+                    ? "bg-[var(--peri)] text-[var(--deep)] font-bold"
+                    : "bg-[var(--paper)] text-[var(--mute)] border border-[var(--peri)]"
+                }`}
+              >
+                {s.step}
+              </span>
+              <span
+                className={`hidden md:inline font-semibold ${
+                  currentStep === s.step ? "text-[var(--deep)] font-bold" : "text-[var(--mute)]"
+                }`}
+              >
+                {s.label}
+              </span>
+              {idx < 3 && <ChevronRight className="w-3.5 h-3.5 text-[var(--peri)] hidden sm:block" />}
+            </div>
+          ))}
+        </div>
+
+        {/* Main 2-Column Interactive Workspace */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+          {/* LEFT COLUMN (7 cols): Stepper Workflow Container */}
+          <div className="lg:col-span-7 bg-white border border-[rgba(21,19,74,0.14)] p-6 sm:p-8 shadow-[0_16px_40px_rgba(87,80,168,0.08)] flex flex-col justify-between min-h-[500px]"
+            style={{
+              clipPath: "polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)",
+            }}
+          >
+            {/* Confirmed Screen */}
+            {isConfirmed ? (
+              <div className="py-6 text-center space-y-5 my-auto">
+                <div className="w-14 h-14 rounded-full bg-[#16875b]/15 text-[#16875b] grid place-items-center mx-auto border border-[#16875b]/30">
+                  <CheckCircle2 className="w-8 h-8" />
+                </div>
+
+                <div>
+                  <span className="text-xs font-mono font-bold uppercase text-[#16875b] tracking-wider">
+                    Simulated Booking Successful
+                  </span>
+                  <h3 className="text-2xl font-extrabold text-[var(--deep)] mt-1">
+                    Appointment Reserved
+                  </h3>
+                  <p className="text-xs font-mono text-[var(--pur)] mt-1">
+                    Simulation Ref: {confirmedBookingId}
+                  </p>
+                </div>
+
+                <div className="p-4 bg-[var(--paper)] border border-[var(--peri)] text-left text-xs space-y-2 max-w-md mx-auto rounded-sm">
+                  <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
+                    <span className="text-[var(--mute)]">Industry:</span>
+                    <span className="font-bold text-[var(--deep)]">{currentIndustry.name}</span>
                   </div>
-                ))}
+                  <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
+                    <span className="text-[var(--mute)]">Service:</span>
+                    <span className="font-bold text-[var(--deep)]">{selectedService.name}</span>
+                  </div>
+                  <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
+                    <span className="text-[var(--mute)]">Scheduled Slot:</span>
+                    <span className="font-bold text-[var(--or)]">{bookingData.selectedDate} at {bookingData.selectedTime}</span>
+                  </div>
+                  <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
+                    <span className="text-[var(--mute)]">Caller Name:</span>
+                    <span className="font-bold text-[var(--deep)]">{bookingData.customerName}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[var(--mute)]">Simulated SMS:</span>
+                    <span className="font-bold text-[#16875b]">Dispatched to {bookingData.customerPhone}</span>
+                  </div>
+                </div>
+
+                <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleStartAgain}
+                    className="btn ghost sm inline-flex items-center gap-1.5"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Test Another Vertical</span>
+                  </button>
+                  <Link
+                    href="/contact#appointment"
+                    className="btn sm"
+                    style={{ background: "var(--or)", color: "var(--deep)", fontWeight: 700 }}
+                  >
+                    <span>Deploy For Your Business</span>
+                    <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                  </Link>
+                </div>
               </div>
-
-              {/* Step Content Container */}
-              <div className="rounded-panel bg-card border border-line p-6 sm:p-8 shadow-card relative min-h-[440px] flex flex-col justify-between">
-                
-                {/* Confirmed Screen */}
-                {isConfirmed ? (
-                  <div className="py-8 text-center space-y-6">
-                    <div className="mx-auto h-16 w-16 rounded-full bg-success/20 border border-success/40 flex items-center justify-center text-success">
-                      <CheckCircle2 className="h-8 w-8" />
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-xs uppercase font-mono text-success tracking-wider">
-                        Simulated Reservation Complete
-                      </span>
-                      <h3 className="text-2xl font-bold text-fg">
-                        Appointment Confirmed!
-                      </h3>
-                      <p className="text-xs text-fg-muted font-mono">
-                        Booking ID: {confirmedBookingId}
+            ) : (
+              <div>
+                {/* STEP 1: Select Industry */}
+                {currentStep === 1 && (
+                  <div className="space-y-5">
+                    <div>
+                      <span className="text-xs font-mono text-[var(--pur)] uppercase font-bold">Step 1 of 4</span>
+                      <h2 className="text-xl sm:text-2xl font-extrabold text-[var(--deep)] mt-1">
+                        Select a Sample Business Industry
+                      </h2>
+                      <p className="text-xs sm:text-sm text-[var(--mute)] mt-1">
+                        Choose an industry to see how the assistant adapts its greeting, service catalog, and conversational tone.
                       </p>
                     </div>
 
-                    <div className="rounded-card bg-raised border border-line p-5 text-left text-xs space-y-2.5 max-w-md mx-auto">
-                      <div className="flex justify-between pb-2 border-b border-line">
-                        <span className="text-fg-muted">Industry:</span>
-                        <span className="text-fg font-medium">{currentIndustry.name}</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {demoIndustries.map((ind) => (
+                        <button
+                          key={ind.id}
+                          type="button"
+                          onClick={() => handleIndustryChange(ind.id)}
+                          className={`p-3.5 text-left border rounded-sm transition-all cursor-pointer ${
+                            selectedIndustryId === ind.id
+                              ? "bg-[var(--paper)] border-[var(--pur)] ring-2 ring-[var(--pur)]/40 shadow-sm"
+                              : "bg-white border-[var(--peri)] hover:bg-[var(--mist)]/40"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-sm font-bold text-[var(--deep)]">{ind.name}</span>
+                            <span className="text-[10px] font-mono text-[var(--pur)] uppercase font-bold bg-white px-1.5 py-0.5 border border-[var(--peri)]">
+                              {ind.category}
+                            </span>
+                          </div>
+                          <p className="text-xs text-[var(--mute)] truncate">{ind.services[0].name}</p>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 2: Select Service */}
+                {currentStep === 2 && (
+                  <div className="space-y-5">
+                    <div>
+                      <span className="text-xs font-mono text-[var(--pur)] uppercase font-bold">Step 2 of 4</span>
+                      <h2 className="text-xl sm:text-2xl font-extrabold text-[var(--deep)] mt-1">
+                        Select Service for {currentIndustry.name}
+                      </h2>
+                      <p className="text-xs sm:text-sm text-[var(--mute)] mt-1">
+                        The AI checks real calendar slot availability based on configured service durations.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2.5">
+                      {currentIndustry.services.map((srv) => (
+                        <button
+                          key={srv.id}
+                          type="button"
+                          onClick={() => setBookingData({ ...bookingData, serviceId: srv.id })}
+                          className={`w-full p-3.5 text-left border rounded-sm transition-all cursor-pointer flex items-center justify-between ${
+                            bookingData.serviceId === srv.id
+                              ? "bg-[var(--paper)] border-[var(--pur)] ring-2 ring-[var(--pur)]/40 shadow-sm"
+                              : "bg-white border-[var(--peri)] hover:bg-[var(--mist)]/40"
+                          }`}
+                        >
+                          <div>
+                            <h3 className="text-sm font-bold text-[var(--deep)]">{srv.name}</h3>
+                            <div className="flex items-center gap-3 text-xs text-[var(--mute)] mt-1">
+                              <span className="flex items-center gap-1 font-mono">
+                                <Clock className="w-3 h-3 text-[var(--pur)]" /> {srv.duration}
+                              </span>
+                              <span>•</span>
+                              <span className="font-mono font-bold text-[var(--deep)]">{srv.price}</span>
+                            </div>
+                          </div>
+                          <span
+                            className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                              bookingData.serviceId === srv.id
+                                ? "border-[var(--pur)] bg-[var(--pur)]"
+                                : "border-slate-300"
+                            }`}
+                          >
+                            {bookingData.serviceId === srv.id && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 3: Contact & Slot Selection */}
+                {currentStep === 3 && (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="text-xs font-mono text-[var(--pur)] uppercase font-bold">Step 3 of 4</span>
+                        <h2 className="text-xl sm:text-2xl font-extrabold text-[var(--deep)] mt-1">
+                          Caller Details &amp; Preferred Time
+                        </h2>
                       </div>
-                      <div className="flex justify-between pb-2 border-b border-line">
-                        <span className="text-fg-muted">Service:</span>
-                        <span className="text-fg font-medium">{selectedService.name}</span>
+                      <button
+                        type="button"
+                        onClick={handleFillDemoData}
+                        className="px-2.5 py-1 text-xs font-mono font-bold uppercase text-[var(--pur)] bg-[var(--paper)] border border-[var(--peri)] hover:bg-[var(--mist)] transition-colors cursor-pointer"
+                      >
+                        ⚡ Pre-fill Sample
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-mono font-bold uppercase text-[var(--mute)] mb-1">
+                          Preferred Date
+                        </label>
+                        <input
+                          type="date"
+                          value={bookingData.selectedDate}
+                          min="2026-10-25"
+                          onChange={(e) => setBookingData({ ...bookingData, selectedDate: e.target.value })}
+                          className="w-full bg-[var(--paper)] border border-[var(--peri)] p-2.5 text-xs rounded-sm"
+                        />
                       </div>
-                      <div className="flex justify-between pb-2 border-b border-line">
-                        <span className="text-fg-muted">Date & Time:</span>
-                        <span className="text-brand-300 font-bold">{bookingData.selectedDate} at {bookingData.selectedTime}</span>
+
+                      <div>
+                        <label className="block text-xs font-mono font-bold uppercase text-[var(--mute)] mb-1">
+                          Caller Full Name *
+                        </label>
+                        <input
+                          type="text"
+                          value={bookingData.customerName}
+                          placeholder="e.g. Alex Jordan"
+                          onChange={(e) => {
+                            setBookingData({ ...bookingData, customerName: e.target.value });
+                            setFormErrors((prev) => ({ ...prev, customerName: "" }));
+                          }}
+                          className={`w-full bg-[var(--paper)] border p-2.5 text-xs rounded-sm ${
+                            formErrors.customerName ? "border-red-500" : "border-[var(--peri)]"
+                          }`}
+                        />
+                        {formErrors.customerName && (
+                          <span className="text-[10px] text-red-500 mt-0.5 block">{formErrors.customerName}</span>
+                        )}
                       </div>
-                      <div className="flex justify-between pb-2 border-b border-line">
-                        <span className="text-fg-muted">Customer:</span>
-                        <span className="text-fg">{bookingData.customerName}</span>
+
+                      <div>
+                        <label className="block text-xs font-mono font-bold uppercase text-[var(--mute)] mb-1">
+                          Caller Email *
+                        </label>
+                        <input
+                          type="email"
+                          value={bookingData.customerEmail}
+                          placeholder="alex@example.com"
+                          onChange={(e) => {
+                            setBookingData({ ...bookingData, customerEmail: e.target.value });
+                            setFormErrors((prev) => ({ ...prev, customerEmail: "" }));
+                          }}
+                          className={`w-full bg-[var(--paper)] border p-2.5 text-xs rounded-sm ${
+                            formErrors.customerEmail ? "border-red-500" : "border-[var(--peri)]"
+                          }`}
+                        />
+                        {formErrors.customerEmail && (
+                          <span className="text-[10px] text-red-500 mt-0.5 block">{formErrors.customerEmail}</span>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-mono font-bold uppercase text-[var(--mute)] mb-1">
+                          Mobile Phone * (For SMS Preview)
+                        </label>
+                        <input
+                          type="tel"
+                          value={bookingData.customerPhone}
+                          placeholder="+1 (555) 000-0000"
+                          onChange={(e) => {
+                            setBookingData({ ...bookingData, customerPhone: e.target.value });
+                            setFormErrors((prev) => ({ ...prev, customerPhone: "" }));
+                          }}
+                          className={`w-full bg-[var(--paper)] border p-2.5 text-xs rounded-sm ${
+                            formErrors.customerPhone ? "border-red-500" : "border-[var(--peri)]"
+                          }`}
+                        />
+                        {formErrors.customerPhone && (
+                          <span className="text-[10px] text-red-500 mt-0.5 block">{formErrors.customerPhone}</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Time Slots */}
+                    <div>
+                      <label className="block text-xs font-mono font-bold uppercase text-[var(--mute)] mb-1.5">
+                        Available Calendar Slots ({selectedService.duration})
+                      </label>
+                      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                        {availableSlots.map((slot) => (
+                          <button
+                            key={slot}
+                            type="button"
+                            onClick={() => setBookingData({ ...bookingData, selectedTime: slot })}
+                            className={`p-2 text-center text-xs font-mono font-bold rounded-xs border transition-colors cursor-pointer ${
+                              bookingData.selectedTime === slot
+                                ? "bg-[var(--deep)] text-white border-[var(--deep)] shadow-sm"
+                                : "bg-white text-[var(--deep)] border-[var(--peri)] hover:bg-[var(--paper)]"
+                            }`}
+                          >
+                            {slot}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 4: Review Parameters */}
+                {currentStep === 4 && (
+                  <div className="space-y-4">
+                    <div>
+                      <span className="text-xs font-mono text-[var(--pur)] uppercase font-bold">Step 4 of 4</span>
+                      <h2 className="text-xl sm:text-2xl font-extrabold text-[var(--deep)] mt-1">
+                        Review Booking Parameters
+                      </h2>
+                      <p className="text-xs sm:text-sm text-[var(--mute)] mt-1">
+                        Confirming writes this reservation into the simulator state and sends an assistant confirmation.
+                      </p>
+                    </div>
+
+                    <div className="p-4 bg-[var(--paper)] border border-[var(--peri)] text-xs space-y-2 rounded-sm">
+                      <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
+                        <span className="text-[var(--mute)]">Selected Vertical:</span>
+                        <span className="font-bold text-[var(--deep)]">{currentIndustry.name}</span>
+                      </div>
+                      <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
+                        <span className="text-[var(--mute)]">Service &amp; Price:</span>
+                        <span className="font-bold text-[var(--deep)]">{selectedService.name} ({selectedService.price})</span>
+                      </div>
+                      <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
+                        <span className="text-[var(--mute)]">Date &amp; Time Slot:</span>
+                        <span className="font-bold text-[var(--or)]">{bookingData.selectedDate} at {bookingData.selectedTime}</span>
+                      </div>
+                      <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
+                        <span className="text-[var(--mute)]">Caller Name:</span>
+                        <span className="font-bold text-[var(--deep)]">{bookingData.customerName}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-fg-muted">SMS Notification:</span>
-                        <span className="text-success font-medium">Simulated Dispatched</span>
+                        <span className="text-[var(--mute)]">Phone &amp; Email:</span>
+                        <span className="font-bold text-[var(--deep)]">{bookingData.customerPhone} • {bookingData.customerEmail}</span>
                       </div>
                     </div>
-
-                    <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-                      <Button onClick={handleStartAgain} variant="secondary" size="md" leftIcon={<RotateCcw className="h-4 w-4" />}>
-                        Start Again
-                      </Button>
-                      <Button href="/dashboard" variant="primary" size="md">
-                        View in Client Dashboard
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    {/* STEP 1: Select Industry */}
-                    {currentStep === 1 && (
-                      <div className="space-y-5">
-                        <div>
-                          <h2 className="text-xl font-bold text-fg">Select Sample Business Vertical</h2>
-                          <p className="text-xs text-fg-muted mt-1">
-                            Choose an industry to simulate its specialized booking rules and assistant tone.
-                          </p>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          {demoIndustries.map((ind) => (
-                            <button
-                              key={ind.id}
-                              type="button"
-                              onClick={() => handleIndustryChange(ind.id)}
-                              className={`p-4 rounded-card border text-left transition-all ${
-                                selectedIndustryId === ind.id
-                                  ? "bg-brand-600/15 border-brand-500/50 shadow-[0_0_20px_rgba(139,92,246,0.15)] ring-1 ring-brand-500/50"
-                                  : "bg-raised border-line hover:border-line-strong"
-                              }`}
-                            >
-                              <div className="flex items-center justify-between mb-1">
-                                <span className="text-sm font-bold text-fg">{ind.name}</span>
-                                <span className="text-xs text-brand-400 uppercase font-mono">{ind.category}</span>
-                              </div>
-                              <p className="text-xs text-fg-muted line-clamp-2">{ind.services[0].name}</p>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* STEP 2: Select Service */}
-                    {currentStep === 2 && (
-                      <div className="space-y-5">
-                        <div>
-                          <h3 className="text-xl font-bold text-fg">Select Service Offering</h3>
-                          <p className="text-xs text-fg-muted mt-1">
-                            Configured service catalog for {currentIndustry.name}.
-                          </p>
-                        </div>
-
-                        <div className="space-y-3">
-                          {currentIndustry.services.map((srv) => (
-                            <button
-                              key={srv.id}
-                              type="button"
-                              onClick={() => setBookingData({ ...bookingData, serviceId: srv.id })}
-                              className={`w-full p-4 rounded-card border text-left transition-all flex items-center justify-between ${
-                                bookingData.serviceId === srv.id
-                                  ? "bg-brand-600/15 border-brand-500/50 ring-1 ring-brand-500/50 shadow-md"
-                                  : "bg-raised border-line hover:border-line-strong"
-                              }`}
-                            >
-                              <div>
-                                <h3 className="text-sm font-bold text-fg">{srv.name}</h3>
-                                <div className="flex items-center gap-3 text-xs text-fg-muted mt-1">
-                                  <span className="flex items-center gap-1">
-                                    <Clock className="h-3 w-3 text-brand-400" /> {srv.duration}
-                                  </span>
-                                  <span>•</span>
-                                  <span>{srv.price}</span>
-                                </div>
-                              </div>
-                              <span className={`h-4 w-4 rounded-full border flex items-center justify-center ${
-                                bookingData.serviceId === srv.id ? "border-brand-400 bg-brand-400" : "border-slate-600"
-                              }`}>
-                                {bookingData.serviceId === srv.id && <span className="h-1.5 w-1.5 rounded-full bg-black" />}
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* STEP 3: Contact & Slot Selection */}
-                    {currentStep === 3 && (
-                      <div className="space-y-5">
-                        <div>
-                          <h3 className="text-xl font-bold text-fg">Customer Info & Desired Time</h3>
-                          <p className="text-xs text-fg-muted mt-1">
-                            Input details to simulate caller contact intake.
-                          </p>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <Input
-                            label="Customer Full Name"
-                            placeholder="e.g. Elena Woods"
-                            value={bookingData.customerName}
-                            onChange={(e) => setBookingData({ ...bookingData, customerName: e.target.value })}
-                            error={formErrors.customerName}
-                            required
-                          />
-                          <Input
-                            label="Customer Phone"
-                            placeholder="+1 (555) 234-5678"
-                            value={bookingData.customerPhone}
-                            onChange={(e) => setBookingData({ ...bookingData, customerPhone: e.target.value })}
-                            error={formErrors.customerPhone}
-                            required
-                          />
-                        </div>
-
-                        <Input
-                          label="Customer Email"
-                          type="email"
-                          placeholder="elena@example.com"
-                          value={bookingData.customerEmail}
-                          onChange={(e) => setBookingData({ ...bookingData, customerEmail: e.target.value })}
-                          error={formErrors.customerEmail}
-                          required
-                        />
-
-                        {/* Preferred Time Slots */}
-                        <div>
-                          <label className="text-xs font-semibold uppercase tracking-wider text-fg-soft block mb-2">
-                            Available Real-Time Slots (Thursday, Oct 24)
-                          </label>
-                          <div className="grid grid-cols-3 gap-2">
-                            {availableSlots.map((slot) => (
-                              <button
-                                key={slot}
-                                type="button"
-                                onClick={() => setBookingData({ ...bookingData, selectedTime: slot })}
-                                className={`py-2 px-3 rounded-control text-xs font-semibold transition-all ${
-                                  bookingData.selectedTime === slot
-                                    ? "bg-brand-600 text-fg shadow-md shadow-brand-600/30"
-                                    : "bg-raised text-fg-soft border border-line hover:border-line-strong"
-                                }`}
-                              >
-                                {slot}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* STEP 4: Review Selections */}
-                    {currentStep === 4 && (
-                      <div className="space-y-5">
-                        <div>
-                          <h3 className="text-xl font-bold text-fg">Review Appointment Parameters</h3>
-                          <p className="text-xs text-fg-muted mt-1">
-                            Verify your simulated details prior to testing confirmation.
-                          </p>
-                        </div>
-
-                        <div className="rounded-card bg-raised border border-line p-5 space-y-3 text-xs">
-                          <div className="flex justify-between pb-2 border-b border-line">
-                            <span className="text-fg-muted">Industry:</span>
-                            <span className="text-fg font-medium">{currentIndustry.name}</span>
-                          </div>
-                          <div className="flex justify-between pb-2 border-b border-line">
-                            <span className="text-fg-muted">Service:</span>
-                            <span className="text-fg font-medium">{selectedService.name}</span>
-                          </div>
-                          <div className="flex justify-between pb-2 border-b border-line">
-                            <span className="text-fg-muted">Duration & Fee:</span>
-                            <span className="text-fg-soft">{selectedService.duration} • {selectedService.price}</span>
-                          </div>
-                          <div className="flex justify-between pb-2 border-b border-line">
-                            <span className="text-fg-muted">Reserved Slot:</span>
-                            <span className="text-brand-300 font-bold">{bookingData.selectedDate} at {bookingData.selectedTime}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-fg-muted">Client:</span>
-                            <span className="text-fg">{bookingData.customerName} ({bookingData.customerPhone})</span>
-                          </div>
-                        </div>
-
-                        <div className="p-3.5 rounded-control bg-brand-500/10 border border-brand-500/20 text-xs text-brand-300">
-                          Clicking &ldquo;Simulate Booking&rdquo; will demonstrate the confirmation flow, generate a booking token, and update the conversation transcript.
-                        </div>
-                      </div>
-                    )}
                   </div>
                 )}
-
-                {/* Footer Controls (when not confirmed) */}
-                {!isConfirmed && (
-                  <div className="pt-6 mt-6 border-t border-line flex items-center justify-between">
-                    {currentStep > 1 ? (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setCurrentStep(currentStep - 1)}
-                      >
-                        Back
-                      </Button>
-                    ) : (
-                      <div />
-                    )}
-
-                    {currentStep < 4 ? (
-                      <Button
-                        type="button"
-                        variant="primary"
-                        size="md"
-                        onClick={handleNextStep}
-                        rightIcon={<ArrowRight className="h-4 w-4" />}
-                      >
-                        Continue to Step {currentStep + 1}
-                      </Button>
-                    ) : (
-                      <Button
-                        type="button"
-                        variant="primary"
-                        size="md"
-                        isLoading={isSubmitting}
-                        onClick={handleConfirmBooking}
-                      >
-                        Simulate Booking
-                      </Button>
-                    )}
-                  </div>
-                )}
-
               </div>
-            </div>
+            )}
 
-            {/* Right Column (5 cols): Live Conversation Panel & Interactive Chat */}
-            <div className="lg:col-span-5 flex flex-col gap-4">
-              <div className="rounded-panel bg-card border border-line p-5 sm:p-6 shadow-card flex flex-col h-[580px]">
-                
-                {/* Header */}
-                <div className="flex items-center justify-between pb-4 border-b border-line">
-                  <div className="flex items-center gap-2.5">
-                    <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-brand-600 to-brand-500 flex items-center justify-center text-fg">
-                      <Bot className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-bold text-fg">Receptionist Stream</h3>
-                      <p className="text-xs text-fg-muted">Simulated AI Telephony</p>
-                    </div>
-                  </div>
-
-                  <span className="flex items-center gap-1.5 text-xs text-success bg-success/10 px-2 py-0.5 rounded-full border border-success/20 font-mono">
-                    <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
-                    Interactive
-                  </span>
-                </div>
-
-                {/* Messages Scroll Area */}
-                <div className="flex-1 overflow-y-auto py-4 space-y-3 pr-1">
-                  {messages.map((msg) => (
-                    <div
-                      key={msg.id}
-                      className={`flex flex-col ${
-                        msg.sender === "customer" ? "items-end" : "items-start"
-                      }`}
-                    >
-                      <div
-                        className={`max-w-[88%] p-3 rounded-card text-xs leading-relaxed ${
-                          msg.sender === "customer"
-                            ? "bg-brand-600 text-fg rounded-br-none"
-                            : "bg-raised text-fg-soft rounded-bl-none border border-line"
-                        }`}
-                      >
-                        {msg.text}
-                      </div>
-                      <span className="text-xs text-fg-subtle mt-1 px-1">
-                        {msg.sender === "customer" ? "You" : "Deptloy Assistant"} • {msg.timestamp}
-                      </span>
-                    </div>
-                  ))}
-                  <div ref={chatBottomRef} />
-                </div>
-
-                {/* Quick Prompts */}
-                <div className="py-2 border-t border-line">
-                  <span className="text-xs text-fg-subtle uppercase font-semibold block mb-1.5">
-                    Quick Sample Questions:
-                  </span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {currentIndustry.sampleQuestions.map((q, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => handleSendMessage(q)}
-                        className="text-xs px-2.5 py-1 rounded-full bg-white/[0.04] text-fg-soft hover:text-fg hover:bg-white/10 border border-line transition-colors"
-                      >
-                        &ldquo;{q}&rdquo;
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Input Bar */}
-                <div className="pt-2 flex items-center gap-2">
-                  <input
-                    type="text"
-                    placeholder="Type an inquiry (e.g. hours, pricing)..."
-                    value={inputMessage}
-                    onChange={(e) => setInputMessage(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") handleSendMessage();
-                    }}
-                    className="flex-1 h-9 px-3 rounded-control bg-raised border border-line text-xs text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-1 focus:ring-brand-400"
-                  />
+            {/* Stepper Navigation Buttons */}
+            {!isConfirmed && (
+              <div className="pt-6 mt-6 border-t border-[var(--mist)] flex items-center justify-between">
+                {currentStep > 1 ? (
                   <button
                     type="button"
-                    onClick={() => handleSendMessage()}
-                    className="h-9 w-9 rounded-control bg-brand-600 text-fg flex items-center justify-center hover:bg-brand-500 transition-colors"
-                    aria-label="Send message"
+                    onClick={() => setCurrentStep((prev) => prev - 1)}
+                    className="btn ghost sm"
                   >
-                    <Send className="h-4 w-4" />
+                    Back
                   </button>
-                </div>
+                ) : (
+                  <span className="text-xs font-mono text-[var(--mute)]">Industry: {currentIndustry.name}</span>
+                )}
 
+                {currentStep < 4 ? (
+                  <button
+                    type="button"
+                    onClick={handleNextStep}
+                    className="btn sm"
+                    style={{ background: "var(--deep)", color: "#fff" }}
+                  >
+                    <span>Continue to Step {currentStep + 1}</span>
+                    <ChevronRight className="w-3.5 h-3.5 ml-1" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleConfirmBooking}
+                    disabled={isSubmitting}
+                    className="btn sm"
+                    style={{ background: "var(--or)", color: "var(--deep)", fontWeight: 700 }}
+                  >
+                    <CheckCircle2 className="w-4 h-4 mr-1" />
+                    <span>{isSubmitting ? "Locking Slot..." : "Simulate Instant Booking"}</span>
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* RIGHT COLUMN (5 cols): Conversational Phone / Chat Simulator */}
+          <div className="lg:col-span-5 bg-[var(--deep)] text-white rounded-sm shadow-xl flex flex-col justify-between h-[540px] border border-white/10 relative overflow-hidden"
+            style={{
+              clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%)",
+            }}
+          >
+            {/* Receptionist Header Bar */}
+            <div className="p-4 bg-black/20 border-b border-white/10 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-[var(--or)] text-[var(--deep)] grid place-items-center font-bold font-mono text-xs shadow-sm">
+                  AI
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-white flex items-center gap-1.5">
+                    {currentIndustry.name} Receptionist
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  </h3>
+                  <span className="text-[10px] font-mono text-[var(--peri)]">Text Intake Engine Active</span>
+                </div>
+              </div>
+
+              {/* Ready for future voice integration badge */}
+              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono text-[#cfd2ee]"
+                title="Telephony voice integration will be connected in our next update"
+              >
+                <Mic className="w-3 h-3 text-slate-400" />
+                <span>Voice Soon</span>
               </div>
             </div>
 
+            {/* Quick Sample Questions Bar */}
+            <div className="p-2.5 bg-black/10 border-b border-white/10 shrink-0">
+              <span className="text-[10px] font-mono uppercase text-[var(--peri)] block mb-1.5">
+                Ask Sample Question:
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {currentIndustry.sampleQuestions.map((q) => (
+                  <button
+                    key={q}
+                    type="button"
+                    onClick={() => handleSendMessage(q)}
+                    className="px-2 py-1 text-[10px] font-mono bg-white/10 hover:bg-white/20 border border-white/15 text-white rounded-xs truncate max-w-[200px] transition-colors cursor-pointer"
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Message Thread */}
+            <div className="p-4 flex-1 overflow-y-auto space-y-3 text-xs leading-relaxed">
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`flex flex-col ${
+                    msg.sender === "customer" ? "items-end" : "items-start"
+                  }`}
+                >
+                  <span className="text-[9px] font-mono text-slate-400 mb-0.5">
+                    {msg.sender === "customer" ? "Caller" : "AI Receptionist"}
+                  </span>
+                  <div
+                    className={`p-3 max-w-[85%] rounded-sm ${
+                      msg.sender === "customer"
+                        ? "bg-[var(--or)] text-[var(--deep)] font-medium rounded-tr-none"
+                        : "bg-white/10 text-white border border-white/10 rounded-tl-none"
+                    }`}
+                  >
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+              <div ref={chatBottomRef} />
+            </div>
+
+            {/* Chat Input Bar */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSendMessage();
+              }}
+              className="p-3 bg-black/20 border-t border-white/10 flex items-center gap-2 shrink-0"
+            >
+              <input
+                type="text"
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                placeholder="Ask about hours, fees, or slot availability..."
+                className="flex-1 bg-white/10 border border-white/15 text-white placeholder:text-slate-400 p-2 text-xs rounded-sm focus:outline-none focus:border-[var(--or)]"
+              />
+              <button
+                type="submit"
+                aria-label="Send message"
+                className="w-8 h-8 rounded-sm bg-[var(--or)] text-[var(--deep)] grid place-items-center hover:bg-white transition-colors cursor-pointer shrink-0"
+              >
+                <Send className="w-3.5 h-3.5" />
+              </button>
+            </form>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

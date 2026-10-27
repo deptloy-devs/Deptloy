@@ -17,25 +17,25 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      {/* 1. Hero with animated Dep & clear flagship + custom CTAs */}
+      {/* 1. Hero with animated Dep */}
       <Hero />
 
-      {/* 2. Why companies outgrow generic tools */}
-      <WhyDeptloySection />
-
-      {/* 3. Interactive system assembly: Different capabilities. One connected product. */}
+      {/* 2. Animated Connected System (AssemblyTrack) */}
       <AssemblyTrack />
 
-      {/* 4. Four concise capability areas */}
+      {/* 3. Why Custom Software (Comparison) */}
+      <WhyDeptloySection />
+
+      {/* 4. Engineering Capabilities */}
       <ExpertiseSection />
 
-      {/* 5. Two featured solution blueprints */}
+      {/* 5. Featured Projects */}
       <FeaturedProjectsSection />
 
-      {/* 6. Simplified 3-stage delivery process */}
+      {/* 6. Three-Step Process */}
       <ShortProcessSection />
 
-      {/* 7. Visually striking final CTA */}
+      {/* 7. Final Contact CTA */}
       <SimpleFinalCta />
     </>
   );

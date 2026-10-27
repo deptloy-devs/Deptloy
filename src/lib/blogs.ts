@@ -116,7 +116,7 @@ export const blogPosts: BlogPost[] = [
     date: "September 2026",
     readTime: "4 min read",
     summary:
-      "How service businesses deploy voice and chat AI assistants while maintaining strict HIPAA, GDPR, and SOC2 compliance boundaries.",
+      "How service businesses deploy voice and chat AI assistants while maintaining strict privacy boundaries and audit-ready data controls.",
     keyTakeaways: [
       "Customer audio and transcripts should never be used to train foundational AI models.",
       "Automated PII scrubbing (names, credit card numbers, health identifiers) occurs before data touches inference engines.",
@@ -146,29 +146,29 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "omni-channel-voice-to-sms-scheduling",
-    title: "The Voice-to-SMS Bridge: Closing the 68% Appointment Drop-Off",
+    title: "The Voice-to-SMS Bridge: Converting Inbound Callers into Confirmed Bookings",
     category: "Automation",
     date: "August 2026",
     readTime: "3 min read",
     summary:
-      "Why combining autonomous phone reception with instant SMS calendar verification drives a 300% lift in confirmed bookings compared to voicemails.",
+      "Why combining responsive phone reception with instant SMS calendar verification drives significantly higher confirmed bookings compared to unreturned voicemails.",
     keyTakeaways: [
-      "68% of callers who reach a voicemail hang up and immediately call a competing local provider.",
+      "A large majority of callers who encounter an unanswered voicemail hang up and call a competing provider rather than leaving a message.",
       "Sending an automated instant SMS confirmation with a one-tap calendar pass locks commitment while the intent is highest.",
-      "Automated 24-hour and 2-hour SMS reminder sequences reduce appointment no-show rates below 4%.",
+      "Automated 24-hour and 2-hour SMS reminder sequences significantly reduce missed appointments and last-minute cancellations.",
     ],
     content: [
       {
         heading: "The Cost of Voicemail",
         body: [
           "In high-intent industries like emergency dentistry, medspas, home repairs, and legal consults, prospective clients rarely wait for a callback. When they hear 'leave a message after the tone,' they tap back and call the next business on Google.",
-          "Even if staff return the call 30 minutes later, the conversion rate drops by over 80%.",
+          "Even if staff return the call 30 minutes later, the conversion rate drops significantly compared to immediate first-call resolution.",
         ],
       },
       {
         heading: "The Instant Voice-to-SMS Handoff",
         body: [
-          "When Deptloy's AI receptionist handles the call, it doesn't just record the time; within 5 seconds of the call ending, the caller receives a branded SMS with an Apple Wallet / Google Calendar pass, directions to the office, and a direct link to reschedule if their plans change.",
+          "When Deptloy's AI receptionist handles the call, it doesn't just record the time; within seconds of the call ending, the caller receives a branded SMS with an Apple Wallet / Google Calendar pass, directions to the office, and a direct link to reschedule if their plans change.",
           "This immediate tactile confirmation eliminates anxiety and cements the booking in the client's day.",
         ],
       },

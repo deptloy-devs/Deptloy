@@ -22,7 +22,7 @@ const workflowSteps = [
   {
     step: "01",
     title: "Inbound Call or Chat Received",
-    desc: "Call arrives via your existing business line (seamless carrier forwarding) or website widget. Answered in sub-500ms with custom brand inflection.",
+    desc: "Call arrives via your existing business line (seamless carrier forwarding) or website widget. Answered with streaming conversational latency and custom brand inflection.",
     badge: "Carrier Connect",
   },
   {
@@ -85,7 +85,7 @@ const faqs = [
   },
   {
     q: "Does it sound like a robotic telephone menu?",
-    a: "No. We deploy neural conversational speech models that speak naturally with sub-500ms latency, conversational pauses, and human inflection. Callers experience a smooth, intelligent two-way conversation.",
+    a: "No. We deploy neural conversational speech models that speak naturally with low latency, conversational pauses, and human inflection. Callers experience a smooth, intelligent two-way conversation.",
   },
   {
     q: "What happens if a caller asks something unexpected?",
@@ -102,7 +102,7 @@ export default function AiReceptionistPage() {
   const [activeStep, setActiveStep] = React.useState(0);
 
   return (
-    <div className="py-24 sm:py-32">
+    <div className="py-14 sm:py-20">
       <div className="wrap">
         {/* Breadcrumb */}
         <div className="mb-6 flex items-center gap-2 text-xs font-mono text-[var(--mute)]">
@@ -114,24 +114,24 @@ export default function AiReceptionistPage() {
         </div>
 
         {/* Hero Section */}
-        <span className="k">Conversational Voice & Chat Ingestion</span>
-        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[var(--deep)] max-w-3xl">
+        <span className="k">Conversational Voice &amp; Chat Ingestion</span>
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--deep)] max-w-3xl mt-1 leading-tight">
           An AI Receptionist that never misses a call.
         </h1>
-        <p className="lead2 max-w-2xl">
-          A conversational, human-grade voice and messaging assistant tailored strictly to your business rules. It answers calls 24/7, schedules verified calendar appointments, resolves pricing FAQs, and logs every detail into your CRM.
+        <p className="lead2 max-w-2xl text-sm sm:text-base mt-2">
+          A conversational voice and messaging assistant tailored strictly to your business rules. It answers calls 24/7, schedules verified calendar appointments, resolves pricing FAQs, and logs every detail into your CRM.
         </p>
 
         {/* Hero CTA & Quick Proof */}
         <div className="mt-8 flex flex-wrap gap-4 items-center">
-          <Link href="/contact" className="btn">
+          <Link href="/contact" className="btn" style={{ background: "var(--or)", color: "var(--deep)", fontWeight: 700 }}>
             Schedule Architecture Call
           </Link>
           <Link
             href="/demo"
             className="btn ghost"
           >
-            <Sparkles className="w-4 h-4 text-[var(--or)]" /> Test Live Voice Demo
+            <Sparkles className="w-4 h-4 text-[var(--or)]" /> Test AI Receptionist Demo
           </Link>
         </div>
 

@@ -13,19 +13,19 @@ export const metadata: Metadata = {
 
 export default function BlogsPage() {
   return (
-    <div className="py-24 sm:py-32">
+    <div className="py-14 sm:py-20">
       <div className="wrap">
         <span className="k">Field notes &amp; briefs</span>
-        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[var(--deep)] max-w-3xl">
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--deep)] max-w-3xl mt-1 leading-tight">
           High-signal intelligence for AI implementation.
         </h1>
-        <p className="lead2 max-w-2xl">
+        <p className="lead2 max-w-2xl text-sm sm:text-base mt-2">
           Concise, practical breakdowns of real-time voice latency, autonomous workflows, model architectures, and data security. No fluff, just implementation reality.
         </p>
 
         {/* Executive Summary Banner */}
         <div
-          className="my-12 p-6 sm:p-8 bg-white border border-[rgba(21,19,74,0.14)]"
+          className="my-8 p-6 sm:p-8 bg-white border border-[rgba(21,19,74,0.14)]"
           style={{
             clipPath: "polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)",
           }}
@@ -37,16 +37,16 @@ export default function BlogsPage() {
                 State of Business AI — 2026 Executive Summary
               </span>
               <h2 className="font-display text-xl sm:text-2xl font-bold text-[var(--deep)]">
-                Sub-second voice response &amp; deterministic tool execution have replaced static chatbots.
+                Streaming conversational voice &amp; deterministic tool execution have replaced static chatbots.
               </h2>
               <p className="text-sm leading-relaxed text-[var(--mute)]">
-                The modern AI stack is defined by three rules: sub-500ms voice response for natural conversation, zero training retention on customer data, and bi-directional CRM integration that writes verified bookings rather than hallucinating answers.
+                The modern AI stack is defined by three rules: low-latency streaming voice for natural conversation, zero training retention on customer data, and bi-directional CRM integration that writes verified bookings rather than hallucinating answers.
               </p>
             </div>
 
             <div className="shrink-0 flex items-center gap-3">
               <Link href="/demo" className="btn sm">
-                Try AI Voice Demo
+                Try AI Receptionist Demo
               </Link>
             </div>
           </div>

@@ -24,13 +24,13 @@ const processStages = [
     label: "Launch & Evolve",
     title: "Seamless cutover and long-term care.",
     desc: "We manage deployment, carrier telephony forwarding, and team onboarding (under 15 mins). Then we actively monitor APIs and prompts so your system never degrades as you scale.",
-    output: "Zero-downtime launch & ongoing SRE care",
+    output: "Production launch with telemetry & ongoing engineering support",
   },
 ];
 
 export function ShortProcessSection() {
   return (
-    <section id="process" className="py-20 sm:py-28" style={{ borderTop: "1px solid var(--peri)" }}>
+    <section id="process" className="py-14 sm:py-20" style={{ borderTop: "1px solid var(--peri)" }}>
       <div className="wrap">
         <div className="max-w-2xl mb-12">
           <span className="k">Our Engineering Methodology</span>

@@ -25,23 +25,23 @@ const KB: [RegExp, string][] = [
   ],
   [
     /receptionist|phone|call(s)?|voice|answer|telephony/i,
-    "Our flagship AI receptionist answers phone calls 24/7 in your brand's voice with sub-500ms latency. It checks live calendar availability, books appointments, triages emergencies, and syncs directly into your CRM. You can test a live simulation right now on our /demo page!",
+    "Our flagship AI receptionist answers phone calls 24/7 in your brand's voice with natural streaming conversational cadence. It checks live calendar availability, books appointments, triages urgent inquiries, and syncs directly into your CRM. You can test an interactive text-based simulation right now on our /demo page!",
   ],
   [
     /demo|test|try/i,
-    "You can experience a live interactive simulation of our AI Receptionist at /demo! You can choose an industry, test caller intake, ask questions, and simulate real-time slot booking.",
+    "You can experience an interactive text simulation of our AI Receptionist at /demo! You can choose an industry, test caller intake, ask sample questions, and simulate real-time slot booking.",
   ],
   [
     /custom|software|platform|app|web|saas|engineer/i,
-    "Beyond AI receptionists, Deptloy designs, engineers, and maintains custom software products: client portals, business management platforms, staff dispatch dashboards, SaaS apps, and relational PostgreSQL databases tailored around how your team actually works.",
+    "Beyond AI receptionists, Deptloy designs, engineers, and maintains custom software products: client portals, business management platforms, staff dispatch dashboards, SaaS apps, and relational databases tailored around how your team actually works.",
   ],
   [
     /crm|database|pipeline|leads|contacts|postgres/i,
-    "We architect custom PostgreSQL and Supabase databases shaped around your sales and fulfillment workflows. Inbound calls, notes, transcripts, and stages update automatically with 100% data sovereignty.",
+    "We architect custom PostgreSQL and Supabase databases shaped around your sales and fulfillment workflows. Inbound calls, notes, transcripts, and stages update automatically with dedicated architecture where you retain complete data ownership.",
   ],
   [
     /automat|workflow|integration|api|sync/i,
-    "We automate repetitive administrative busywork: two-way natural language SMS reminders that cut no-shows, instant post-call follow-ups, team alerts, and API bridges to legacy systems like EHRs, QuickBooks, and CRMs.",
+    "We automate repetitive administrative busywork: two-way SMS reminders that reduce missed appointments, instant post-call follow-ups, team alerts, and API bridges to systems like EHRs, accounting software, and CRMs.",
   ],
   [
     /project(s)?|blueprint(s)?|case|example/i,

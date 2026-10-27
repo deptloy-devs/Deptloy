@@ -57,21 +57,23 @@ const principles = [
 
 export default function HowItWorksPage() {
   return (
-    <div className="py-24 sm:py-32">
+    <div className="py-14 sm:py-20">
       <div className="wrap">
         <span className="k">How Deptloy works</span>
         <div className="grid lg:grid-cols-12 gap-8 items-end">
           <div className="lg:col-span-8">
-            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[var(--deep)] leading-tight mt-3">
+            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--deep)] leading-tight mt-2">
               Your challenge is the starting point. Not a list of services.
             </h1>
           </div>
-          <p className="lg:col-span-4 text-base text-[var(--mute)] leading-relaxed">
+          <p className="lg:col-span-4 text-sm sm:text-base text-[var(--mute)] leading-relaxed">
             We bring software engineering, product design, data systems and AI expertise together to create whatever your business actually needs.
           </p>
         </div>
-        <div className="flex flex-wrap gap-4 mt-9 mb-16">
-          <Link href="/contact" className="btn">Discuss your project <ArrowRight size={16}/></Link>
+        <div className="flex flex-wrap gap-4 mt-6 mb-12">
+          <Link href="/contact" className="btn" style={{ background: "var(--or)", color: "var(--deep)", fontWeight: 700 }}>
+            Discuss your project <ArrowRight size={16}/>
+          </Link>
           <Link href="/projects" className="btn ghost">Explore blueprints</Link>
         </div>
 

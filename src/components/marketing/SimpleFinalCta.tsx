@@ -6,10 +6,10 @@ import { Calendar, MessageSquare } from "lucide-react";
 
 export function SimpleFinalCta() {
   return (
-    <section className="py-20 sm:py-28">
+    <section className="py-14 sm:py-20">
       <div className="wrap">
         <div
-          className="bg-[var(--deep)] text-white p-8 sm:p-14 lg:p-16 relative overflow-hidden shadow-[0_25px_60px_rgba(21,19,74,0.3)]"
+          className="bg-[var(--deep)] text-white p-8 sm:p-12 lg:p-14 relative overflow-hidden shadow-[0_25px_60px_rgba(21,19,74,0.3)]"
           style={{
             clipPath: "polygon(0 0, calc(100% - 32px) 0, 100% 32px, 100% 100%, 0 100%)",
             border: "1px solid rgba(132, 120, 224, 0.4)",

@@ -127,7 +127,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="rbwrap" id="rbwrap">
+        <div className={`rbwrap${inCall ? " on-call" : ""}`} id="rbwrap">
           <div className="disc"></div>
           <div
             className={`bubble${phase.kind === "idle" ? "" : " caption"}${phase.kind === "idle" || speaking ? "" : " quiet"}`}
@@ -135,13 +135,13 @@ export function Hero() {
           >
             {line}
           </div>
-          <div className="fc" style={{ "--c": "#3ccf91" } as React.CSSProperties}>
+          <div className="fc fc-a" style={{ "--c": "#3ccf91" } as React.CSSProperties}>
             <i></i>24/7 AI Receptionist Active
           </div>
-          <div className="fc" style={{ "--c": "var(--or)" } as React.CSSProperties}>
+          <div className="fc fc-b" style={{ "--c": "var(--or)" } as React.CSSProperties}>
             <i></i>Custom Workflow Live
           </div>
-          <div className="fc" style={{ "--c": "var(--lav)" } as React.CSSProperties}>
+          <div className="fc fc-c" style={{ "--c": "var(--lav)" } as React.CSSProperties}>
             <i></i>Data In Sync · Zero Drift
           </div>
 

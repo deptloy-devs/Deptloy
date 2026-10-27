@@ -19,7 +19,12 @@ export type LiveCallEvents = {
 export type ToolHandler = (call: ToolCall, session: { sessionId: string }) => Promise<ToolResult> | ToolResult;
 
 /** What Dep reads every frame for lip sync. */
-export type VoiceLevels = { agent(): number; caller(): number };
+export type VoiceLevels = {
+  agent(): number;
+  caller(): number;
+  /** The agent's sound by frequency (dB per bin), for mouth shapes. */
+  agentSpectrum(): { db: Float32Array; sampleRate: number } | null;
+};
 
 /**
  * Audio set up by the click handler. Safari only lets audio start inside a
@@ -54,6 +59,7 @@ export class LiveCall {
   private ended = false;
   private status: CallStatus = "connecting";
   private frame = new Float32Array(1024);
+  private spectrum: Float32Array<ArrayBuffer> | null = null;
 
   constructor(
     private readonly issued: IssuedSession,
@@ -65,6 +71,13 @@ export class LiveCall {
   readonly levels: VoiceLevels = {
     agent: () => this.level(this.speakerAnalyser),
     caller: () => (this.muted ? 0 : this.level(this.micAnalyser)),
+    agentSpectrum: () => {
+      const analyser = this.speakerAnalyser;
+      if (!analyser || this.ended) return null;
+      this.spectrum ??= new Float32Array(analyser.frequencyBinCount);
+      analyser.getFloatFrequencyData(this.spectrum);
+      return { db: this.spectrum, sampleRate: this.audio.speakerContext.sampleRate };
+    },
   };
 
   async start(): Promise<void> {
@@ -135,6 +148,8 @@ export class LiveCall {
     const ctx = this.audio.speakerContext;
     const analyser = ctx.createAnalyser();
     analyser.fftSize = 1024;
+    // Light smoothing so the mouth follows each sound, not an average of the last few.
+    analyser.smoothingTimeConstant = 0.3;
     analyser.connect(ctx.destination);
     this.speakerAnalyser = analyser;
   }

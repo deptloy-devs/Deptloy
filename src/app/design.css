@@ -431,31 +431,20 @@ h1 span:nth-child(3) b {
   97% { transform: scaleY(0.1); }
 }
 
+/* Talking: DepRobot reshapes .mouth every frame from the voice, and swaps it in for the smile. */
 .mouth {
-  display: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
 }
-
-.mouth rect {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: talk 0.4s ease-in-out infinite alternate;
-}
-
-.mouth rect:nth-child(2n) { animation-delay: -0.2s; }
-.mouth rect:nth-child(3n) { animation-delay: -0.1s; }
-
-@keyframes talk {
-  from { transform: scaleY(0.3); }
-  to { transform: scaleY(2.2); }
-}
-
-.speaking .smile { display: none; }
-.speaking .mouth { display: block; }
-
-/* Live voice demo: DepRobot sets --dep-mouth (0..1) from the receptionist's voice every frame. */
-#robot.dep-live .mouth rect {
-  animation: none;
-  transform: scaleY(calc(0.3 + var(--dep-mouth, 0) * 1.9));
+.smile { transition: opacity 0.18s ease; }
+#robot.speaking .mouth { opacity: 1; }
+#robot.speaking .smile { opacity: 0; }
+/* Small nods and sways while talking pivot at the neck. */
+.dep-head { transform-origin: 150px 196px; }
+/* A blink at the end of each sentence. */
+#robot.dep-blink .eye { animation: dep-blink 0.24s ease-in-out; }
+@keyframes dep-blink {
+  50% { transform: scaleY(0.1); }
 }
 /* The wave is a hello; Dep keeps still arms while on a call. */
 #robot.dep-live .arm { animation: none; }
@@ -612,9 +601,20 @@ h1 span:nth-child(3) b {
   50% { transform: translateY(-10px); }
 }
 
-.fc:nth-of-type(1) { top: 16%; right: 0; }
-.fc:nth-of-type(2) { top: 58%; left: -2%; animation-delay: -1.5s; }
-.fc:nth-of-type(3) { top: 36%; right: -3%; animation-delay: -3s; }
+/* Badges sit around Dep, never over its face: one above its head, one each side of its body. */
+.fc-a { top: 6%; right: -2%; }
+.fc-b { top: 60%; left: -4%; animation-delay: -1.5s; }
+.fc-c { top: 57%; right: -4%; animation-delay: -3s; }
+.fc { transition: opacity 0.3s ease; }
+/* On a call they step aside so Dep's captions and face stay clear. */
+.rbwrap.on-call .fc { opacity: 0; pointer-events: none; }
+/* Where there's no free room around Dep, the badges that would bump into something else hide. */
+@media (980px < width < 1200px), (width < 600px) {
+  .fc-a { display: none; }
+}
+@media (width < 600px) {
+  .fc-c { display: none; }
+}
 
 /* Interactive Assembly Track - Snappy responsive scroll */
 .track {

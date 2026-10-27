@@ -55,15 +55,21 @@ export function Hero() {
             </span>
           </h1>
           <p className="sub">
-            From complex internal platforms to intelligent customer experiences, we design, build and maintain custom
-            software around the way your business works.
+            From intelligent AI receptionists to complete custom software platforms, we build technology that works
+            around your business.
           </p>
-          <div className="cta">
-            <Link className="btn" href="/contact">
-              Discuss your idea
+          <div className="cta flex items-center gap-3 flex-wrap">
+            <Link className="btn" href="/demo" style={{ background: "var(--deep)", color: "#fff" }}>
+              Test Our AI Receptionist →
             </Link>
-            <Link className="btn ghost" href="/projects">
-              Explore projects
+            <Link className="btn ghost" href="/contact#appointment">
+              Book a Call
+            </Link>
+            <Link
+              href="/projects"
+              className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--pur)] hover:text-[var(--or)] ml-1 transition-colors"
+            >
+              Explore Our Projects →
             </Link>
           </div>
         </div>
@@ -74,13 +80,13 @@ export function Hero() {
             {bubbleText}
           </div>
           <div className="fc" style={{ "--c": "#3ccf91" } as React.CSSProperties}>
-            <i></i>Systems connected
+            <i></i>24/7 AI Receptionist Active
           </div>
           <div className="fc" style={{ "--c": "var(--or)" } as React.CSSProperties}>
-            <i></i>Custom workflow live
+            <i></i>Custom Workflow Live
           </div>
           <div className="fc" style={{ "--c": "var(--lav)" } as React.CSSProperties}>
-            <i></i>Data in sync
+            <i></i>Data In Sync · Zero Drift
           </div>
 
           <svg

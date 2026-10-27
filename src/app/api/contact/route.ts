@@ -3,8 +3,6 @@ import nodemailer from "nodemailer";
 import fs from "fs/promises";
 import path from "path";
 
-const RECIPIENT_EMAIL = process.env.CONTACT_EMAIL || "deptloy@gmail.com";
-
 interface ContactRequestBody {
   fullName?: string;
   name?: string;
@@ -17,13 +15,23 @@ interface ContactRequestBody {
   projectDescription?: string;
   message?: string;
   description?: string;
+  phone?: string;
+  honeypot?: string;
 }
 
 export async function POST(req: Request) {
   try {
     const body = (await req.json()) as Partial<ContactRequestBody>;
 
-    // Normalize fields
+    // Honeypot spam protection
+    if (body.honeypot) {
+      return NextResponse.json(
+        { error: "Spam submission rejected." },
+        { status: 400 }
+      );
+    }
+
+    // 1. Normalize and sanitize incoming fields
     const fullName = (body.fullName || body.name || "").trim();
     const email = (body.email || "").trim().toLowerCase();
     const companyName = (body.companyName || body.company || "Direct Inquiry").trim();
@@ -31,7 +39,7 @@ export async function POST(req: Request) {
       body.serviceRequired ||
       body.service ||
       body.projectType ||
-      "Full System Quote"
+      "Custom software inquiry"
     ).trim();
     const projectDescription = (
       body.projectDescription ||
@@ -40,7 +48,7 @@ export async function POST(req: Request) {
       ""
     ).trim();
 
-    // Server-side validation
+    // 2. Server-side validation
     if (!fullName || fullName.length < 2) {
       return NextResponse.json(
         { error: "Please enter your name (at least 2 characters)." },
@@ -48,7 +56,15 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (fullName.length > 100) {
+      return NextResponse.json(
+        { error: "Name must be under 100 characters." },
+        { status: 400 }
+      );
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email) || email.length > 150) {
       return NextResponse.json(
         { error: "Please enter a valid email address." },
         { status: 400 }
@@ -57,12 +73,41 @@ export async function POST(req: Request) {
 
     if (!projectDescription || projectDescription.length < 3) {
       return NextResponse.json(
-        { error: "Please share what you would like to improve or your project details." },
+        { error: "Please share what you would like to build or your inquiry details." },
         { status: 400 }
       );
     }
 
-    const submissionId = `DEP-${Math.floor(100000 + Math.random() * 900000)}`;
+    if (projectDescription.length > 5000) {
+      return NextResponse.json(
+        { error: "Message length must be under 5,000 characters." },
+        { status: 400 }
+      );
+    }
+
+    // 3. Resolve Gmail Credentials (accessed ONLY on the server)
+    const gmailUser = (process.env.GMAIL_USER || process.env.EMAIL_USER || "").trim();
+    const gmailPass = (process.env.GMAIL_APP_PASSWORD || process.env.EMAIL_PASS || "").replace(/\s+/g, "");
+    const recipientEmail = (process.env.CONTACT_EMAIL || gmailUser || "deptloy@gmail.com").trim();
+
+    if (!gmailUser || !gmailPass) {
+      console.error(
+        "[api/contact] Missing Gmail credentials. GMAIL_USER and GMAIL_APP_PASSWORD environment variables must be set."
+      );
+      return NextResponse.json(
+        {
+          error:
+            "Email service is currently unconfigured on the server. Please contact deptloy@gmail.com directly while we configure server credentials.",
+        },
+        { status: 503 }
+      );
+    }
+
+    const isCallRequest =
+      serviceRequired.toLowerCase().includes("call") ||
+      serviceRequired.toLowerCase().includes("appointment");
+    const prefix = isCallRequest ? "CAL" : "DEP";
+    const submissionId = `${prefix}-${Math.floor(100000 + Math.random() * 900000)}`;
     const timestamp = new Date().toISOString();
 
     const leadRecord = {
@@ -75,137 +120,66 @@ export async function POST(req: Request) {
       timestamp,
     };
 
-    console.log("=== NEW QUOTE REQUEST RECEIVED ===");
-    console.log(leadRecord);
+    // 4. Configure Nodemailer with Gmail SMTP
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: gmailUser,
+        pass: gmailPass,
+      },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
+    });
 
-    let emailSent = false;
-    let emailProvider = "none";
-    let emailError: string | null = null;
+    const subject = isCallRequest
+      ? `New Call Request: ${fullName} (${serviceRequired}) - Deptloy [${submissionId}]`
+      : `New Quote Request: ${fullName} (${companyName}) - Deptloy [${submissionId}]`;
 
-    // 1. Try sending via Resend API if configured
-    if (process.env.RESEND_API_KEY) {
-      try {
-        const resendRes = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-          },
-          body: JSON.stringify({
-            from: process.env.EMAIL_FROM || "Deptloy <onboarding@resend.dev>",
-            to: [RECIPIENT_EMAIL],
-            reply_to: email,
-            subject: `New Quote Request: ${fullName} (${companyName})`,
-            html: generateHtmlEmail(leadRecord),
-          }),
-        });
-
-        if (resendRes.ok) {
-          emailSent = true;
-          emailProvider = "Resend API";
-          console.log("Quote email dispatched via Resend API to", RECIPIENT_EMAIL);
-        } else {
-          const errData = await resendRes.text();
-          console.error("Resend API error:", errData);
-          emailError = `Resend error: ${errData}`;
-        }
-      } catch (err) {
-        console.error("Failed to dispatch via Resend:", err);
-        emailError = String(err);
-      }
-    }
-
-    // 2. Try sending via Gmail App Password / SMTP if configured
-    const smtpPass = process.env.EMAIL_PASS || process.env.GMAIL_APP_PASSWORD;
-    const smtpUser = process.env.EMAIL_USER || process.env.GMAIL_USER || RECIPIENT_EMAIL;
-
-    if (!emailSent && smtpPass) {
-      try {
-        const transporter = nodemailer.createTransport({
-          service: process.env.SMTP_SERVICE || "gmail",
-          host: process.env.SMTP_HOST,
-          port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT, 10) : undefined,
-          secure: process.env.SMTP_SECURE === "true",
-          auth: {
-            user: smtpUser,
-            pass: smtpPass,
-          },
-        });
-
-        await transporter.sendMail({
-          from: `"${fullName} via Deptloy" <${smtpUser}>`,
-          to: RECIPIENT_EMAIL,
-          replyTo: email,
-          subject: `New Quote Request: ${fullName} (${companyName})`,
-          text: `
-New Quote Request Received on Deptloy
-
-Name: ${fullName}
-Email: ${email}
-Company: ${companyName}
-Service: ${serviceRequired}
+    const plainText = `
+New Submission Received on Deptloy
+------------------------------------------------
 Reference ID: ${submissionId}
-Date: ${timestamp}
+Date:         ${timestamp}
+Type:         ${serviceRequired}
 
-Details / Message:
+Contact Name: ${fullName}
+Email:        ${email}
+Company:      ${companyName}
+
+Message / Details:
 ${projectDescription}
-          `,
-          html: generateHtmlEmail(leadRecord),
-        });
 
-        emailSent = true;
-        emailProvider = "Gmail SMTP";
-        console.log("Quote email dispatched via Gmail SMTP to", RECIPIENT_EMAIL);
-      } catch (err) {
-        console.error("Failed to dispatch via SMTP:", err);
-        emailError = String(err);
-      }
+------------------------------------------------
+Reply directly to this email to contact ${fullName} (${email}).
+    `.trim();
+
+    const htmlContent = generateHtmlEmail(leadRecord);
+
+    // 5. Send Email via Gmail SMTP
+    try {
+      const info = await transporter.sendMail({
+        from: `"${fullName.replace(/["\r\n]/g, "")} via Deptloy" <${gmailUser}>`,
+        to: recipientEmail,
+        replyTo: email,
+        subject,
+        text: plainText,
+        html: htmlContent,
+      });
+
+      console.log(`[api/contact] Email dispatched successfully: ${info.messageId} -> ${recipientEmail}`);
+    } catch (mailError) {
+      console.error("[api/contact] Nodemailer Gmail dispatch failed:", mailError);
+      return NextResponse.json(
+        {
+          error:
+            "Failed to send email. Please check server credentials or email deptloy@gmail.com directly.",
+        },
+        { status: 500 }
+      );
     }
 
-    // 3. Guaranteed Direct Web Dispatch via FormSubmit directly to deptloy@gmail.com
-    if (!emailSent) {
-      try {
-        const formSubmitRes = await fetch(`https://formsubmit.co/ajax/${RECIPIENT_EMAIL}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            "User-Agent":
-              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            Referer: "https://deptloy.com/#contact",
-          },
-          body: JSON.stringify({
-            name: fullName,
-            email: email,
-            company: companyName,
-            service: serviceRequired,
-            message: projectDescription,
-            reference_id: submissionId,
-            _subject: `New Quote Request: ${fullName} - Deptloy`,
-            _replyto: email,
-            _captcha: "false",
-            _template: "table",
-          }),
-        });
-
-        const fsData = await formSubmitRes.json();
-        if (fsData.success === "true" || fsData.success === true) {
-          emailSent = true;
-          emailProvider = "FormSubmit";
-          console.log("Quote email dispatched via FormSubmit to", RECIPIENT_EMAIL);
-        } else {
-          console.warn("FormSubmit notice:", fsData.message);
-          if (fsData.message && fsData.message.includes("Activation")) {
-            emailSent = true;
-            emailProvider = "FormSubmit (Activation Sent)";
-          }
-        }
-      } catch (fsErr) {
-        console.error("FormSubmit dispatch error:", fsErr);
-      }
-    }
-
-    // 4. Guaranteed Local Backup to data/leads.json
+    // 6. Safe local backup for development environments (ignored if filesystem is read-only)
     try {
       const dataDir = path.join(process.cwd(), "data");
       await fs.mkdir(dataDir, { recursive: true });
@@ -219,24 +193,18 @@ ${projectDescription}
       }
       existingLeads.unshift(leadRecord);
       await fs.writeFile(leadsFilePath, JSON.stringify(existingLeads, null, 2), "utf8");
-      console.log("Lead successfully persisted to data/leads.json");
-    } catch (fsErr) {
-      console.warn("Could not write to data/leads.json:", fsErr);
+    } catch {
+      // Ignored in read-only environments like Vercel serverless
     }
 
+    // 7. Return success ONLY after Nodemailer sendMail has succeeded
     return NextResponse.json({
       success: true,
       submissionId,
-      emailSent,
-      emailProvider,
-      recipient: RECIPIENT_EMAIL,
-      notice: emailSent
-        ? `Quote request sent directly to ${RECIPIENT_EMAIL}.`
-        : `Quote request recorded under Ref: ${submissionId}.`,
-      ...(emailError && !emailSent ? { debugNote: emailError } : {}),
+      message: `Your request was successfully delivered to ${recipientEmail}.`,
     });
   } catch (error) {
-    console.error("Contact API route error:", error);
+    console.error("[api/contact] Unexpected route error:", error);
     return NextResponse.json(
       {
         error:
@@ -256,12 +224,17 @@ function generateHtmlEmail(lead: {
   projectDescription: string;
   timestamp: string;
 }) {
+  const isCall = lead.serviceRequired.toLowerCase().includes("call");
+  const badgeLabel = isCall ? "Discovery Call Request" : "New Quote Request";
+  const badgeColor = isCall ? "#8478e0" : "#fd9150";
+
   return `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${escapeHtml(badgeLabel)}</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -292,8 +265,8 @@ function generateHtmlEmail(lead: {
     }
     .badge {
       display: inline-block;
-      background: #fd9150;
-      color: #15134a;
+      background: ${badgeColor};
+      color: ${isCall ? "#ffffff" : "#15134a"};
       font-size: 11px;
       font-weight: 800;
       text-transform: uppercase;
@@ -370,10 +343,10 @@ function generateHtmlEmail(lead: {
 <body>
   <div class="wrapper">
     <div class="header">
-      <span class="badge">New Quote Request</span>
+      <span class="badge">${escapeHtml(badgeLabel)}</span>
       <h2>${escapeHtml(lead.companyName)}</h2>
       <p style="margin: 0; font-size: 13px; color: #d2cdf3;">
-        Submitted by <strong>${escapeHtml(lead.fullName)}</strong> • ${new Date(lead.timestamp).toLocaleString("en-US", { timeZone: "America/New_York" })}
+        Submitted by <strong>${escapeHtml(lead.fullName)}</strong> • ${new Date(lead.timestamp).toUTCString()}
       </p>
     </div>
     
@@ -391,7 +364,7 @@ function generateHtmlEmail(lead: {
         <span class="value">${escapeHtml(lead.companyName)}</span>
       </div>
       <div class="row">
-        <span class="label">Requested Focus</span>
+        <span class="label">Request Type</span>
         <span class="value">${escapeHtml(lead.serviceRequired)}</span>
       </div>
       <div class="row">
@@ -400,24 +373,24 @@ function generateHtmlEmail(lead: {
       </div>
 
       <div class="box">
-        <div class="box-title">Project Details & Pain Points</div>
+        <div class="box-title">Details & Context</div>
         <p class="box-text">${escapeHtml(lead.projectDescription)}</p>
       </div>
 
       <div class="action">
-        <a href="mailto:${escapeHtml(lead.email)}?subject=Re:%20Deptloy%20Quote%20Inquiry%20(${encodeURIComponent(lead.id)})" class="btn">
+        <a href="mailto:${escapeHtml(lead.email)}?subject=Re:%20Deptloy%20Inquiry%20[${encodeURIComponent(lead.id)}]" class="btn">
           Reply Directly to ${escapeHtml(lead.fullName)}
         </a>
       </div>
     </div>
 
     <div class="footer">
-      Deptloy • Software built to outlast the hype • Lead Routing System
+      Deptloy • Software built to outlast the hype • Server-side Notification
     </div>
   </div>
 </body>
 </html>
-  `;
+  `.trim();
 }
 
 function escapeHtml(str: string): string {

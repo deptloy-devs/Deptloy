@@ -21,35 +21,43 @@ export function useDepChat() {
 const KB: [RegExp, string][] = [
   [
     /hi\b|hello|hey|greetings/i,
-    "Hello! I'm Dep, Deptloy's assistant. I can tell you about our AI receptionists, custom CRMs, automations, or help you book a consultation.",
+    "Hello! I'm Dep, Deptloy's assistant. I can explain our AI receptionists, custom software capabilities, solution blueprints, or help you book a discovery call.",
   ],
   [
-    /receptionist|phone|call(s)?|voice|answer/i,
-    "Our AI receptionist answers phone calls 24/7 in your brand's voice with sub-500ms latency. It checks your real-time calendar, books appointments, answers FAQs, and logs every call directly into your CRM.",
+    /receptionist|phone|call(s)?|voice|answer|telephony/i,
+    "Our flagship AI receptionist answers phone calls 24/7 in your brand's voice with sub-500ms latency. It checks live calendar availability, books appointments, triages emergencies, and syncs directly into your CRM. You can test a live simulation right now on our /demo page!",
   ],
   [
-    /crm|pipeline|leads|contacts/i,
-    "We build custom CRMs configured around how your team actually sells and serves clients. Call transcripts, notes, tasks, and follow-up stages are created automatically without manual data entry.",
+    /demo|test|try/i,
+    "You can experience a live interactive simulation of our AI Receptionist at /demo! You can choose an industry, test caller intake, ask questions, and simulate real-time slot booking.",
   ],
   [
-    /automat|workflow|busywork|integration/i,
-    "We automate repetitive administrative busywork: instant SMS confirmations after calls, two-way calendar sync, reminder sequences that prevent no-shows, and team alerts when human attention is needed.",
+    /custom|software|platform|app|web|saas|engineer/i,
+    "Beyond AI receptionists, Deptloy designs, engineers, and maintains custom software products: client portals, business management platforms, staff dispatch dashboards, SaaS apps, and relational PostgreSQL databases tailored around how your team actually works.",
   ],
   [
-    /web|app|site|mobile|portal|dashboard/i,
-    "We engineer high-performance Next.js websites, self-service client portals, booking dashboards, and mobile experiences built to convert traffic into revenue.",
+    /crm|database|pipeline|leads|contacts|postgres/i,
+    "We architect custom PostgreSQL and Supabase databases shaped around your sales and fulfillment workflows. Inbound calls, notes, transcripts, and stages update automatically with 100% data sovereignty.",
+  ],
+  [
+    /automat|workflow|integration|api|sync/i,
+    "We automate repetitive administrative busywork: two-way natural language SMS reminders that cut no-shows, instant post-call follow-ups, team alerts, and API bridges to legacy systems like EHRs, QuickBooks, and CRMs.",
+  ],
+  [
+    /project(s)?|blueprint(s)?|case|example/i,
+    "Visit our /projects page to explore our interactive solution blueprints—including a unified operations platform for multi-location healthcare networks and a live dispatch hub for field services.",
   ],
   [
     /price|cost|pricing|quote|how much/i,
-    "Every system is scoped around your operational volume. We provide clear, fixed project quotes with turnkey setup. Use the 'Get the Quote' form below or let me help you book a strategy call.",
+    "We provide transparent, fixed-scope engineering proposals tailored to your operational volume. You can submit a quote request on our /contact page or schedule a 30-minute discovery call.",
   ],
   [
-    /book|talk|contact|demo|meeting|call/i,
-    "You can scroll down to our contact form, click 'Book a call' in the header, or email deptloy@gmail.com. We typically respond with a concrete scope within 4 hours.",
+    /book|talk|contact|schedule|appointment|meeting/i,
+    "You can request a discovery call or submit a quote request directly at /contact, or email our engineering team directly at deptloy@gmail.com.",
   ],
   [
-    /build|service|offer|what do you do/i,
-    "We combine four core services: AI voice receptionists, custom CRMs, workflow automations, and web & mobile apps into one unified, long-lasting system for your business.",
+    /build|what do you do|services/i,
+    "Deptloy combines two major areas of expertise: our flagship autonomous AI Receptionists and end-to-end custom software engineering (web apps, platforms, CRMs, and automations).",
   ],
 ];
 
@@ -58,7 +66,7 @@ function getBotReply(question: string): string {
   for (const [re, answer] of KB) {
     if (re.test(q)) return answer;
   }
-  return "I can explain our AI receptionists, custom CRMs, workflow automations, or help you request a quote. What would you like to explore?";
+  return "I can tell you about our AI receptionists, custom software platforms, solution blueprints, or help you book a discovery call. What would you like to explore?";
 }
 
 interface Message {
@@ -288,7 +296,7 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
 
         {/* Quick Suggestion Chips */}
         <div className="flex flex-wrap gap-1.5 px-3 py-2 bg-[#f4f3fb] border-t border-[#e8e6f7]">
-          {["What do you build?", "How does pricing work?", "Book a call"].map((chip) => (
+          {["What do you build?", "Test AI Receptionist", "Custom software capabilities", "Book a discovery call"].map((chip) => (
             <button
               key={chip}
               onClick={() => handleUserSend(chip)}

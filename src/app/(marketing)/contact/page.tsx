@@ -92,36 +92,11 @@ export default function ContactPage() {
         setQuoteRefId(data.submissionId || refId);
         return;
       }
-      throw new Error(data.error || "Server could not send directly.");
-    } catch {
-      // Direct fail-safe to FormSubmit
-      try {
-        const fsRes = await fetch("https://formsubmit.co/ajax/deptloy@gmail.com", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({
-            name: quoteName,
-            email: quoteEmail,
-            service: "Custom software inquiry",
-            message: quoteMessage,
-            reference_id: refId,
-            _subject: `New Quote Request: ${quoteName} - Deptloy`,
-            _replyto: quoteEmail,
-            _captcha: "false",
-          }),
-        });
-        const fsData = await fsRes.json();
-        if (fsData.success === "true" || fsData.success === true || (fsData.message && fsData.message.includes("Activation"))) {
-          setQuoteStatus("success");
-          setQuoteRefId(refId);
-          return;
-        }
-      } catch {
-        // Fall through
-      }
-
+      throw new Error(data.error || "Failed to deliver quote request.");
+    } catch (err) {
       setQuoteStatus("error");
-      setQuoteError("Could not deliver automatically. You can email deptloy@gmail.com directly with the button below.");
+      const msg = err instanceof Error ? err.message : "Could not deliver your inquiry. Please try again or email deptloy@gmail.com directly.";
+      setQuoteError(msg);
     }
   };
 
@@ -132,7 +107,6 @@ export default function ContactPage() {
     setApptError("");
 
     const refId = `CAL-${Math.floor(100000 + Math.random() * 900000)}`;
-
     const details = `Discovery call request: ${selectedTopic} | Preferred date: ${selectedDate} | Window: ${selectedSlot} | Time zone: ${preferredTimeZone} | Phone: ${apptPhone} | Notes: ${apptNotes || "None"}`;
 
     try {
@@ -154,35 +128,10 @@ export default function ContactPage() {
         return;
       }
       throw new Error(data.error || "Could not send call request.");
-    } catch {
-      // Direct fail-safe
-      try {
-        const fsRes = await fetch("https://formsubmit.co/ajax/deptloy@gmail.com", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({
-            name: apptName,
-            email: apptEmail,
-            service: `Call request: ${selectedTopic}`,
-            message: details,
-            reference_id: refId,
-            _subject: `New Strategy Call Request: ${apptName} (${selectedTopic})`,
-            _replyto: apptEmail,
-            _captcha: "false",
-          }),
-        });
-        const fsData = await fsRes.json();
-        if (fsData.success === "true" || fsData.success === true || (fsData.message && fsData.message.includes("Activation"))) {
-          setApptStatus("success");
-          setApptRefId(refId);
-          return;
-        }
-      } catch {
-        // Fall through
-      }
-
+    } catch (err) {
       setApptStatus("error");
-      setApptError("Could not send the call request. Please email deptloy@gmail.com directly.");
+      const msg = err instanceof Error ? err.message : "Could not send the call request. Please try again or email deptloy@gmail.com directly.";
+      setApptError(msg);
     }
   };
 

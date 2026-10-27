@@ -1,37 +1,42 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/marketing/Hero";
-import { AssemblyTrack } from "@/components/marketing/AssemblyTrack";
-import { Marquee } from "@/components/marketing/Marquee";
-import { ServicesModule } from "@/components/marketing/ServicesModule";
-import { SolutionsSection } from "@/components/marketing/SolutionsSection";
-import { StoryTimeline } from "@/components/marketing/StoryTimeline";
 import { WhyDeptloySection } from "@/components/marketing/WhyDeptloySection";
-import { ProcessSection } from "@/components/marketing/ProcessSection";
-import { AboutStudioSection } from "@/components/marketing/AboutStudioSection";
-import { FaqSection } from "@/components/marketing/FaqSection";
-import { FinalContactSection } from "@/components/marketing/FinalContactSection";
+import { AssemblyTrack } from "@/components/marketing/AssemblyTrack";
+import { ExpertiseSection } from "@/components/marketing/ExpertiseSection";
+import { FeaturedProjectsSection } from "@/components/marketing/FeaturedProjectsSection";
+import { ShortProcessSection } from "@/components/marketing/ShortProcessSection";
+import { SimpleFinalCta } from "@/components/marketing/SimpleFinalCta";
 
 export const metadata: Metadata = {
   title: "Deptloy – Software built to outlast the hype",
   description:
-    "Custom software, AI systems and connected digital products designed, built and maintained around your business.",
+    "From intelligent AI receptionists to complete custom software platforms, Deptloy designs, builds and maintains software tailored to how your business actually operates.",
   alternates: { canonical: "/" },
 };
 
 export default function HomePage() {
   return (
     <>
+      {/* 1. Hero with animated Dep & clear flagship + custom CTAs */}
       <Hero />
-      <AssemblyTrack />
-      <Marquee />
-      <ServicesModule />
-      <SolutionsSection />
-      <StoryTimeline />
+
+      {/* 2. Why companies outgrow generic tools */}
       <WhyDeptloySection />
-      <ProcessSection />
-      <AboutStudioSection />
-      <FaqSection />
-      <FinalContactSection />
+
+      {/* 3. Interactive system assembly: Different capabilities. One connected product. */}
+      <AssemblyTrack />
+
+      {/* 4. Four concise capability areas */}
+      <ExpertiseSection />
+
+      {/* 5. Two featured solution blueprints */}
+      <FeaturedProjectsSection />
+
+      {/* 6. Simplified 3-stage delivery process */}
+      <ShortProcessSection />
+
+      {/* 7. Visually striking final CTA */}
+      <SimpleFinalCta />
     </>
   );
 }

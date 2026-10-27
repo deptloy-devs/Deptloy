@@ -7,6 +7,8 @@ import { projectBlueprints } from "@/lib/project-blueprints";
 
 interface PageProps { params: Promise<{ slug: string }> }
 
+export const instant = false;
+
 export function generateStaticParams() {
   return projectBlueprints.map(({ slug }) => ({ slug }));
 }

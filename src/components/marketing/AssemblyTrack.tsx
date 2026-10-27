@@ -147,12 +147,12 @@ export function AssemblyTrack() {
   return (
     <div className="track" ref={trackRef} id="track">
       <div className="stage">
-        <h2>Different capabilities, engineered into one custom product.</h2>
+        <h2>Different capabilities. One connected product.</h2>
 
         <div className="phase" id="phase">
-          <span className={phaseIndex === 0 ? "on" : ""}>Specialist capabilities</span>
-          <span className={phaseIndex === 1 ? "on" : ""}>Integrating</span>
-          <span className={phaseIndex === 2 ? "on" : ""}>Your system</span>
+          <span className={phaseIndex === 0 ? "on" : ""}>AI &amp; Custom Software</span>
+          <span className={phaseIndex === 1 ? "on" : ""}>Databases &amp; Automations</span>
+          <span className={phaseIndex === 2 ? "on" : ""}>One Connected System</span>
         </div>
 
         <div className="console" ref={consoleRef} id="console">

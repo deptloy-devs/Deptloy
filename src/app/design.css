@@ -518,7 +518,7 @@ h1 span:nth-child(3) b {
 
 /* Interactive Assembly Track */
 .track {
-  height: 320vh;
+  height: 200vh;
   position: relative;
 }
 

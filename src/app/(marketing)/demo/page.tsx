@@ -12,6 +12,7 @@ import {
   Sparkles,
   Mic,
 } from "lucide-react";
+import { VoiceReceptionist } from "@/components/marketing/voice-demo/VoiceReceptionist";
 import { demoIndustries, demoTimeSlots } from "@/lib/site";
 import type { DemoIndustryId, ChatMessage, DemoBookingState } from "@/types";
 
@@ -58,6 +59,8 @@ export default function DemoPage() {
     },
   ]);
   const [inputMessage, setInputMessage] = React.useState("");
+  // Right panel: the text simulator, or a live voice call.
+  const [panelMode, setPanelMode] = React.useState<"text" | "voice">("text");
   const chatBottomRef = React.useRef<HTMLDivElement>(null);
 
   // When industry changes, reset selected service & conversation greeting
@@ -222,7 +225,7 @@ export default function DemoPage() {
         <div className="max-w-3xl mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-[var(--paper)] text-[var(--pur)] border border-[var(--peri)] mb-3">
             <Sparkles className="w-3.5 h-3.5 text-[var(--or)]" />
-            Interactive Text-Based Simulation
+            Text &amp; Live Voice Simulation
           </div>
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--deep)] leading-tight">
             AI Receptionist Simulator
@@ -234,10 +237,10 @@ export default function DemoPage() {
           {/* Honest Prototype Notice & Distinction from Dep Mascot */}
           <div className="mt-4 p-3 bg-white border-l-4 border-[var(--or)] text-xs text-[var(--mute)] shadow-sm space-y-1">
             <div>
-              <strong>Demonstration Prototype:</strong> This is an interactive text simulation of our business receptionist system. Telephony voice streaming will be enabled in our next major release.
+              <strong>Demonstration Prototype:</strong> Chat by text, or switch to Voice and talk to the receptionist live in your browser. Bookings use sample data only.
             </div>
             <div className="text-[11px] text-[var(--pur)] font-mono">
-              Note: This simulator represents the receptionist Deptloy builds for your company. Dep (in the lower corner) is Deptloy&apos;s own studio mascot.
+              Note: This simulator represents the receptionist Deptloy builds for your company. In voice mode, Dep, our studio mascot, gives it a face.
             </div>
           </div>
         </div>
@@ -656,19 +659,45 @@ export default function DemoPage() {
                     {currentIndustry.name} Receptionist
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   </h3>
-                  <span className="text-[10px] font-mono text-[var(--peri)]">Text Intake Engine Active</span>
+                  <span className="text-[10px] font-mono text-[var(--peri)]">
+                    {panelMode === "voice" ? "Live Voice Engine Active" : "Text Intake Engine Active"}
+                  </span>
                 </div>
               </div>
 
-              {/* Ready for future voice integration badge */}
-              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono text-[#cfd2ee]"
-                title="Telephony voice integration will be connected in our next update"
+              {/* Text / live voice switch */}
+              <div
+                role="tablist"
+                aria-label="Receptionist demo mode"
+                className="flex items-center p-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono"
               >
-                <Mic className="w-3 h-3 text-slate-400" />
-                <span>Voice Soon</span>
+                {(["text", "voice"] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    role="tab"
+                    aria-selected={panelMode === mode}
+                    onClick={() => setPanelMode(mode)}
+                    className={`flex items-center gap-1 px-2.5 py-0.5 rounded-full transition-colors cursor-pointer ${
+                      panelMode === mode ? "bg-white text-[var(--deep)] font-bold" : "text-[#cfd2ee] hover:text-white"
+                    }`}
+                  >
+                    {mode === "voice" && <Mic className="w-3 h-3" />}
+                    {mode === "voice" ? "Voice" : "Text"}
+                    {mode === "voice" && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" aria-label="live" />}
+                  </button>
+                ))}
               </div>
             </div>
 
+            {panelMode === "voice" ? (
+              <VoiceReceptionist
+                key={`${currentIndustry.id}:${selectedService.id}`}
+                industry={currentIndustry}
+                service={selectedService}
+              />
+            ) : (
+              <>
             {/* Quick Sample Questions Bar */}
             <div className="p-2.5 bg-black/10 border-b border-white/10 shrink-0">
               <span className="text-[10px] font-mono uppercase text-[var(--peri)] block mb-1.5">
@@ -730,6 +759,16 @@ export default function DemoPage() {
                 className="flex-1 bg-white/10 border border-white/15 text-white placeholder:text-slate-400 p-2 text-xs rounded-sm focus:outline-none focus:border-[var(--or)]"
               />
               <button
+                type="button"
+                onClick={() => setPanelMode("voice")}
+                aria-label="Talk to the receptionist"
+                title="Talk to the receptionist"
+                className="h-8 px-2.5 rounded-sm border border-white/20 bg-white/10 text-white text-[10px] font-mono font-bold flex items-center gap-1.5 hover:bg-white/20 transition-colors cursor-pointer shrink-0"
+              >
+                <Mic className="w-3.5 h-3.5 text-[var(--or)]" />
+                <span className="hidden sm:inline">Talk</span>
+              </button>
+              <button
                 type="submit"
                 aria-label="Send message"
                 className="w-8 h-8 rounded-sm bg-[var(--or)] text-[var(--deep)] grid place-items-center hover:bg-white transition-colors cursor-pointer shrink-0"
@@ -737,6 +776,8 @@ export default function DemoPage() {
                 <Send className="w-3.5 h-3.5" />
               </button>
             </form>
+              </>
+            )}
           </div>
         </div>
       </div>

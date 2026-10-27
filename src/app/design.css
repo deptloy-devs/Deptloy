@@ -452,6 +452,19 @@ h1 span:nth-child(3) b {
 .speaking .smile { display: none; }
 .speaking .mouth { display: block; }
 
+/* Live voice demo: DepRobot sets --dep-mouth (0..1) from the receptionist's voice every frame. */
+#robot.dep-live .mouth rect {
+  animation: none;
+  transform: scaleY(calc(0.3 + var(--dep-mouth, 0) * 1.9));
+}
+/* The wave is a hello; Dep keeps still arms while on a call. */
+#robot.dep-live .arm { animation: none; }
+/* Antenna turns green and pulses faster while the caller talks. */
+#robot.listening .glow {
+  fill: #3ccf91;
+  animation-duration: 0.8s;
+}
+
 .glow {
   animation: pls 1.6s ease-in-out infinite;
   transform-box: fill-box;

@@ -342,7 +342,7 @@ export function AssemblyTrack() {
           <svg className="lines" ref={linesRef} id="lines" aria-hidden="true"></svg>
 
           <div className="hub" ref={hubRef} id="hub">
-            <svg width="34" height="38" viewBox="-140 -160 280 320">
+            <svg width="34" height="38" viewBox="0 0 313.26 367.98">
               <use href="#mk" />
             </svg>
           </div>

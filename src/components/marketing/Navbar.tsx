@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LogoMark, LogoWordmark } from "@/components/ui/Logo";
 
 export function Navbar() {
   const [open, setOpen] = React.useState(false);
@@ -41,10 +42,8 @@ export function Navbar() {
         <div className="wrap">
           <div className="navpill">
             <Link href="/" className="logo" aria-label="Deptloy home">
-              <svg style={{ width: "28px", height: "32px", flexShrink: 0 }}>
-                <use href="#mk" />
-              </svg>
-              Deptloy
+              <LogoMark className="w-7 h-8" />
+              <LogoWordmark className="w-[74px] h-[20.5px]" />
             </Link>
 
             <nav>

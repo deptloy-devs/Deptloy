@@ -86,8 +86,8 @@ export function StoryTimeline() {
   return (
     <section id="story" style={{ paddingTop: 0 }}>
       <div className="wrap">
-        <span className="k">One call, followed through</span>
-        <h2>See what happens after hours.</h2>
+        <span className="k">One example workflow</span>
+        <h2>See a connected product in action.</h2>
 
         <div className="story">
           {/* Sticky left card */}

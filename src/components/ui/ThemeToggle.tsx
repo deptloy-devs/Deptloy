@@ -5,29 +5,16 @@ import { Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 export function ThemeToggle({ className }: { className?: string }) {
-  const [theme, setTheme] = React.useState<"dark" | "light">("dark");
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
+  const [theme, setTheme] = React.useState<"dark" | "light">(() => {
+    if (typeof window === "undefined") return "dark";
     const attr = document.documentElement.getAttribute("data-theme");
-    if (attr === "light" || attr === "dark") {
-      setTheme(attr);
-    } else {
-      const stored = localStorage.getItem("deptloy-theme");
-      if (stored === "light" || stored === "dark") {
-        setTheme(stored);
-        applyTheme(stored);
-      } else {
-        const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
-        const initial = prefersLight ? "light" : "dark";
-        setTheme(initial);
-        applyTheme(initial);
-      }
-    }
-  }, []);
+    if (attr === "light" || attr === "dark") return attr;
+    const stored = localStorage.getItem("deptloy-theme");
+    if (stored === "light" || stored === "dark") return stored;
+    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  });
 
-  const applyTheme = (next: "dark" | "light") => {
+  const applyTheme = React.useCallback((next: "dark" | "light") => {
     document.documentElement.setAttribute("data-theme", next);
     if (next === "light") {
       document.documentElement.classList.add("light");
@@ -41,7 +28,11 @@ export function ThemeToggle({ className }: { className?: string }) {
     } catch {
       // localStorage unavailable in private iframe/sandbox
     }
-  };
+  }, []);
+
+  React.useEffect(() => {
+    applyTheme(theme);
+  }, [theme, applyTheme]);
 
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";

@@ -27,13 +27,13 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://deptloy.com"),
   title: "Deptloy – Software built to outlast the hype",
   description:
-    "We combine AI, CRM, automation and custom apps into one system built around your business, then maintain it so it keeps working for years.",
+    "Deptloy designs, engineers and maintains custom software products, intelligent workflows and connected business systems.",
   keywords: [
-    "AI receptionist",
-    "business automation",
-    "AI agency",
-    "CRM automation",
-    "appointment booking AI",
+    "custom software engineering",
+    "business systems architecture",
+    "custom SaaS development",
+    "AI integration",
+    "enterprise application development",
     "custom software development",
     "workflow automation",
   ],
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Deptloy – Software built to outlast the hype",
     description:
-      "We combine AI, CRM, automation and custom apps into one system built around your business, then maintain it so it keeps working for years.",
+      "Deptloy designs, engineers and maintains custom software products, intelligent workflows and connected business systems.",
     url: "https://deptloy.com",
     siteName: "Deptloy",
     locale: "en_US",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Deptloy – Software built to outlast the hype",
     description:
-      "We combine AI, CRM, automation and custom apps into one system built around your business, then maintain it so it keeps working for years.",
+      "Deptloy designs, engineers and maintains custom software products, intelligent workflows and connected business systems.",
   },
 };
 

@@ -1,22 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  ArrowRight,
   CheckCircle2,
   ShieldCheck,
   Cpu,
   RefreshCw,
   Layers,
-  Sparkles,
-  Users,
-  Compass,
-  Code2,
 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About Deptloy — Software built to outlast the hype",
   description:
-    "Deptloy is an engineered software studio combining AI receptionists, custom CRMs, automations, and custom apps into unified systems for businesses that run on people and phones.",
+    "Deptloy is a software engineering studio building custom products, connected platforms and intelligent systems around business needs.",
   alternates: { canonical: "/about" },
 };
 
@@ -25,34 +20,34 @@ const pillars = [
     icon: Layers,
     title: "Systems, not tools",
     color: "#8478e0",
-    desc: "A bolted-on chatbot solves one problem and creates three more. We map out the entire operational flow first so every component connects natively to your calendar, CRM, and team workflows.",
+    desc: "We understand the full workflow before choosing the right product architecture. Every component has a clear purpose and a place within the system.",
   },
   {
     icon: Cpu,
     title: "Plain-spoken engineering",
     color: "#5750a8",
-    desc: "No jargon, no buzzwords, and no speculative hype. You always know what we are building, why it was chosen, and how many hours or lost leads it reclaims for your business every week.",
+    desc: "No jargon or speculative promises. We explain what we are building, why it matters and how we will evaluate whether it works.",
   },
   {
     icon: ShieldCheck,
     title: "Production hardened",
     color: "#fd9150",
-    desc: "Our AI receptionists operate with sub-500ms voice latency, zero training data retention, and strict CRM write rules so hallucinations never compromise customer relationships.",
+    desc: "Reliability, privacy boundaries and understandable interfaces guide our engineering choices from prototype through production.",
   },
   {
     icon: RefreshCw,
     title: "We stay after launch",
     color: "#ef7a5e",
-    desc: "Launch is only day one. We continuously monitor API connections, tune response parameters against real customer inquiries, and extend your system as your company scales.",
+    desc: "Launch is only the start. We can monitor, improve and extend the product as your company changes.",
   },
 ];
 
 const processSteps = [
-  { step: "01", name: "Discover", desc: "Audit phone lines, booking flows, and bottlenecks." },
+  { step: "01", name: "Discover", desc: "Understand users, goals and existing workflows." },
   { step: "02", name: "Design", desc: "Architect one unified operational blueprint." },
-  { step: "03", name: "Build", desc: "Engineer voice agents, database pipelines, and UI." },
+  { step: "03", name: "Build", desc: "Engineer and test the complete product." },
   { step: "04", name: "Launch", desc: "Deploy with close initial monitoring and staff onboarding." },
-  { step: "05", name: "Care", desc: "Weekly prompt tuning, API health checks, and upgrades." },
+  { step: "05", name: "Care", desc: "Support, improve and evolve the product." },
 ];
 
 export default function AboutPage() {
@@ -61,23 +56,23 @@ export default function AboutPage() {
       <div className="wrap">
         <span className="k">About Deptloy Studio</span>
         <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[var(--deep)] max-w-3xl">
-          A software studio for businesses that run on calls, leads and customers.
+          A software studio for businesses with ambitions beyond everyday apps.
         </h1>
         <p className="lead2 max-w-2xl">
-          We combine AI voice agents, custom CRMs, workflow automations, and high-performance apps into unified, long-lasting systems shaped around how your business actually works.
+          We design and engineer custom digital products, connecting the people, data and workflows that make your business unique.
         </p>
 
         {/* Narrative Section */}
         <div className="my-16 grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           <div className="lg:col-span-7 space-y-6 text-base sm:text-lg text-[var(--mute)] leading-relaxed">
             <p>
-              Most businesses don’t have an &ldquo;AI problem&rdquo; — they have a <strong>disconnection problem</strong>. Answering services lose context, inquiries get stuck in generic inboxes, customer notes never make it to the calendar, and follow-ups only happen if someone remembers to chase them.
+              Every growing business develops its own processes, exceptions and ambitions. Standard applications can be useful, but eventually the team is forced to work around the software instead of the other way around.
             </p>
             <p>
-              When software vendors sell isolated SaaS tools, they leave you to stitch together APIs, manage monthly subscription bloat, and troubleshoot fragile Zapier scripts that fail silently.
+              One company needs an internal operations platform. Another needs a client-facing product, a complex integration layer or an intelligent workflow. The solution should begin with the problem, not a preset list of features.
             </p>
             <p className="font-semibold text-[var(--deep)]">
-              Deptloy was founded to replace that patchwork with one resilient, custom system. We design, engineer, deploy, and maintain the infrastructure so your front door never misses a customer and your staff never wastes hours on repetitive admin busywork.
+              Deptloy brings product thinking and engineering expertise together. We design, build and support custom software so the technology matches the people and operations behind it.
             </p>
           </div>
 
@@ -93,19 +88,19 @@ export default function AboutPage() {
             <ul className="space-y-3 text-sm text-[var(--mute)] font-medium">
               <li className="flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-[#3ccf91] shrink-0 mt-0.5" />
-                <span>Sub-500ms voice response latency for natural phone dialogue</span>
+                <span>Architecture chosen for the performance and reliability each product needs</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-[#3ccf91] shrink-0 mt-0.5" />
-                <span>Bi-directional real-time calendar and CRM synchronization</span>
+                <span>Clear integration boundaries and reliable data flows</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-[#3ccf91] shrink-0 mt-0.5" />
-                <span>Dedicated cloud infrastructure with zero data resale</span>
+                <span>Security and privacy requirements discussed from the start</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-[#3ccf91] shrink-0 mt-0.5" />
-                <span>Active weekly monitoring, rule tuning, and maintenance</span>
+                <span>Maintenance and improvement options after launch</span>
               </li>
             </ul>
 
@@ -158,7 +153,7 @@ export default function AboutPage() {
             How we partner with you
           </h2>
           <p className="text-sm text-[var(--mute)] max-w-2xl mb-8">
-            From initial operational discovery to ongoing prompt maintenance, our team handles the heavy lifting.
+            From the first product conversation to ongoing improvements, we guide each stage of delivery.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -185,12 +180,12 @@ export default function AboutPage() {
               Let’s talk about how your business operates today.
             </h3>
             <p className="text-xs sm:text-sm text-[#cfd2ee] leading-relaxed">
-              We’ll show you how a custom, unified system could eliminate manual bottlenecks and capture every inbound opportunity.
+              We’ll explore what the right custom product could look like, which users it should serve and how to get to a useful first release.
             </p>
           </div>
 
           <Link href="/contact" className="btn" style={{ background: "var(--or)", color: "var(--deep)" }}>
-            Schedule Architecture Call
+            Discuss Your Idea
           </Link>
         </div>
       </div>

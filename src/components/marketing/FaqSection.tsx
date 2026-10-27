@@ -5,19 +5,19 @@ import * as React from "react";
 const faqs = [
   {
     q: "What exactly does Deptloy build?",
-    a: "AI receptionists, custom CRMs, workflow automation, and websites and mobile apps, designed together as one connected system for your business.",
+    a: "Custom software products such as business platforms, client portals, SaaS applications, data systems and AI-enabled workflows. We choose the capabilities around the problem, not from a fixed service bundle.",
   },
   {
-    q: "Do I need every part?",
-    a: "No. Many clients start with one, often the receptionist or the CRM. Because we design for the whole system from the start, adding the rest later is straightforward.",
+    q: "Do I need to know which technology to use?",
+    a: "No. Tell us what you are trying to achieve, who will use it and what is getting in the way. We will help define an appropriate technical approach and scope.",
   },
   {
     q: "What happens after launch?",
-    a: "We stay involved. We monitor the system, fix issues, and improve and extend it as your business changes, so it doesn’t go stale.",
+    a: "We can stay involved with maintenance, monitoring, improvements and new capabilities, with support arrangements tailored to the project.",
   },
   {
     q: "How do we get started?",
-    a: "Book a call or send us a message. We’ll ask how your business runs, then outline what a connected system could look like and what to build first.",
+    a: "Send us a short description of your idea or business challenge. We will discuss the users, workflows, priorities and possible first version.",
   },
 ];
 

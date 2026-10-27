@@ -14,7 +14,7 @@ import { FinalContactSection } from "@/components/marketing/FinalContactSection"
 export const metadata: Metadata = {
   title: "Deptloy – Software built to outlast the hype",
   description:
-    "We combine AI, CRM, automation and custom apps into one system built around your business, then maintain it so it keeps working for years.",
+    "Custom software, AI systems and connected digital products designed, built and maintained around your business.",
   alternates: { canonical: "/" },
 };
 

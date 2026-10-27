@@ -11,60 +11,43 @@ import {
   Send,
   Calendar,
   CheckCircle2,
-  PhoneCall,
-  MessageSquare,
-  Bot,
-  Database,
-  Workflow,
-  Globe,
 } from "lucide-react";
 
 const consultationTopics = [
   {
-    id: "voice-ai",
-    title: "AI Voice Receptionist Scope",
+    id: "discovery",
+    title: "Project Discovery Call",
     duration: "30 mins",
-    icon: Bot,
-    color: "#8478e0",
   },
   {
-    id: "crm-scope",
-    title: "Custom CRM & Lead Pipeline",
+    id: "technical",
+    title: "Technical Consultation",
     duration: "45 mins",
-    icon: Database,
-    color: "#5750a8",
   },
   {
-    id: "automation",
-    title: "Workflow Automation Audit",
-    duration: "30 mins",
-    icon: Workflow,
-    color: "#fd9150",
-  },
-  {
-    id: "full-system",
-    title: "Full Unified System Architecture",
+    id: "systems",
+    title: "Business Systems Review",
     duration: "45 mins",
-    icon: Globe,
-    color: "#ef7a5e",
   },
 ];
 
-const availableTimeSlots = [
-  "9:30 AM",
-  "11:00 AM",
-  "1:30 PM",
-  "3:00 PM",
-  "4:30 PM",
-];
+const preferredTimeWindows = ["Morning (9 AM–12 PM)", "Afternoon (12–5 PM)", "Evening (5–8 PM)"];
 
 export default function ContactPage() {
   const [activeTab, setActiveTab] = React.useState<"quote" | "appointment">("quote");
 
+  React.useEffect(() => {
+    const selectFromHash = () => {
+      if (window.location.hash === "#appointment") setActiveTab("appointment");
+    };
+    selectFromHash();
+    window.addEventListener("hashchange", selectFromHash);
+    return () => window.removeEventListener("hashchange", selectFromHash);
+  }, []);
+
   // Quote Form State
   const [quoteName, setQuoteName] = React.useState("");
   const [quoteEmail, setQuoteEmail] = React.useState("");
-  const [quoteService, setQuoteService] = React.useState("Full System Quote");
   const [quoteMessage, setQuoteMessage] = React.useState("");
   const [quoteStatus, setQuoteStatus] = React.useState<"idle" | "submitting" | "success" | "error">("idle");
   const [quoteRefId, setQuoteRefId] = React.useState("");
@@ -72,8 +55,9 @@ export default function ContactPage() {
 
   // Appointment Form State
   const [selectedTopic, setSelectedTopic] = React.useState(consultationTopics[0].title);
-  const [selectedDate, setSelectedDate] = React.useState("Tomorrow, 11:00 AM");
-  const [selectedSlot, setSelectedSlot] = React.useState("11:00 AM");
+  const [selectedDate, setSelectedDate] = React.useState("");
+  const [selectedSlot, setSelectedSlot] = React.useState(preferredTimeWindows[0]);
+  const [preferredTimeZone, setPreferredTimeZone] = React.useState("");
   const [apptName, setApptName] = React.useState("");
   const [apptEmail, setApptEmail] = React.useState("");
   const [apptPhone, setApptPhone] = React.useState("");
@@ -97,7 +81,7 @@ export default function ContactPage() {
         body: JSON.stringify({
           fullName: quoteName,
           email: quoteEmail,
-          serviceRequired: quoteService,
+          serviceRequired: "Custom software inquiry",
           message: quoteMessage,
         }),
       });
@@ -118,7 +102,7 @@ export default function ContactPage() {
           body: JSON.stringify({
             name: quoteName,
             email: quoteEmail,
-            service: quoteService,
+            service: "Custom software inquiry",
             message: quoteMessage,
             reference_id: refId,
             _subject: `New Quote Request: ${quoteName} - Deptloy`,
@@ -149,7 +133,7 @@ export default function ContactPage() {
 
     const refId = `CAL-${Math.floor(100000 + Math.random() * 900000)}`;
 
-    const details = `Appointment Request: ${selectedTopic} | Slot: ${selectedSlot} | Phone: ${apptPhone} | Notes: ${apptNotes || "None"}`;
+    const details = `Discovery call request: ${selectedTopic} | Preferred date: ${selectedDate} | Window: ${selectedSlot} | Time zone: ${preferredTimeZone} | Phone: ${apptPhone} | Notes: ${apptNotes || "None"}`;
 
     try {
       const res = await fetch("/api/contact", {
@@ -158,7 +142,7 @@ export default function ContactPage() {
         body: JSON.stringify({
           fullName: apptName,
           email: apptEmail,
-          serviceRequired: `Scheduled Appointment: ${selectedTopic}`,
+          serviceRequired: `Call request: ${selectedTopic}`,
           message: details,
         }),
       });
@@ -169,7 +153,7 @@ export default function ContactPage() {
         setApptRefId(data.submissionId || refId);
         return;
       }
-      throw new Error(data.error || "Could not lock appointment slot.");
+      throw new Error(data.error || "Could not send call request.");
     } catch {
       // Direct fail-safe
       try {
@@ -179,7 +163,7 @@ export default function ContactPage() {
           body: JSON.stringify({
             name: apptName,
             email: apptEmail,
-            service: `Appointment Request: ${selectedTopic}`,
+            service: `Call request: ${selectedTopic}`,
             message: details,
             reference_id: refId,
             _subject: `New Strategy Call Request: ${apptName} (${selectedTopic})`,
@@ -198,7 +182,7 @@ export default function ContactPage() {
       }
 
       setApptStatus("error");
-      setApptError("Could not lock appointment online. Please email deptloy@gmail.com directly.");
+      setApptError("Could not send the call request. Please email deptloy@gmail.com directly.");
     }
   };
 
@@ -210,7 +194,7 @@ export default function ContactPage() {
           Let’s build something that lasts.
         </h1>
         <p className="lead2 max-w-2xl">
-          Tell us how your business runs today. Request a custom quote, schedule a live strategy session, or connect with our engineering team directly.
+          Tell us what you want to build or improve. Request a quote, propose a discovery call, or email our team directly.
         </p>
 
         {/* 2 Main Action Modes Toggle */}
@@ -237,7 +221,7 @@ export default function ContactPage() {
             }`}
           >
             <Calendar className="w-3.5 h-3.5 text-[var(--or)]" />
-            Option 2: Schedule a Strategy Call
+            Option 2: Request a Discovery Call
           </button>
         </div>
 
@@ -408,31 +392,14 @@ export default function ContactPage() {
 
                     <div>
                       <label className="block text-xs font-mono font-bold uppercase text-[var(--mute)] mb-1">
-                        Primary Service Focus
-                      </label>
-                      <select
-                        value={quoteService}
-                        onChange={(e) => setQuoteService(e.target.value)}
-                        className="w-full bg-[var(--paper)] border border-[var(--peri)] p-3 text-sm rounded-lg focus:outline-none focus:border-[var(--pur)]"
-                      >
-                        <option value="Full System Quote">Complete Unified System (Voice + CRM + Automation + Web)</option>
-                        <option value="AI Receptionist">AI Voice & Text Receptionist (24/7 Call Intake)</option>
-                        <option value="Custom CRM">Custom CRM & Pipeline Architecture</option>
-                        <option value="Workflow Automation">Workflow Automation & Background Synchronization</option>
-                        <option value="Web & App Development">Web Platforms & Bespoke Client Portals</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-mono font-bold uppercase text-[var(--mute)] mb-1">
-                        What would you like to improve? *
+                        What would you like to build or improve? *
                       </label>
                       <textarea
                         required
                         rows={4}
                         value={quoteMessage}
                         onChange={(e) => setQuoteMessage(e.target.value)}
-                        placeholder="Describe your current phone/inquiry volume, tools you use, and what manual bottlenecks you want eliminated..."
+                        placeholder="Tell us about your product idea, business challenge, or workflow you'd like to improve..."
                         className="w-full bg-[var(--paper)] border border-[var(--peri)] p-3 text-sm rounded-lg focus:outline-none focus:border-[var(--pur)]"
                       />
                     </div>
@@ -468,13 +435,13 @@ export default function ContactPage() {
                       <Calendar className="w-8 h-8" />
                     </div>
                     <h3 className="text-2xl font-extrabold text-[var(--deep)]">
-                      Strategy Session Reserved!
+                      Discovery Call Request Received
                     </h3>
                     <div className="text-xs font-mono font-bold text-[var(--pur)] bg-[var(--paper)] px-3 py-1 rounded-full inline-block border border-[var(--peri)]">
-                      Booking Reference: {apptRefId}
+                      Request Reference: {apptRefId}
                     </div>
                     <p className="text-sm text-[var(--mute)] max-w-md mx-auto leading-relaxed">
-                      Thank you, <strong>{apptName}</strong>. Your session for <strong>{selectedTopic}</strong> ({selectedSlot}) has been dispatched to <strong className="text-[var(--deep)]">deptloy@gmail.com</strong>. You will receive a calendar invite within 2 hours.
+                      Thank you, <strong>{apptName}</strong>. We received your request for <strong>{selectedTopic}</strong> on <strong>{selectedDate}</strong> ({selectedSlot}, {preferredTimeZone}). Our team will reply by email to agree on an available time. Your appointment is not confirmed yet.
                     </p>
                     <div className="pt-2 flex justify-center gap-3">
                       <button
@@ -486,7 +453,7 @@ export default function ContactPage() {
                         }}
                         className="btn sm ghost"
                       >
-                        Schedule another time
+                        Request another time
                       </button>
                     </div>
                   </div>
@@ -494,10 +461,10 @@ export default function ContactPage() {
                   <form onSubmit={handleAppointmentSubmit} className="space-y-4">
                     <div className="border-b border-[var(--mist)] pb-3">
                       <h2 className="text-xl font-extrabold text-[var(--deep)]">
-                        Schedule a Technical Strategy Call
+                        Request a Discovery Call
                       </h2>
                       <p className="text-xs text-[var(--mute)] mt-1">
-                        Meet with a principal systems engineer. 100% technical scope, zero sales pressure.
+                        Choose a conversation type and a preferred window. We will follow up with actual availability before confirming.
                       </p>
                     </div>
 
@@ -525,13 +492,22 @@ export default function ContactPage() {
                       </div>
                     </div>
 
-                    {/* Step 2: Available Time Window */}
+                    {/* Step 2: Requested date and time window, not live calendar availability */}
                     <div>
                       <label className="block text-xs font-mono font-bold uppercase text-[var(--mute)] mb-2">
-                        2. Select Time Window (EST / PT)
+                        2. Suggest a Date and Time
                       </label>
+                      <div className="grid sm:grid-cols-2 gap-3 mb-3">
+                        <input type="date" required value={selectedDate} min={new Date().toISOString().slice(0, 10)}
+                          onChange={(e) => setSelectedDate(e.target.value)}
+                          aria-label="Preferred call date"
+                          className="w-full bg-[var(--paper)] border border-[var(--peri)] p-3 text-sm rounded-lg" />
+                        <input type="text" required value={preferredTimeZone} onChange={(e) => setPreferredTimeZone(e.target.value)}
+                          placeholder="Your time zone (e.g. PKT, UTC+5)" aria-label="Your time zone"
+                          className="w-full bg-[var(--paper)] border border-[var(--peri)] p-3 text-sm rounded-lg" />
+                      </div>
                       <div className="flex flex-wrap gap-2">
-                        {availableTimeSlots.map((slot) => (
+                        {preferredTimeWindows.map((slot) => (
                           <button
                             key={slot}
                             type="button"
@@ -546,6 +522,7 @@ export default function ContactPage() {
                           </button>
                         ))}
                       </div>
+                      <p className="text-xs text-[var(--mute)] mt-2">These are preferences, not real-time available slots. We will confirm the date and time by email.</p>
                     </div>
 
                     {/* Step 3: Attendee Details */}
@@ -592,6 +569,15 @@ export default function ContactPage() {
                       />
                     </div>
 
+                    <div>
+                      <label className="block text-xs font-mono font-bold uppercase text-[var(--mute)] mb-1">
+                        Project Context (Optional)
+                      </label>
+                      <textarea rows={3} value={apptNotes} onChange={(e) => setApptNotes(e.target.value)}
+                        placeholder="What would you like to discuss?"
+                        className="w-full bg-[var(--paper)] border border-[var(--peri)] p-3 text-sm rounded-lg focus:outline-none focus:border-[var(--pur)]" />
+                    </div>
+
                     {apptStatus === "error" && (
                       <div className="p-3 bg-[rgba(217,56,58,0.08)] border border-[rgba(217,56,58,0.2)] text-[#d9383a] text-xs rounded-lg text-center">
                         {apptError}
@@ -605,7 +591,7 @@ export default function ContactPage() {
                       style={{ background: "var(--or)", color: "var(--deep)" }}
                     >
                       <Calendar className="w-4 h-4 mr-1.5" />
-                      {apptStatus === "submitting" ? "Locking Slot..." : "Confirm Strategy Call"}
+                      {apptStatus === "submitting" ? "Sending Request..." : "Request Discovery Call"}
                     </button>
                   </form>
                 )}

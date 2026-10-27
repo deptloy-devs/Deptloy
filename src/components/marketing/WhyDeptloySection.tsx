@@ -7,30 +7,30 @@ export function WhyDeptloySection() {
     <section className="dark" id="why">
       <div className="wrap">
         <span className="k">Why Deptloy</span>
-        <h2>Most AI providers sell you a tool. We build what it plugs into.</h2>
+        <h2>Generic tools make you adapt. Custom software adapts to you.</h2>
         <p className="lead2">
-          A bolted-on chatbot solves one problem and creates three more. We design the whole system first, so every piece fits and nothing is thrown away when your business changes.
+          Your processes, people and customers should shape the software. We connect the pieces deliberately and keep room for the system to grow.
         </p>
 
         <div className="cmp">
-          {/* Column A: Usual AI provider */}
+          {/* Column A: Generic stack */}
           <div className="col a">
-            <h3>The usual AI provider</h3>
+            <h3>A patchwork of generic tools</h3>
             <div>
               <b>×</b>
-              <span>One tool configured from a template</span>
+              <span>Features shaped by a generic workflow</span>
             </div>
             <div>
               <b>×</b>
-              <span>Calls, leads and follow-ups live in separate places</span>
+              <span>Teams copy information between disconnected apps</span>
             </div>
             <div>
               <b>×</b>
-              <span>Breaks when a tool or price changes</span>
+              <span>Integrations become difficult to maintain</span>
             </div>
             <div>
               <b>×</b>
-              <span>Handed over at launch, then you’re on your own</span>
+              <span>New requirements mean more workarounds</span>
             </div>
           </div>
 
@@ -43,7 +43,7 @@ export function WhyDeptloySection() {
             </div>
             <div>
               <b>✓</b>
-              <span>Every call becomes a CRM record and an automatic follow-up</span>
+              <span>Interfaces and data designed for your actual users</span>
             </div>
             <div>
               <b>✓</b>

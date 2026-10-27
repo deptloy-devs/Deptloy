@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  async redirects() {
+    return [
+      { source: "/services", destination: "/how-it-works", permanent: true },
+      { source: "/services/:path+", destination: "/how-it-works", permanent: true },
+    ];
+  },
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

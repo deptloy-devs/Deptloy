@@ -55,15 +55,15 @@ export function Hero() {
             </span>
           </h1>
           <p className="sub">
-            We combine AI, CRM, automation and custom apps into one system built around your business, then maintain it
-            so it keeps working for years.
+            From complex internal platforms to intelligent customer experiences, we design, build and maintain custom
+            software around the way your business works.
           </p>
           <div className="cta">
-            <Link className="btn" href="/#contact">
-              Book a call
+            <Link className="btn" href="/contact">
+              Discuss your idea
             </Link>
-            <Link className="btn ghost" href="/#services">
-              Explore services
+            <Link className="btn ghost" href="/projects">
+              Explore projects
             </Link>
           </div>
         </div>
@@ -74,13 +74,13 @@ export function Hero() {
             {bubbleText}
           </div>
           <div className="fc" style={{ "--c": "#3ccf91" } as React.CSSProperties}>
-            <i></i>Call answered in 2 rings
+            <i></i>Systems connected
           </div>
           <div className="fc" style={{ "--c": "var(--or)" } as React.CSSProperties}>
-            <i></i>Booked Thu 2:30 PM
+            <i></i>Custom workflow live
           </div>
           <div className="fc" style={{ "--c": "var(--lav)" } as React.CSSProperties}>
-            <i></i>Lead saved to CRM
+            <i></i>Data in sync
           </div>
 
           <svg

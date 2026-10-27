@@ -12,7 +12,7 @@ import {
   Sparkles,
   Mic,
 } from "lucide-react";
-import { demoIndustries } from "@/lib/site";
+import { demoIndustries, demoTimeSlots } from "@/lib/site";
 import type { DemoIndustryId, ChatMessage, DemoBookingState } from "@/types";
 
 let messageCounter = 100;
@@ -84,14 +84,7 @@ export default function DemoPage() {
     currentIndustry.services[0];
 
   // Time Slots
-  const availableSlots = [
-    "09:00 AM",
-    "10:30 AM",
-    "01:15 PM",
-    "02:45 PM",
-    "04:15 PM",
-    "05:30 PM",
-  ];
+  const availableSlots = demoTimeSlots;
 
   // Send message in interactive chat simulator
   const handleSendMessage = (textToSend?: string) => {

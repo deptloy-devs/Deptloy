@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
+import { scrollToTop } from "@/lib/scrollToTop";
 
 interface LogoProps {
   className?: string;
@@ -74,10 +75,7 @@ export function Logo({
     }
     if (href === "/" && pathname === "/") {
       e.preventDefault();
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-      if (window.location.hash) {
-        window.history.replaceState(null, "", "/");
-      }
+      scrollToTop();
     }
   };
 

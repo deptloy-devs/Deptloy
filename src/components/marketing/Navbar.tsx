@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoMark, LogoWordmark } from "@/components/ui/Logo";
+import { scrollToTop } from "@/lib/scrollToTop";
 
 export function Navbar() {
   const [open, setOpen] = React.useState(false);
@@ -17,7 +18,7 @@ export function Navbar() {
       setOpen(false);
       document.body.classList.remove("open");
       if (pathname === "/" && !window.location.hash) {
-        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        scrollToTop();
       }
     }
   }, [pathname]);
@@ -42,10 +43,7 @@ export function Navbar() {
   const handleHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname === "/") {
       e.preventDefault();
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-      if (window.location.hash) {
-        window.history.replaceState(null, "", "/");
-      }
+      scrollToTop();
     }
   };
 

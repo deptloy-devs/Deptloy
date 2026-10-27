@@ -126,7 +126,7 @@ export function AssemblyTrack() {
       }
 
       const activePhase = p < 0.25 ? 0 : p < 0.8 ? 1 : 2;
-      setPhaseIndex(activePhase);
+      setPhaseIndex((prev) => (prev !== activePhase ? activePhase : prev));
 
       if (hintRef.current) {
         hintRef.current.style.opacity = p > 0.04 ? "0" : "1";

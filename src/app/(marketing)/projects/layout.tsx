@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "Solution Blueprints | Custom Software Projects | Deptloy",
-  description: "Explore illustrative custom software architectures for healthcare, operations, commerce and professional services, with interactive connected-system diagrams.",
+  title: "What We Deliver | AI Receptionists, Automation, CRM & Apps | Deptloy",
+  description:
+    "See what you get from Deptloy: AI receptionists, business automation, CRMs and custom web apps, with example screens and a step-by-step look at how a project is built.",
   alternates: { canonical: "/projects" },
 };
 

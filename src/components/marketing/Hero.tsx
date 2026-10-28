@@ -6,6 +6,8 @@ import { Mic, MicOff, PhoneOff } from "lucide-react";
 import type { BookingRequested } from "@/lib/voice-demo/booking";
 import { captionTail, formatClock } from "@/lib/voice-demo/call-state";
 import { BOOK_A_CALL_HREF } from "@/lib/voice-demo/messages";
+import { typedEmailNote } from "@/lib/voice-demo/prompts";
+import { readTypedEmail } from "@/lib/voice-demo/typed-email";
 import { DepRobot } from "./DepRobot";
 import { useDepChat } from "./DepChat";
 import { isBookingRequested, sendDepBooking } from "./voice-demo/dep-booking";
@@ -23,6 +25,9 @@ const END_LINES: Record<EndReason, string> = {
   dropped: "Oops, the call dropped. Want to try again?",
   error: "Something went wrong on my end. Please try again.",
 };
+
+/** The box Dep shows when it asks for an email, so the visitor can type it instead. */
+type EmailBox = { value: string; state: "editing" | "sent" | "invalid" };
 
 /** What Dep's speech bubble says at each step of a call. */
 function bubbleLine(phase: VoicePhase, depSaid: string | undefined): string {
@@ -59,9 +64,12 @@ export function Hero() {
     start,
     hangUp,
     toggleMute,
+    sendNote,
+    markActive,
   } = useVoiceCall({ theme: "light" });
   const [request, setRequest] = React.useState<BookingRequested | null>(null);
   const [requestFailed, setRequestFailed] = React.useState(false);
+  const [emailBox, setEmailBox] = React.useState<EmailBox | null>(null);
 
   // Typewriter effect
   React.useEffect(() => {
@@ -78,12 +86,26 @@ export function Hero() {
   const talk = () => {
     setRequest(null);
     setRequestFailed(false);
+    setEmailBox(null);
     void start({ agent: "dep" }, async (call, { sessionId }) => {
+      if (call.name === "show_email_box") {
+        setEmailBox((box) => box ?? { value: "", state: "editing" });
+        return { status: "ok", message: "The email box is showing under the call buttons." };
+      }
       const result = await sendDepBooking(call, sessionId);
       if (isBookingRequested(result)) setRequest(result);
       else setRequestFailed(true);
       return result;
     });
+  };
+
+  const sendEmail = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailBox) return;
+    const email = readTypedEmail(emailBox.value);
+    if (!email) return setEmailBox({ ...emailBox, state: "invalid" });
+    sendNote(typedEmailNote(email));
+    setEmailBox({ value: email, state: "sent" });
   };
 
   const inCall = live || busy;
@@ -183,12 +205,36 @@ export function Hero() {
                   </button>
                 </div>
               )}
+              {/* Shown when Dep asks for an email, so the visitor can type it instead of spelling it. */}
+              {live && emailBox && !request && (
+                <form className="dep-email" onSubmit={sendEmail} noValidate>
+                  <input
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    aria-label="Your email"
+                    aria-invalid={emailBox.state === "invalid"}
+                    placeholder="Or type your email"
+                    maxLength={120}
+                    value={emailBox.value}
+                    onChange={(e) => {
+                      setEmailBox({ value: e.target.value, state: "editing" });
+                      markActive();
+                    }}
+                  />
+                  <button className="btn sm" type="submit">
+                    {emailBox.state === "sent" ? "Sent ✓" : "Send"}
+                  </button>
+                </form>
+              )}
               {/* One status line under the buttons, so Dep's bubble stays short and never covers its face. */}
               <p className={`dep-note${request ? " sent" : ""}`} role="status">
                 {request ? (
                   <>
                     ✓ Request sent. We’ll email <b>{request.email}</b> to confirm.
                   </>
+                ) : live && emailBox?.state === "invalid" ? (
+                  "That doesn’t look like a full email address."
                 ) : offerBooking ? (
                   <Link href={BOOK_A_CALL_HREF}>Book a call instead →</Link>
                 ) : (

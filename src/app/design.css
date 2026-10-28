@@ -573,6 +573,27 @@ h1 span:nth-child(3) b {
   font-weight: 500;
 }
 .dep-check:empty { display: none; }
+.dep-email {
+  display: flex;
+  gap: 8px;
+  width: min(320px, 100%);
+  /* Not a card like the site's other forms: just the box and its button. */
+  padding: 0;
+  background: none;
+  clip-path: none;
+  box-shadow: none;
+}
+.dep-email input {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 12px;
+  background: #fff;
+  /* 16px keeps phones from zooming in on the box. */
+  font-size: 16px;
+  box-shadow: 0 8px 22px rgba(87, 80, 168, 0.16);
+}
+.dep-email input[aria-invalid="true"] { border-color: #d93f45; }
+.dep-email .btn { width: auto; flex: none; }
 
 .fc {
   position: absolute;

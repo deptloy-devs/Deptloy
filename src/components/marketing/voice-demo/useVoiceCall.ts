@@ -153,6 +153,8 @@ export function useVoiceCall({ theme }: { theme: "light" | "dark" }) {
   );
 
   const hangUp = React.useCallback(() => call?.end("hangup"), [call]);
+  const sendNote = React.useCallback((text: string) => call?.sendNote(text), [call]);
+  const markActive = React.useCallback(() => call?.markActive(), [call]);
 
   const toggleMute = React.useCallback(() => {
     setMuted((was) => {
@@ -177,5 +179,7 @@ export function useVoiceCall({ theme }: { theme: "light" | "dark" }) {
     start,
     hangUp,
     toggleMute,
+    sendNote,
+    markActive,
   };
 }

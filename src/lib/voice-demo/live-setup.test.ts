@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { demoIndustries, services } from "@/lib/site";
 import { createGeminiLiveToken } from "./gemini-token";
-import { buildDepInstruction, buildSystemInstruction, DEP_PERSONA, RECEPTIONIST_PERSONAS } from "./prompts";
+import { buildDepInstruction, buildSystemInstruction, DEP_PERSONA, RECEPTIONIST_PERSONAS, typedEmailNote } from "./prompts";
 
 const { create, ctorArgs } = vi.hoisted(() => ({
   create: vi.fn(),
@@ -50,6 +50,20 @@ describe("buildDepInstruction", () => {
     expect(text).toContain("3 minutes");
     expect(text).toMatch(/spell/i);
   });
+
+  it("shows the email box when it asks for the email", () => {
+    expect(buildDepInstruction(180)).toContain("show_email_box");
+  });
+
+  it("says its name to rhyme with step, not deep", () => {
+    expect(buildDepInstruction(180)).toMatch(/rhymes with "step"/);
+  });
+});
+
+describe("typedEmailNote", () => {
+  it("hands Dep the typed address as a note", () => {
+    expect(typedEmailNote("ana@example.com")).toMatch(/^\[.*ana@example\.com.*\]$/);
+  });
 });
 
 describe("createGeminiLiveToken", () => {
@@ -93,7 +107,7 @@ describe("createGeminiLiveToken", () => {
     expect(constraints.config.outputAudioTranscription).toEqual({});
   });
 
-  it("gives Dep its own voice, prompt and booking tool", async () => {
+  it("gives Dep its own voice, prompt, booking tool and email box tool", async () => {
     create.mockResolvedValue({ name: "auth_tokens/dep" });
     const now = Date.now();
     await createGeminiLiveToken({
@@ -107,9 +121,10 @@ describe("createGeminiLiveToken", () => {
     const constraints = create.mock.calls[0][0].config.liveConnectConstraints;
     expect(constraints.config.systemInstruction).toContain("You are Dep");
     expect(constraints.config.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName).toBe(DEP_PERSONA.voice);
-    const tool = constraints.config.tools[0].functionDeclarations[0];
-    expect(constraints.config.tools[0].functionDeclarations).toHaveLength(1);
+    const [tool, emailBox] = constraints.config.tools[0].functionDeclarations;
+    expect(constraints.config.tools[0].functionDeclarations).toHaveLength(2);
     expect(tool.name).toBe("book_discovery_call");
+    expect(emailBox.name).toBe("show_email_box");
     expect(tool.parameters.required).toEqual(["name", "email", "topic", "preferred_time"]);
   });
 

@@ -112,6 +112,18 @@ export class LiveCall {
     }
   }
 
+  /** Passes the agent a note, like an email the caller typed. */
+  sendNote(text: string) {
+    if (this.ended || !this.session) return;
+    this.lastActivityAt = Date.now();
+    this.session.sendClientContent({ turns: text, turnComplete: true });
+  }
+
+  /** The caller is typing, which isn't silence. */
+  markActive() {
+    this.lastActivityAt = Date.now();
+  }
+
   setMuted(muted: boolean) {
     this.muted = muted;
     if (muted) this.session?.sendRealtimeInput({ audioStreamEnd: true });

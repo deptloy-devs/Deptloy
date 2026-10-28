@@ -36,7 +36,10 @@ const RECEPTIONIST_TOOLS: FunctionDeclaration[] = [
   },
 ];
 
-/** Dep's tool. The browser forwards it to /api/voice-demo/book, which emails the team. */
+/**
+ * Dep's tools. The browser forwards book_discovery_call to /api/voice-demo/book, which emails
+ * the team, and answers show_email_box itself by showing the email box.
+ */
 const DEP_TOOLS: FunctionDeclaration[] = [
   {
     name: "book_discovery_call",
@@ -56,6 +59,11 @@ const DEP_TOOLS: FunctionDeclaration[] = [
       },
       required: ["name", "email", "topic", "preferred_time"],
     },
+  },
+  {
+    name: "show_email_box",
+    description:
+      "Shows a box on the page where the visitor can type their email instead of spelling it. Call it right before asking for their email.",
   },
 ];
 

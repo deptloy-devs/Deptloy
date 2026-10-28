@@ -2888,10 +2888,47 @@ footer a:hover {
   .architecture-stage-bottom { align-items: flex-start; flex-direction: column; gap: 10px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+/* Featured Solutions - Interactive Miniature App Previews */
+.solution-preview-card {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease;
+}
+
+.solution-preview-card:hover {
+  transform: translateY(-3px);
+}
+
+@keyframes solutionFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  html { scroll-behavior: auto; }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.solution-card-1 {
+  opacity: 0;
+  animation: solutionFadeIn 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+}
+
+.solution-card-2 {
+  opacity: 0;
+  animation: solutionFadeIn 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .solution-card-1,
+  .solution-card-2 {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .solution-preview-card {
+    transition: none !important;
+    transform: none !important;
+  }
 }

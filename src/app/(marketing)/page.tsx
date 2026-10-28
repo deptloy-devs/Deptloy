@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/marketing/Hero";
-import { WhyDeptloySection } from "@/components/marketing/WhyDeptloySection";
 import { AssemblyTrack } from "@/components/marketing/AssemblyTrack";
-import { ExpertiseSection } from "@/components/marketing/ExpertiseSection";
-import { FeaturedProjectsSection } from "@/components/marketing/FeaturedProjectsSection";
-import { ShortProcessSection } from "@/components/marketing/ShortProcessSection";
+import { FeaturedSolutions } from "@/components/marketing/FeaturedSolutions";
 import { SimpleFinalCta } from "@/components/marketing/SimpleFinalCta";
 
 export const metadata: Metadata = {
@@ -20,22 +17,13 @@ export default function HomePage() {
       {/* 1. Hero with animated Dep */}
       <Hero />
 
-      {/* 2. Animated Connected System (AssemblyTrack) */}
+      {/* 2. Animated Connected System */}
       <AssemblyTrack />
 
-      {/* 3. Why Custom Software (Comparison) */}
-      <WhyDeptloySection />
+      {/* 3. Featured Solutions (Interactive miniature application previews) */}
+      <FeaturedSolutions />
 
-      {/* 4. Engineering Capabilities */}
-      <ExpertiseSection />
-
-      {/* 5. Featured Projects */}
-      <FeaturedProjectsSection />
-
-      {/* 6. Three-Step Process */}
-      <ShortProcessSection />
-
-      {/* 7. Final Contact CTA */}
+      {/* 4. Final Contact CTA */}
       <SimpleFinalCta />
     </>
   );

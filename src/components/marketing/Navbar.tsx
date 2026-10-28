@@ -4,18 +4,22 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoMark, LogoWordmark } from "@/components/ui/Logo";
+import { scrollToTop } from "@/lib/scrollToTop";
 
 export function Navbar() {
   const [open, setOpen] = React.useState(false);
   const pathname = usePathname();
   const prevPathnameRef = React.useRef(pathname);
 
-  // Close menus on route change
+  // Close menus on route change and ensure scroll to top when navigating to home
   React.useEffect(() => {
     if (prevPathnameRef.current !== pathname) {
       prevPathnameRef.current = pathname;
       setOpen(false);
       document.body.classList.remove("open");
+      if (pathname === "/" && !window.location.hash) {
+        scrollToTop();
+      }
     }
   }, [pathname]);
 
@@ -36,19 +40,35 @@ export function Navbar() {
     document.body.classList.remove("open");
   };
 
+  const handleHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      scrollToTop();
+    }
+  };
+
   return (
     <>
       <header>
         <div className="wrap">
           <div className="navpill">
-            <Link href="/" className="logo" aria-label="Deptloy home">
+            <Link
+              href="/"
+              className="logo"
+              aria-label="Deptloy home"
+              onClick={handleHomeClick}
+            >
               <LogoMark className="w-7 h-8" />
               <LogoWordmark className="w-[74px] h-[20.5px]" />
             </Link>
 
             <nav>
               {/* Home */}
-              <Link href="/" className={pathname === "/" ? "cur" : ""}>
+              <Link
+                href="/"
+                className={pathname === "/" ? "cur" : ""}
+                onClick={handleHomeClick}
+              >
                 Home
               </Link>
 
@@ -102,7 +122,13 @@ export function Navbar() {
 
       {/* Fullscreen Mobile Menu Overlay */}
       <div id="menu">
-        <Link href="/" onClick={closeMenu}>
+        <Link
+          href="/"
+          onClick={(e) => {
+            closeMenu();
+            handleHomeClick(e);
+          }}
+        >
           Home
         </Link>
         <Link href="/how-it-works" onClick={closeMenu}>

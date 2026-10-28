@@ -6,7 +6,13 @@ import { Calendar, MessageSquare } from "lucide-react";
 
 export function SimpleFinalCta() {
   return (
-    <section className="py-14 sm:py-20">
+    <section
+      className="relative"
+      style={{
+        paddingTop: "clamp(48px, 5.5vw, 76px)",
+        paddingBottom: "clamp(48px, 5.5vw, 76px)",
+      }}
+    >
       <div className="wrap">
         <div
           className="bg-[var(--deep)] text-white p-8 sm:p-12 lg:p-14 relative overflow-hidden shadow-[0_25px_60px_rgba(21,19,74,0.3)]"
@@ -29,10 +35,11 @@ export function SimpleFinalCta() {
               Build With Us
             </span>
             <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-3 mb-4 leading-tight">
-              Your business deserves software built for it.
+              Every business works differently.{" "}
+              <span className="text-[var(--peri)]">Your software should too.</span>
             </h2>
             <p className="text-base sm:text-lg text-[#cfd2ee] leading-relaxed max-w-2xl mb-8">
-              Tell us what you&apos;re trying to achieve. We&apos;ll help design the right solution—from autonomous AI receptionists to full-scale custom platforms.
+              Tell us what slows your team down. We&apos;ll help you design a system that makes everything work together.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">

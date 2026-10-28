@@ -1,6 +1,10 @@
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
+import { scrollToTop } from "@/lib/scrollToTop";
 
 interface LogoProps {
   className?: string;
@@ -8,6 +12,7 @@ interface LogoProps {
   showText?: boolean;
   size?: "sm" | "md" | "lg";
   variant?: "dark" | "light" | "auto";
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 const sizes = {
@@ -59,8 +64,20 @@ export function Logo({
   showText = true,
   size = "md",
   variant = "auto",
+  onClick,
 }: LogoProps) {
+  const pathname = usePathname();
   const s = sizes[size];
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (onClick) {
+      onClick(e);
+    }
+    if (href === "/" && pathname === "/") {
+      e.preventDefault();
+      scrollToTop();
+    }
+  };
 
   const textColor =
     variant === "light"
@@ -72,6 +89,7 @@ export function Logo({
   return (
     <Link
       href={href}
+      onClick={handleClick}
       className={cn(
         "group inline-flex items-center gap-2.5 font-display font-extrabold tracking-tight transition-transform duration-200 hover:scale-[1.02]",
         textColor,

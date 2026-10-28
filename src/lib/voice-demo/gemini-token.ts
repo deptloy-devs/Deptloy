@@ -107,8 +107,9 @@ export async function createGeminiLiveToken(req: TokenRequest): Promise<string> 
       expireTime: req.expiresAt.toISOString(),
       newSessionExpireTime: new Date(req.now + START_WINDOW_MS).toISOString(),
       liveConnectConstraints: liveConstraints(req.model, req.agent, maxCallSeconds),
-      // Empty list: lock every field set above, so the browser can't change them.
-      lockAdditionalFields: [],
+      // No lockAdditionalFields: with no field mask, Gemini takes the whole call setup from this
+      // token and ignores the browser's, so nothing can be changed. (An empty list makes the SDK
+      // send a field mask with "tools.0" in it, which Gemini rejects.)
       httpOptions: { apiVersion: API_VERSION },
     },
   });

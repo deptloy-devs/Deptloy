@@ -77,7 +77,8 @@ describe("createGeminiLiveToken", () => {
     expect(config.uses).toBe(1);
     expect(config.expireTime).toBe(expiresAt.toISOString());
     expect(config.newSessionExpireTime).toBe(new Date(now + 60_000).toISOString());
-    expect(config.lockAdditionalFields).toEqual([]);
+    // Left out on purpose: see gemini-token.test.ts, which checks the real request Gemini gets.
+    expect(config).not.toHaveProperty("lockAdditionalFields");
 
     const constraints = config.liveConnectConstraints;
     expect(constraints.model).toBe("gemini-3.8-live");

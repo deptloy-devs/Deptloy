@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/marketing/Hero";
 import { AssemblyTrack } from "@/components/marketing/AssemblyTrack";
-import { WhyDeptloySection } from "@/components/marketing/WhyDeptloySection";
+import { FeaturedSolutions } from "@/components/marketing/FeaturedSolutions";
 import { SimpleFinalCta } from "@/components/marketing/SimpleFinalCta";
 
 export const metadata: Metadata = {
@@ -20,8 +20,8 @@ export default function HomePage() {
       {/* 2. Animated Connected System */}
       <AssemblyTrack />
 
-      {/* 3. Why Custom Software (Compact comparison with comfortable spacing) */}
-      <WhyDeptloySection />
+      {/* 3. Featured Solutions (Interactive miniature application previews) */}
+      <FeaturedSolutions />
 
       {/* 4. Final Contact CTA */}
       <SimpleFinalCta />

@@ -2802,34 +2802,21 @@ footer a:hover {
   .architecture-stage-bottom { align-items: flex-start; flex-direction: column; gap: 10px; }
 }
 
-/* Why Custom Software - Business Benefits */
-.why-benefits-trio {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
-
-@media (max-width: 860px) {
-  .why-benefits-trio {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-}
-
-.why-benefit-card {
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+/* Featured Solutions - Interactive Miniature App Previews */
+.solution-preview-card {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.25s ease;
 }
 
-.why-benefit-card:hover {
-  transform: translateY(-2px);
+.solution-preview-card:hover {
+  transform: translateY(-3px);
 }
 
-@keyframes whyBenefitFadeIn {
+@keyframes solutionFadeIn {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -2837,30 +2824,24 @@ footer a:hover {
   }
 }
 
-.why-card-1 {
+.solution-card-1 {
   opacity: 0;
-  animation: whyBenefitFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  animation: solutionFadeIn 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
 }
 
-.why-card-2 {
+.solution-card-2 {
   opacity: 0;
-  animation: whyBenefitFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards;
-}
-
-.why-card-3 {
-  opacity: 0;
-  animation: whyBenefitFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.34s forwards;
+  animation: solutionFadeIn 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .why-card-1,
-  .why-card-2,
-  .why-card-3 {
+  .solution-card-1,
+  .solution-card-2 {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
   }
-  .why-benefit-card {
+  .solution-preview-card {
     transition: none !important;
     transform: none !important;
   }

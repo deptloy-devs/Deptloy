@@ -35,7 +35,7 @@ function bubbleLine(phase: VoicePhase, depSaid: string | undefined): string {
     case "idle":
       return "";
     case "asking_mic":
-      return "Allow your microphone so I can hear you. Our call runs on Google Gemini, which may use it to improve its products.";
+      return "Allow your microphone so I can hear you.";
     case "starting":
       return "Connecting…";
     case "live":

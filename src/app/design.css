@@ -2802,26 +2802,34 @@ footer a:hover {
   .architecture-stage-bottom { align-items: flex-start; flex-direction: column; gap: 10px; }
 }
 
-/* Why Custom Software - Minimal, Premium Comparison */
-.why-grid {
+/* Why Custom Software - Business Benefits */
+.why-benefits-trio {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 20px;
-  align-items: stretch;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
 }
 
-@media (max-width: 920px) {
-  .why-grid {
+@media (max-width: 860px) {
+  .why-benefits-trio {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 14px;
   }
 }
 
-/* Staged animation sequence for Why Custom Software */
-@keyframes whyFadeInUp {
+.why-benefit-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease;
+}
+
+.why-benefit-card:hover {
+  transform: translateY(-2px);
+}
+
+@keyframes whyBenefitFadeIn {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -2829,94 +2837,31 @@ footer a:hover {
   }
 }
 
-@keyframes whyDrawLine {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-.why-seq-1 {
+.why-card-1 {
   opacity: 0;
-  animation: whyFadeInUp 0.45s ease-out 0.1s forwards;
+  animation: whyBenefitFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
 }
 
-.why-seq-2 {
-  stroke-dasharray: 80;
-  stroke-dashoffset: 80;
-  animation: whyDrawLine 0.65s ease-out 0.3s forwards;
-}
-
-.why-seq-3 {
+.why-card-2 {
   opacity: 0;
-  animation: whyFadeInUp 0.5s ease-out 0.55s forwards;
+  animation: whyBenefitFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards;
 }
 
-.why-seq-4 {
-  stroke-dasharray: 140;
-  stroke-dashoffset: 140;
-  animation: whyDrawLine 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.75s forwards;
-}
-
-.why-seq-5 {
+.why-card-3 {
   opacity: 0;
-  animation: whyFadeInUp 0.45s ease-out 1.2s forwards;
-}
-
-.why-hub-ring {
-  animation: whyHubAura 3s ease-in-out infinite;
-}
-
-@keyframes whyHubAura {
-  0%, 100% {
-    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.95), 0 0 16px rgba(132, 120, 224, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 0 5px rgba(255, 255, 255, 1), 0 0 24px rgba(253, 145, 80, 0.4);
-  }
-}
-
-.why-live-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: #10b981;
-  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-  animation: whyLivePulse 2.2s cubic-bezier(0.66, 0, 0, 1) infinite;
-  display: inline-block;
-}
-
-@keyframes whyLivePulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 5px rgba(16, 185, 129, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-  }
+  animation: whyBenefitFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.34s forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .why-seq-1,
-  .why-seq-3,
-  .why-seq-5 {
+  .why-card-1,
+  .why-card-2,
+  .why-card-3 {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
   }
-  .why-seq-2,
-  .why-seq-4 {
-    stroke-dashoffset: 0 !important;
-    animation: none !important;
+  .why-benefit-card {
+    transition: none !important;
+    transform: none !important;
   }
-  .why-hub-ring,
-  .why-live-dot {
-    animation: none !important;
-  }
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-  html { scroll-behavior: auto; }
 }

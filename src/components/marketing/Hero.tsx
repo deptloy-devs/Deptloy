@@ -238,7 +238,7 @@ export function Hero() {
                 ) : offerBooking ? (
                   <Link href={BOOK_A_CALL_HREF}>Book a call instead →</Link>
                 ) : (
-                  "Voice uses your mic · short calls · runs on Google Gemini"
+                  "Voice uses your mic · short calls"
                 )}
               </p>
             </div>

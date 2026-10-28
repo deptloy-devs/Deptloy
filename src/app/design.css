@@ -2802,6 +2802,119 @@ footer a:hover {
   .architecture-stage-bottom { align-items: flex-start; flex-direction: column; gap: 10px; }
 }
 
+/* Why Custom Software - Minimal, Premium Comparison */
+.why-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+@media (max-width: 900px) {
+  .why-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.why-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width: 1024px) {
+  .why-benefits-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .why-benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+.why-flow-line {
+  animation: fw 1s linear infinite;
+}
+
+.why-hub-ring {
+  animation: whyHubAura 2.4s ease-in-out infinite;
+}
+
+@keyframes whyHubAura {
+  0%, 100% {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.95), 0 0 14px rgba(132, 120, 224, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 1), 0 0 22px rgba(253, 145, 80, 0.45);
+  }
+}
+
+.why-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: whyLivePulse 1.8s cubic-bezier(0.66, 0, 0, 1) infinite;
+  display: inline-block;
+}
+
+@keyframes whyLivePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.why-err-pulse {
+  animation: whyErrPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes whyErrPulse {
+  0%, 100% {
+    opacity: 0.95;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.97);
+  }
+}
+
+@keyframes whyCardPulse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.why-card-float {
+  animation: whyCardPulse 4s ease-in-out infinite;
+}
+
+.why-card-float-delayed {
+  animation: whyCardPulse 4s ease-in-out infinite 2s;
+}
+
+@keyframes drawConnector {
+  from { stroke-dashoffset: 40; }
+  to { stroke-dashoffset: 0; }
+}
+
+.why-connector {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 0;
+  animation: drawConnector 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

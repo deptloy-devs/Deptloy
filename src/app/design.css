@@ -2806,14 +2806,14 @@ footer a:hover {
 .why-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 16px;
+  gap: 20px;
   align-items: stretch;
 }
 
-@media (max-width: 860px) {
+@media (max-width: 920px) {
   .why-grid {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 16px;
   }
 }
 
@@ -2821,7 +2821,7 @@ footer a:hover {
 @keyframes whyFadeInUp {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -2837,29 +2837,29 @@ footer a:hover {
 
 .why-seq-1 {
   opacity: 0;
-  animation: whyFadeInUp 0.4s ease-out 0.1s forwards;
+  animation: whyFadeInUp 0.45s ease-out 0.1s forwards;
 }
 
 .why-seq-2 {
-  stroke-dasharray: 60;
-  stroke-dashoffset: 60;
-  animation: whyDrawLine 0.6s ease-out 0.3s forwards;
+  stroke-dasharray: 80;
+  stroke-dashoffset: 80;
+  animation: whyDrawLine 0.65s ease-out 0.3s forwards;
 }
 
 .why-seq-3 {
   opacity: 0;
-  animation: whyFadeInUp 0.45s ease-out 0.55s forwards;
+  animation: whyFadeInUp 0.5s ease-out 0.55s forwards;
 }
 
 .why-seq-4 {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  animation: whyDrawLine 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.75s forwards;
+  stroke-dasharray: 140;
+  stroke-dashoffset: 140;
+  animation: whyDrawLine 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.75s forwards;
 }
 
 .why-seq-5 {
   opacity: 0;
-  animation: whyFadeInUp 0.4s ease-out 1.2s forwards;
+  animation: whyFadeInUp 0.45s ease-out 1.2s forwards;
 }
 
 .why-hub-ring {
@@ -2868,16 +2868,16 @@ footer a:hover {
 
 @keyframes whyHubAura {
   0%, 100% {
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.95), 0 0 12px rgba(132, 120, 224, 0.25);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.95), 0 0 16px rgba(132, 120, 224, 0.3);
   }
   50% {
-    box-shadow: 0 0 0 4px rgba(255, 255, 255, 1), 0 0 18px rgba(253, 145, 80, 0.35);
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 1), 0 0 24px rgba(253, 145, 80, 0.4);
   }
 }
 
 .why-live-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background-color: #10b981;
   box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);

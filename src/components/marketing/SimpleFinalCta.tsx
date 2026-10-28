@@ -6,7 +6,13 @@ import { Calendar, MessageSquare } from "lucide-react";
 
 export function SimpleFinalCta() {
   return (
-    <section className="py-14 sm:py-20">
+    <section
+      className="relative"
+      style={{
+        paddingTop: "clamp(48px, 5.5vw, 76px)",
+        paddingBottom: "clamp(48px, 5.5vw, 76px)",
+      }}
+    >
       <div className="wrap">
         <div
           className="bg-[var(--deep)] text-white p-8 sm:p-12 lg:p-14 relative overflow-hidden shadow-[0_25px_60px_rgba(21,19,74,0.3)]"

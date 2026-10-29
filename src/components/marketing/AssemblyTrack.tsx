@@ -162,7 +162,7 @@ export function AssemblyTrack() {
             </small>
           </div>
 
-          <div className="grid" ref={gridRef} id="grid">
+          <div className="asm-grid" ref={gridRef} id="grid">
             {/* Card 1: AI receptionist */}
             <div
               className="hc"

@@ -247,6 +247,9 @@ export const projects: CaseStudyItem[] = [
 ];
 
 
+/** Sample appointment times offered by the /demo receptionist (text and voice). */
+export const demoTimeSlots = ["09:00 AM", "10:30 AM", "01:15 PM", "02:45 PM", "04:15 PM", "05:30 PM"];
+
 export const demoIndustries: DemoIndustryOption[] = [
   {
     id: "clinic",

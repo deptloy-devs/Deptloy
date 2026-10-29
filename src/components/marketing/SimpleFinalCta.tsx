@@ -9,15 +9,15 @@ export function SimpleFinalCta() {
     <section
       className="relative"
       style={{
-        paddingTop: "clamp(48px, 5.5vw, 76px)",
-        paddingBottom: "clamp(48px, 5.5vw, 76px)",
+        paddingTop: "clamp(36px, 5vw, 68px)",
+        paddingBottom: "clamp(36px, 5vw, 68px)",
       }}
     >
       <div className="wrap">
         <div
-          className="bg-[var(--deep)] text-white p-8 sm:p-12 lg:p-14 relative overflow-hidden shadow-[0_25px_60px_rgba(21,19,74,0.3)]"
+          className="bg-[var(--deep)] text-white p-5 sm:p-10 lg:p-14 relative overflow-hidden shadow-[0_25px_60px_rgba(21,19,74,0.3)] rounded-2xl"
           style={{
-            clipPath: "polygon(0 0, calc(100% - 32px) 0, 100% 32px, 100% 100%, 0 100%)",
+            clipPath: "polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)",
             border: "1px solid rgba(132, 120, 224, 0.4)",
           }}
         >
@@ -31,48 +31,48 @@ export function SimpleFinalCta() {
           />
 
           <div className="relative z-10 max-w-3xl">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--peri)]">
+            <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-[var(--peri)]">
               Build With Us
             </span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-3 mb-4 leading-tight">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mt-2.5 mb-3.5 leading-tight">
               Every business works differently.{" "}
               <span className="text-[var(--peri)]">Your software should too.</span>
             </h2>
-            <p className="text-base sm:text-lg text-[#cfd2ee] leading-relaxed max-w-2xl mb-8">
+            <p className="text-sm sm:text-base lg:text-lg text-[#cfd2ee] leading-relaxed max-w-2xl mb-6 sm:mb-8">
               Tell us what slows your team down. We&apos;ll help you design a system that makes everything work together.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
               <Link
                 href="/contact#appointment"
-                className="btn flex items-center justify-center gap-2"
+                className="btn flex items-center justify-center gap-2 text-center"
                 style={{ background: "var(--or)", color: "var(--deep)", fontWeight: 700 }}
               >
-                <Calendar className="w-4 h-4" />
+                <Calendar className="w-4 h-4 shrink-0" />
                 <span>Book a Discovery Call</span>
               </Link>
               <Link
                 href="/contact"
-                className="btn ghost flex items-center justify-center gap-2"
+                className="btn ghost flex items-center justify-center gap-2 text-center"
                 style={{
                   color: "#fff",
                   borderColor: "rgba(255, 255, 255, 0.3)",
                   background: "rgba(255, 255, 255, 0.05)",
                 }}
               >
-                <MessageSquare className="w-4 h-4" />
+                <MessageSquare className="w-4 h-4 shrink-0" />
                 <span>Tell Us About Your Project</span>
               </Link>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center gap-6 text-xs font-mono text-[#cfd2ee]">
+            <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-white/10 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-mono text-[#cfd2ee]">
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#3ccf91]"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#3ccf91] shrink-0"></span>
                 Direct scope with principal engineers
               </span>
-              <span>•</span>
+              <span className="hidden sm:inline opacity-30">•</span>
               <span>Zero sales pressure</span>
-              <span>•</span>
+              <span className="hidden sm:inline opacity-30">•</span>
               <span>Fixed milestones &amp; deliverables</span>
             </div>
           </div>

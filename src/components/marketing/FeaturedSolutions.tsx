@@ -90,13 +90,13 @@ export function FeaturedSolutions() {
             {/* Miniature Healthcare Application Interface Mockup */}
             <div className="my-5 bg-[#f8fafc] border border-slate-200/80 rounded-xl p-3 sm:p-3.5 shadow-inner">
               {/* Mini Clinic Topbar */}
-              <div className="flex items-center justify-between pb-2.5 border-b border-slate-200 text-[10.5px] font-mono">
+              <div className="flex flex-wrap items-center justify-between gap-1 pb-2 border-b border-slate-200 text-[10.5px] font-mono">
                 <div className="flex items-center gap-1.5 font-bold text-slate-800">
-                  <Activity size={12} className="text-[var(--lav)]" />
+                  <Activity size={12} className="text-[var(--lav)] shrink-0" />
                   <span>CareOS · Clinic 2B</span>
                 </div>
                 <div className="flex items-center gap-2 text-[9.5px] text-slate-500">
-                  <span>Dr. Vance · Room 4</span>
+                  <span className="hidden xs:inline">Dr. Vance</span>
                   <span className="text-emerald-600 font-semibold">● 100% Staffed</span>
                 </div>
               </div>
@@ -175,13 +175,13 @@ export function FeaturedSolutions() {
             </div>
 
             {/* Action CTA Link */}
-            <div className="pt-2 border-t border-[var(--mist)] flex items-center justify-between">
-              <span className="text-xs text-[var(--mute)]">
+            <div className="pt-3 mt-1 border-t border-[var(--mist)] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <span className="text-[11.5px] sm:text-xs text-[var(--mute)]">
                 EMR sync · Staff scheduling · Patient intake
               </span>
               <Link
                 href="/projects/care-network"
-                className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[var(--pur)] group-hover:text-[var(--deep)] transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[var(--pur)] group-hover:text-[var(--deep)] transition-colors shrink-0"
               >
                 <span>Explore Healthcare Solution</span>
                 <ArrowRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />
@@ -216,13 +216,13 @@ export function FeaturedSolutions() {
             {/* Miniature Logistics Application Interface Mockup */}
             <div className="my-5 bg-[#0f172a] text-slate-200 border border-slate-800 rounded-xl p-3 sm:p-3.5 shadow-inner">
               {/* Mini Dispatch Topbar */}
-              <div className="flex items-center justify-between pb-2.5 border-b border-slate-800 text-[10.5px] font-mono">
+              <div className="flex flex-wrap items-center justify-between gap-1 pb-2 border-b border-slate-800 text-[10.5px] font-mono">
                 <div className="flex items-center gap-1.5 font-bold text-white">
-                  <Truck size={12} className="text-[var(--or)]" />
-                  <span>FleetHub · Metro North Dispatch</span>
+                  <Truck size={12} className="text-[var(--or)] shrink-0" />
+                  <span className="truncate">FleetHub · Metro North</span>
                 </div>
                 <div className="flex items-center gap-2 text-[9.5px] text-slate-400">
-                  <span>8 Active Drivers</span>
+                  <span className="hidden xs:inline">8 Active Drivers</span>
                   <span className="text-emerald-400 font-semibold">● 98.4% On-Time</span>
                 </div>
               </div>
@@ -320,13 +320,13 @@ export function FeaturedSolutions() {
             </div>
 
             {/* Action CTA Link */}
-            <div className="pt-2 border-t border-[var(--mist)] flex items-center justify-between">
-              <span className="text-xs text-[var(--mute)]">
+            <div className="pt-3 mt-1 border-t border-[var(--mist)] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <span className="text-[11.5px] sm:text-xs text-[var(--mute)]">
                 Live dispatch · Telemetry · Driver updates
               </span>
               <Link
                 href="/projects/field-operations"
-                className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[var(--or)] group-hover:text-[var(--deep)] transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[var(--or)] group-hover:text-[var(--deep)] transition-colors shrink-0"
               >
                 <span>Explore Logistics Solution</span>
                 <ArrowRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />

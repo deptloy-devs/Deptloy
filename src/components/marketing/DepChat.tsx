@@ -200,16 +200,16 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
     <DepChatContext.Provider value={{ isOpen, openChat, closeChat }}>
       {children}
 
-      {/* Floating launcher button in bottom right */}
+      {/* Floating launcher button in bottom right - responsive sizing for mobile/desktop */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         aria-label="Chat with Dep"
         className={cn(
-          "fixed right-5 bottom-5 w-16 h-16 rounded-full bg-[#15134a] text-white shadow-2xl z-[70] grid place-items-center cursor-pointer transition-all duration-300 hover:scale-105 hover:bg-[#fd9150] hover:text-[#15134a]",
+          "fixed right-3.5 sm:right-5 bottom-3.5 sm:bottom-5 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#15134a] text-white shadow-2xl z-[70] grid place-items-center cursor-pointer transition-all duration-300 hover:scale-105 hover:bg-[#fd9150] hover:text-[#15134a]",
           isOpen ? "scale-90 opacity-0 pointer-events-none" : "scale-100 opacity-100"
         )}
       >
-        <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
+        <svg className="w-6 h-6 sm:w-8 sm:h-8" viewBox="0 0 40 40" fill="none">
           <rect x="5" y="8" width="30" height="24" rx="11" fill="#f7f5ff" />
           <rect x="9" y="12" width="22" height="16" rx="8" fill="#15134a" />
           <rect x="14" y="16" width="4" height="7" rx="2" fill="#bfe3f5" />
@@ -218,12 +218,12 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
         </svg>
       </button>
 
-      {/* Chat Slide-up Modal Dialog */}
+      {/* Chat Slide-up Modal Dialog - full responsive adaptation */}
       <div
         role="dialog"
         aria-label="Chat with Dep"
         className={cn(
-          "fixed right-4 sm:right-6 bottom-4 sm:bottom-6 w-[380px] max-w-[calc(100vw-2rem)] h-[min(560px,calc(100svh-40px))] bg-white rounded-2xl shadow-[0_30px_90px_rgba(21,19,74,0.35)] border border-[rgba(87,80,168,0.18)] z-[75] flex flex-col overflow-hidden transition-all duration-400 ease-[cubic-bezier(0.2,0.8,0.2,1)] origin-bottom-right",
+          "fixed right-2.5 sm:right-6 bottom-2.5 sm:bottom-6 w-[380px] max-w-[calc(100vw-1.25rem)] h-[min(560px,calc(100svh-24px))] bg-white rounded-2xl shadow-[0_30px_90px_rgba(21,19,74,0.35)] border border-[rgba(87,80,168,0.18)] z-[75] flex flex-col overflow-hidden transition-all duration-400 ease-[cubic-bezier(0.2,0.8,0.2,1)] origin-bottom-right",
           isOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none translate-y-6"
         )}
       >

@@ -25,6 +25,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 90px;
+  overflow-x: clip;
 }
 
 body {
@@ -33,6 +34,7 @@ body {
   color: var(--deep);
   font: 500 17px/1.6 "IBM Plex Sans", system-ui, -apple-system, sans-serif;
   overflow-x: clip;
+  max-width: 100vw;
 }
 
 h1, h2, h3, h4 {
@@ -73,7 +75,7 @@ button[aria-pressed="true"],
 .wrap {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 clamp(20px, 4.5vw, 56px);
+  padding: 0 clamp(16px, 4.5vw, 56px);
 }
 
 main, footer, header {
@@ -629,12 +631,15 @@ h1 span:nth-child(3) b {
 .fc { transition: opacity 0.3s ease; }
 /* On a call they step aside so Dep's captions and face stay clear. */
 .rbwrap.on-call .fc { opacity: 0; pointer-events: none; }
-/* Where there's no free room around Dep, the badges that would bump into something else hide. */
-@media (980px < width < 1200px), (width < 600px) {
+/* Where there's no free room around Dep, the badges that would bump into something else hide gracefully. */
+@media (max-width: 1200px) {
   .fc-a { display: none; }
 }
-@media (width < 600px) {
+@media (max-width: 768px) {
   .fc-c { display: none; }
+}
+@media (max-width: 520px) {
+  .fc-b { display: none; }
 }
 
 /* Interactive Assembly Track - Snappy responsive scroll */
@@ -2726,11 +2731,51 @@ footer a:hover {
   #burger { display: block; }
   header .wrap { height: 70px; justify-content: space-between; }
   .navpill { width: auto; flex: 1; }
-  .hero .wrap { grid-template-columns: 1fr; }
-  .rbwrap { height: 50svh; }
-  .hero { padding-top: 84px; }
-  h1 { font-size: 40px; }
-  .sub { font-size: 15px; margin: 14px 0 18px; }
+  .hero {
+    min-height: auto;
+    padding-top: clamp(84px, 12vw, 108px);
+    padding-bottom: clamp(32px, 5vw, 48px);
+  }
+  .hero .wrap {
+    grid-template-columns: 1fr;
+    gap: clamp(24px, 4vw, 40px);
+  }
+  .hero h1 { font-size: clamp(36px, 6vw, 48px); }
+  .hero .sub { font-size: clamp(14px, 2vw, 16px); margin: 12px 0 20px; }
+  .rbwrap {
+    height: clamp(380px, 52svh, 480px);
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .bubble {
+    left: 50%;
+    transform: translateX(-50%);
+    top: -8px;
+    max-width: min(290px, 88vw);
+    text-align: center;
+    font-size: 13.5px;
+    padding: 10px 14px;
+  }
+  .talk {
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+    bottom: 10px;
+    align-items: center;
+    width: 100%;
+    max-width: 340px;
+  }
+  .dep-call-row {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+  }
+  .dep-note {
+    text-align: center;
+    width: 100%;
+  }
 
   .svc, .cmp, .story, .final .wrap, .tiles, .mods, .ab {
     grid-template-columns: 1fr;
@@ -2771,20 +2816,98 @@ footer a:hover {
   .ps::before { top: 14px; left: 14px; }
   footer .wrap { grid-template-columns: 1fr; }
 
+  /* Assembly Track - Clear fixed navbar & responsive tabs */
+  .stage {
+    padding-top: clamp(82px, 12svh, 102px);
+    padding-bottom: 20px;
+  }
+  .stage h2 {
+    font-size: clamp(20px, 4.6vw, 32px);
+    max-width: 18em;
+    padding: 0 14px;
+    margin: 0 auto 10px;
+  }
+  .phase {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 100%;
+    padding: 0 10px;
+    margin-bottom: clamp(14px, 3svh, 28px);
+  }
+  .phase span {
+    font-size: clamp(9px, 2.3vw, 11px);
+    padding: 5px 8px;
+    white-space: nowrap;
+  }
+  .console {
+    width: min(1040px, calc(100vw - 20px));
+  }
   .hc {
     grid-template-columns: 1fr;
     padding: 11px;
     height: auto;
-    min-height: 110px;
+    min-height: 105px;
     font-size: 10.5px;
   }
   .hc .ill, .hide-m { display: none; }
-  .asm-grid { gap: 30px 22px; }
-  .hc h4 { font-size: 13px; }
-  .stage h2 { font-size: 24px; }
-  .phase span { font-size: 11px; padding: 6px 10px; }
-  .stage { padding-top: 70px; }
+  .asm-grid { gap: 16px 14px; }
+  .hc h4 { font-size: 12.5px; }
   .hc h4 em { display: none; }
+}
+
+@media (max-width: 640px) {
+  .hero h1 {
+    font-size: clamp(32px, 8.5vw, 40px);
+    margin-bottom: 12px;
+  }
+  .hero .sub {
+    font-size: 13.5px;
+    margin-bottom: 18px;
+  }
+  .hero .cta {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .hero .cta .btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+  .hero .cta a:last-child {
+    text-align: center;
+    margin: 4px 0 0;
+  }
+  .fc-b { display: none; }
+  .disc { width: min(84%, 330px); }
+  .rbwrap { height: 380px; }
+}
+
+@media (max-width: 360px) {
+  .hero h1 {
+    font-size: 28px;
+  }
+  .rbwrap {
+    height: 350px;
+  }
+  .bubble {
+    max-width: 240px;
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+  .phase span {
+    font-size: 8px;
+    padding: 4px 6px;
+  }
+  .hc {
+    padding: 8px;
+    min-height: 92px;
+  }
+  .asm-grid {
+    gap: 10px 8px;
+  }
 }
 
 /* Shared architecture visualization for methodology and solution blueprints. */

@@ -46,8 +46,8 @@ export default function AboutPage() {
               businesses, all connected so they work as one.
             </p>
             <div className="au-cta">
-              <Link className="btn" href="/contact#appointment">
-                Book a call
+              <Link className="btn" href="/contact#form">
+                Discuss your project
                 <ArrowRight aria-hidden="true" />
               </Link>
               <Link className="btn ghost" href="/projects">

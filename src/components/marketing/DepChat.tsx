@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Mic, Send, Volume2, VolumeX, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 
@@ -21,7 +22,7 @@ export function useDepChat() {
 const KB: [RegExp, string][] = [
   [
     /hi\b|hello|hey|greetings/i,
-    "Hello! I'm Dep, Deptloy's assistant. I can explain our AI receptionists, custom software capabilities, solution blueprints, or help you book a discovery call.",
+    "Hello! I'm Dep, Deptloy's assistant. I can explain our AI receptionists, custom software capabilities, solution blueprints, or help you discuss your project.",
   ],
   [
     /receptionist|phone|call(s)?|voice|answer|telephony/i,
@@ -49,11 +50,11 @@ const KB: [RegExp, string][] = [
   ],
   [
     /price|cost|pricing|quote|how much/i,
-    "We provide transparent, fixed-scope engineering proposals tailored to your operational volume. You can submit a quote request on our /contact page or schedule a 30-minute discovery call.",
+    "We provide transparent, fixed-scope engineering proposals tailored to your operational volume. You can submit a project inquiry directly on our /contact#form page.",
   ],
   [
-    /book|talk|contact|schedule|appointment|meeting/i,
-    "You can request a discovery call or submit a quote request directly at /contact, or email our engineering team directly at deptloy@gmail.com.",
+    /book|talk|contact|discuss|project|quote|inquiry|meeting/i,
+    "You can discuss your project and submit an inquiry directly at /contact#form, or email our engineering team directly at deptloy@gmail.com.",
   ],
   [
     /build|what do you do|services/i,
@@ -66,7 +67,7 @@ function getBotReply(question: string): string {
   for (const [re, answer] of KB) {
     if (re.test(q)) return answer;
   }
-  return "I can tell you about our AI receptionists, custom software platforms, solution blueprints, or help you book a discovery call. What would you like to explore?";
+  return "I can tell you about our AI receptionists, custom software platforms, solution blueprints, or help you discuss your project. What would you like to explore?";
 }
 
 interface Message {
@@ -296,15 +297,23 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
 
         {/* Quick Suggestion Chips */}
         <div className="flex flex-wrap gap-1.5 px-3 py-2 bg-[#f4f3fb] border-t border-[#e8e6f7]">
-          {["What do you build?", "Test AI Receptionist", "Custom software capabilities", "Book a discovery call"].map((chip) => (
+          {["What do you build?", "Test AI Receptionist", "Custom software capabilities"].map((chip) => (
             <button
               key={chip}
+              type="button"
               onClick={() => handleUserSend(chip)}
               className="text-xs font-semibold px-2.5 py-1 rounded-full bg-white hover:bg-[#e8e6f7] border border-[#d2cdf3] text-[#15134a] transition-colors cursor-pointer"
             >
               {chip}
             </button>
           ))}
+          <Link
+            href="/contact#form"
+            onClick={closeChat}
+            className="text-xs font-semibold px-2.5 py-1 rounded-full bg-white hover:bg-[#e8e6f7] border border-[#d2cdf3] text-[#15134a] transition-colors cursor-pointer inline-flex items-center"
+          >
+            Discuss Your Project
+          </Link>
         </div>
 
         {/* Input Bar */}

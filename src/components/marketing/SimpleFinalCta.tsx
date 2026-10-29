@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Calendar, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
 export function SimpleFinalCta() {
   return (
@@ -44,21 +44,9 @@ export function SimpleFinalCta() {
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
               <Link
-                href="/contact#appointment"
-                className="btn flex items-center justify-center gap-2 text-center"
+                href="/contact#form"
+                className="btn inline-flex items-center justify-center gap-2 text-center"
                 style={{ background: "var(--or)", color: "var(--deep)", fontWeight: 700 }}
-              >
-                <Calendar className="w-4 h-4 shrink-0" />
-                <span>Book a Discovery Call</span>
-              </Link>
-              <Link
-                href="/contact"
-                className="btn ghost flex items-center justify-center gap-2 text-center"
-                style={{
-                  color: "#fff",
-                  borderColor: "rgba(255, 255, 255, 0.3)",
-                  background: "rgba(255, 255, 255, 0.05)",
-                }}
               >
                 <MessageSquare className="w-4 h-4 shrink-0" />
                 <span>Tell Us About Your Project</span>

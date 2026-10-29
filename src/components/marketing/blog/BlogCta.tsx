@@ -7,11 +7,11 @@ export function BlogCta() {
     <div className="bl-cta">
       <div>
         <h2>Want this working in your business?</h2>
-        <p>Tell us how your business runs. On a 30-minute call, we&apos;ll show you where AI could save you time.</p>
+        <p>Tell us how your business runs. We&apos;ll show you where AI and custom software could save you time.</p>
       </div>
       <div className="bl-cta-buttons">
-        <Link className="btn" href="/contact#appointment">
-          Book a call
+        <Link className="btn" href="/contact#form">
+          Discuss your project
           <ArrowRight aria-hidden="true" />
         </Link>
         <Link className="btn ghost" href="/demo">

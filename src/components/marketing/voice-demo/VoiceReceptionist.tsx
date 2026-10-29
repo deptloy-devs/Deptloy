@@ -99,7 +99,7 @@ export function VoiceReceptionist({ industry, service }: Props) {
           )}
           {phase.kind === "problem" && phase.offerBooking && (
             <Link href={BOOK_A_CALL_HREF} className="mt-1 inline-block text-[11px] font-mono font-bold text-[var(--or)] underline">
-              Book a call with us →
+              Contact our team →
             </Link>
           )}
         </div>

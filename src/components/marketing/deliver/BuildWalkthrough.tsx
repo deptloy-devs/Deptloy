@@ -63,7 +63,7 @@ export function BuildWalkthrough({ steps }: { steps: WalkStep[] }) {
             <ArrowRight aria-hidden="true" />
           </button>
         ) : (
-          <Link href="/contact#appointment" className="btn sm">
+          <Link href="/contact#form" className="btn sm">
             Start your own project
             <ArrowRight aria-hidden="true" />
           </Link>

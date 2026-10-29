@@ -68,7 +68,7 @@ export default function PrivacyPage() {
               <h2 className="text-lg font-bold">4. Website Inquiries &amp; Communications</h2>
             </div>
             <p className="text-xs sm:text-sm text-[var(--mute)] leading-relaxed">
-              Contact requests and discovery call proposals submitted through this website are transmitted directly to our engineering team at <strong>deptloy@gmail.com</strong>. We only use this information to respond to your technical request.
+              Contact requests and project inquiries submitted through this website are transmitted directly to our engineering team at <strong>deptloy@gmail.com</strong>. We only use this information to respond to your technical request.
             </p>
           </section>
         </div>

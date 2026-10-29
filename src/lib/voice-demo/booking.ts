@@ -44,10 +44,10 @@ export type BookResult =
 /** What Dep is told when a request fails. Dep says it to the visitor in its own words. */
 const MESSAGES: Record<Exclude<BookingReason, "invalid">, string> = {
   origin: "Call requests only work on deptloy.com.",
-  not_configured: "Call requests can't be sent right now. Suggest the Book a Call page on deptloy.com instead.",
-  no_call: "This call can't send requests. Suggest the Book a Call page on deptloy.com instead.",
+  not_configured: "Call requests can't be sent right now. Suggest the Contact page on deptloy.com instead.",
+  no_call: "This call can't send requests. Suggest the Contact page on deptloy.com instead.",
   already_sent: "A call request was already sent during this call. Tell the visitor the team will email them.",
-  send_failed: "The request didn't go through. Try once more, or suggest the Book a Call page on deptloy.com.",
+  send_failed: "The request didn't go through. Try once more, or suggest the Contact page on deptloy.com.",
 };
 
 const MAX = { name: 80, email: 120, topic: 600, preferred_time: 120, company: 100 } as const;

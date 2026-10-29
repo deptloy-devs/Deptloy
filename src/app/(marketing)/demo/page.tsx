@@ -340,7 +340,7 @@ export default function DemoPage() {
                     <span>Test Another Vertical</span>
                   </button>
                   <Link
-                    href="/contact#appointment"
+                    href="/contact#form"
                     className="btn sm"
                     style={{ background: "var(--or)", color: "var(--deep)", fontWeight: 700 }}
                   >

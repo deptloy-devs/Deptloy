@@ -95,14 +95,9 @@ export function Navbar() {
                 Blogs
               </Link>
 
-              {/* Contact */}
-              <Link href="/contact" className={pathname === "/contact" ? "cur" : ""}>
-                Contact
-              </Link>
-
               {/* CTA Button */}
-              <Link className="btn sm" href="/contact#appointment">
-                Book a call
+              <Link className="btn sm" href="/contact#form">
+                Contact Us
               </Link>
             </nav>
 
@@ -143,8 +138,8 @@ export function Navbar() {
         <Link href="/blogs" onClick={closeMenu}>
           Blogs
         </Link>
-        <Link href="/contact" onClick={closeMenu} style={{ color: "var(--or)" }}>
-          Contact &amp; Book
+        <Link href="/contact#form" onClick={closeMenu} style={{ color: "var(--or)" }}>
+          Contact Us
         </Link>
       </div>
     </>

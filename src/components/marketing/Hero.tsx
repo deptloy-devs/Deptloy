@@ -137,8 +137,8 @@ export function Hero() {
             <Link className="btn" href="/demo" style={{ background: "var(--deep)", color: "#fff" }}>
               Test Our AI Receptionist →
             </Link>
-            <Link className="btn ghost" href="/contact#appointment">
-              Book a Call
+            <Link className="btn ghost" href="/contact#form">
+              Discuss Your Project
             </Link>
             <Link
               href="/projects"
@@ -236,7 +236,7 @@ export function Hero() {
                 ) : live && emailBox?.state === "invalid" ? (
                   "That doesn’t look like a full email address."
                 ) : offerBooking ? (
-                  <Link href={BOOK_A_CALL_HREF}>Book a call instead →</Link>
+                  <Link href={BOOK_A_CALL_HREF}>Contact our team instead →</Link>
                 ) : (
                   "Voice uses your mic · short calls"
                 )}

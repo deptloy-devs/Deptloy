@@ -23,7 +23,7 @@ describe("startResponse", () => {
     expect(res.headers.get("retry-after")).toBe("1200");
     expect(await res.json()).toEqual({
       reason: "rate_hour",
-      message: "You've used this hour's demo calls. Try again later, or book a call with us.",
+      message: "You've used this hour's demo calls. Try again later, or contact our team.",
       retryAfter: 1200,
     });
   });

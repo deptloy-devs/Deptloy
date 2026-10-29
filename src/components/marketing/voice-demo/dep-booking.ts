@@ -3,7 +3,7 @@ import type { ToolCall, ToolResult } from "@/lib/voice-demo/tools";
 
 const FALLBACK: ToolResult = {
   status: "error",
-  message: "The request didn't go through. Suggest the Book a Call page on deptloy.com.",
+  message: "The request didn't go through. Suggest the Contact page on deptloy.com.",
 };
 
 /**

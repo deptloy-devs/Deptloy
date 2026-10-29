@@ -52,8 +52,8 @@ export default function ProjectsPage() {
               and how we build it with you.
             </p>
             <div className="wd-cta">
-              <Link className="btn" href="/contact#appointment">
-                Book a call
+              <Link className="btn" href="/contact#form">
+                Discuss your project
                 <ArrowRight aria-hidden="true" />
               </Link>
               <Link className="btn ghost" href="/demo">
@@ -112,10 +112,10 @@ export default function ProjectsPage() {
 
         <div className="wd-final">
           <h2>Tell us how your business works.</h2>
-          <p>On a 30-minute call, we&apos;ll show you what we&apos;d build for you, in plain words.</p>
+          <p>Tell us what slows your team down. We&apos;ll show you what we&apos;d build for you, in plain words.</p>
           <div className="wd-cta">
-            <Link className="btn" href="/contact#appointment">
-              Book a call
+            <Link className="btn" href="/contact#form">
+              Discuss your project
               <ArrowRight aria-hidden="true" />
             </Link>
             <Link className="btn ghost" href="/demo">

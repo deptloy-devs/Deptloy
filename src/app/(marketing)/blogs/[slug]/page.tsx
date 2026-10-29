@@ -117,8 +117,8 @@ export default async function BlogPostPage({ params }: PageProps) {
             </div>
             <div className="bl-side-cta">
               <p>Want this for your business?</p>
-              <Link className="btn sm" href="/contact#appointment">
-                Book a call
+              <Link className="btn sm" href="/contact#form">
+                Discuss your project
                 <ArrowRight aria-hidden="true" />
               </Link>
             </div>

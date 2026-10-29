@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { cn } from "@/lib/cn";
 
@@ -72,45 +73,41 @@ export function Modal({ isOpen, onClose, title, description, children, className
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto p-4 sm:p-6">
-      <div className="fixed inset-0 bg-canvas/80 backdrop-blur-md" onClick={onClose} aria-hidden="true" />
-      <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={title ? titleId : undefined}
-        aria-describedby={description ? descId : undefined}
-        className={cn(
-          "relative z-10 w-full rounded-panel border border-line bg-card p-6 shadow-raised animate-fade-in sm:p-8",
-          widths[maxWidth],
-          className
-        )}
-      >
-        <div className="mb-5 flex items-start justify-between gap-4">
-          <div>
-            {title && (
-              <h2 id={titleId} className="text-h3 font-semibold">
-                {title}
-              </h2>
-            )}
-            {description && (
-              <p id={descId} className="mt-1 text-sm text-fg-muted">
-                {description}
-              </p>
-            )}
+  // Rendered on <body> so it sits above the fixed header instead of inside the page.
+  // The inner wrapper centres short dialogs; tall ones start at their top and scroll.
+  return createPortal(
+    <div className="modal">
+      <div className="modal-backdrop" onClick={onClose} aria-hidden="true" />
+      <div className="modal-frame">
+        <div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={title ? titleId : undefined}
+          aria-describedby={description ? descId : undefined}
+          className={cn("modal-panel", widths[maxWidth], className)}
+        >
+          <div className="modal-head">
+            <div>
+              {title && (
+                <h2 id={titleId} className="modal-title">
+                  {title}
+                </h2>
+              )}
+              {description && (
+                <p id={descId} className="modal-desc">
+                  {description}
+                </p>
+              )}
+            </div>
+            <button type="button" onClick={onClose} className="modal-close" aria-label="Close">
+              <X className="h-5 w-5" aria-hidden="true" />
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="-mr-2 -mt-1 grid h-10 w-10 place-items-center rounded-control text-fg-muted transition-colors hover:bg-white/10 hover:text-fg"
-            aria-label="Close"
-          >
-            <X className="h-5 w-5" aria-hidden="true" />
-          </button>
+          {children}
         </div>
-        {children}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

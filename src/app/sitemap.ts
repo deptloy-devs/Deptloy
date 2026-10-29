@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { getAllPosts } from "@/lib/blogs";
 import { projectBlueprints } from "@/lib/project-blueprints";
 
 const base = "https://deptloy.com";
@@ -15,6 +16,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${base}/projects/${project.slug}`,
       changeFrequency: "monthly" as const,
       priority: 0.7,
+    })),
+    ...getAllPosts().map((post) => ({
+      url: `${base}/blogs/${post.slug}`,
+      lastModified: post.publishedAt,
+      changeFrequency: "yearly" as const,
+      priority: 0.6,
     })),
   ];
 }

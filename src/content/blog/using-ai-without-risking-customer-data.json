@@ -1,0 +1,62 @@
+{
+  "slug": "using-ai-without-risking-customer-data",
+  "title": "How to use AI without putting your customers' data at risk",
+  "category": "Privacy & Security",
+  "publishedAt": "2026-09-08",
+  "summary": "AI tools handle names, phone numbers and sometimes health or payment details. Here are the questions to ask before you let any AI near your customer information.",
+  "keyTakeaways": [
+    "Know where your customers' information goes, how long it's kept and who can see it.",
+    "Ask whether your data is used to train the provider's AI, and get the answer in writing.",
+    "Only share what the AI needs to do its job, and keep a record of what it did.",
+    "If you work in healthcare, legal or finance, check your industry's rules before you start."
+  ],
+  "content": [
+    {
+      "heading": "Why this matters",
+      "body": [
+        "An AI receptionist or assistant talks to your customers all day. Along the way it hears names, phone numbers, addresses and sometimes much more personal details.",
+        "Customers trust you with that information. If it leaks or is misused, the damage to that trust is hard to undo. In some industries there are also legal rules about how it must be handled."
+      ]
+    },
+    {
+      "heading": "Five questions to ask any AI provider",
+      "body": [
+        "A good provider will answer these clearly and put the answers in writing. If they can't, that tells you something."
+      ],
+      "points": [
+        "Where is our customers' data stored, and for how long?",
+        "Is our data used to train your AI models?",
+        "Who on your side can see our conversations?",
+        "Can we delete our data whenever we want?",
+        "If something goes wrong, how quickly will you tell us?"
+      ]
+    },
+    {
+      "heading": "Share only what's needed",
+      "body": [
+        "The simplest way to protect information is not to collect it in the first place. An AI that books appointments needs a name, a phone number and a time. It doesn't need a full medical history or card details.",
+        "Look at what your AI asks callers for, and remove anything it doesn't need for the job."
+      ]
+    },
+    {
+      "heading": "Keep a person in the loop",
+      "body": [
+        "Some requests should always go to a human: refunds, complaints, medical questions or anything that sounds urgent. Decide these rules up front and make sure the AI follows them.",
+        "It also helps to keep a record of every conversation the AI handles, so your team can check what was said and done if a customer has a question later."
+      ]
+    },
+    {
+      "heading": "Check your industry's rules",
+      "body": [
+        "If you work in healthcare, law or finance, there may be specific rules about customer information, such as HIPAA for healthcare in the United States or GDPR in Europe and the UK. Check what applies to you before an AI tool goes live.",
+        "This post is general guidance, not legal advice. If you're unsure, ask a professional who knows your industry."
+      ]
+    },
+    {
+      "heading": "Bring these questions to your first call",
+      "body": [
+        "Whoever builds your AI, these questions belong at the start of the project, not the end. If you're talking to Deptloy about an AI system, bring them to the first call and we'll go through them with you."
+      ]
+    }
+  ]
+}

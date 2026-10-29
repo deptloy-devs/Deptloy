@@ -137,17 +137,3 @@ export interface ReceptionistConfig {
   forwardCallNumber: string;
 }
 
-export interface BlogPost {
-  slug: string;
-  title: string;
-  category: "Voice AI" | "Automation" | "Architecture" | "Security";
-  date: string;
-  readTime: string;
-  summary: string;
-  keyTakeaways: string[];
-  content: {
-    heading: string;
-    body: string[];
-  }[];
-}
-

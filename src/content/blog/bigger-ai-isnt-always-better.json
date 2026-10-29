@@ -1,0 +1,58 @@
+{
+  "slug": "bigger-ai-isnt-always-better",
+  "title": "Bigger AI isn't always better for your business",
+  "category": "AI for Business",
+  "publishedAt": "2026-09-22",
+  "summary": "The biggest AI models grab the headlines, but everyday jobs like answering calls and booking appointments often run better on smaller, focused AI. Here's how to think about it.",
+  "keyTakeaways": [
+    "Big, general AI models are built to do everything. Most business tasks need one thing done well.",
+    "Smaller, focused AI is often faster and cheaper to run, which matters on a live phone call.",
+    "Many good systems use both: a light model for routine work and a bigger one for the hard questions.",
+    "Choose AI by the job it does for you, not by how famous the model is."
+  ],
+  "content": [
+    {
+      "heading": "The headline race",
+      "body": [
+        "Every few months a new, bigger AI model makes the news. These models are impressive: they can write essays, summarise long reports and help write software.",
+        "But your front desk doesn't need to write poetry. It needs to answer the phone, understand what the caller wants and book them in, quickly and correctly, hundreds of times a week."
+      ]
+    },
+    {
+      "heading": "Why focus often wins",
+      "body": [
+        "For everyday business jobs, a smaller AI that's set up for one task can be the better choice."
+      ],
+      "points": [
+        "Speed: on a phone call, a quick reply matters more than a clever one",
+        "Cost: you pay for every conversation, so a lighter model can cost much less to run",
+        "Consistency: a focused setup is easier to keep on script, with your prices, your policies and your tone"
+      ]
+    },
+    {
+      "heading": "When bigger is worth it",
+      "body": [
+        "Bigger models still earn their place. Reading a long contract, handling an unusual complaint or answering a question nobody planned for can need more thinking power.",
+        "That's why many good systems use both. A light, fast model handles the routine calls and messages, and hands over to a more powerful one only when a conversation needs it. You get speed most of the time and depth when it counts."
+      ]
+    },
+    {
+      "heading": "Questions to ask any AI provider",
+      "body": [
+        "You don't need to know model names to make a good choice. Ask questions about results instead."
+      ],
+      "points": [
+        "How quickly does it reply on a real call?",
+        "What does each conversation cost us?",
+        "How does it stick to our information instead of guessing?",
+        "What happens when it doesn't know the answer?"
+      ]
+    },
+    {
+      "heading": "The takeaway",
+      "body": [
+        "The best AI for your business is the one that does your job well at a sensible cost, not the one with the biggest headline. When Deptloy builds a system, we pick the AI for each task, so you're not paying for power you'll never use."
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-/** The calm "book a call" box at the end of the blog and of every post. */
+/** The calm "book a call" box at the end of the blog, every post and the About page. */
 export function BlogCta() {
   return (
     <div className="bl-cta">

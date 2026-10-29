@@ -3661,3 +3661,118 @@ footer a:hover {
   .bl-card, .bl-read svg, .bl-back svg { transition: none; }
   .bl-card:hover { transform: none; }
 }
+
+/* ---------- About page: who we are and how we work. Calm and light like the Projects and blog pages. ---------- */
+.au { padding: clamp(88px, 8vw, 120px) 0 clamp(56px, 7vw, 88px); }
+.au h1 { max-width: 14em; font-size: clamp(38px, 4.6vw, 64px); font-weight: 800; line-height: 1.03; text-wrap: balance; }
+.au .k { margin-bottom: 16px; }
+.au-intro { max-width: 34em; margin: 16px 0 0; color: var(--mute); font-size: 18px; line-height: 1.6; }
+.au-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.au-cta .btn svg { width: 16px; height: 16px; }
+.au-hero { display: grid; gap: 36px; align-items: center; }
+
+/* The team card: no names or photos. Three "faces" up top, then what each co-founder leads,
+   matched by colour and number. Hovering a role lifts its face. */
+.au-team {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(87, 80, 168, 0.12);
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(87, 80, 168, 0.12);
+}
+.au-team [data-tone="lav"] { --c1: #ece9fb; --c2: #d4cdf6; --ink: #5a4fc0; }
+.au-team [data-tone="peach"] { --c1: #fff1e7; --c2: #fbd5ba; --ink: #b2591a; }
+.au-team [data-tone="sky"] { --c1: #eaf5fc; --c2: #c9e3f4; --ink: #2a7099; }
+.au-team-top {
+  position: relative;
+  padding: 26px 26px 22px;
+  background: linear-gradient(135deg, #f1eefc 0%, #f7f1fb 55%, #fdf2ea 100%);
+  border-bottom: 1px solid rgba(87, 80, 168, 0.1);
+}
+.au-team-top::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(rgba(87, 80, 168, 0.22) 1.2px, transparent 1.6px) 0 0 / 16px 16px;
+  -webkit-mask-image: linear-gradient(to left, #000, transparent 65%);
+  mask-image: linear-gradient(to left, #000, transparent 65%);
+  pointer-events: none;
+}
+.au-team-top > * { position: relative; }
+.au-faces { display: flex; margin-bottom: 18px; }
+.au-face {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  background: linear-gradient(145deg, var(--c1), var(--c2));
+  color: var(--ink);
+  box-shadow: 0 10px 24px rgba(21, 19, 74, 0.12);
+  transition: transform 0.25s ease;
+}
+.au-face + .au-face { margin-left: -14px; }
+.au-face svg { width: 24px; height: 24px; }
+.au-team-top .au-chip { position: absolute; top: 26px; right: 26px; }
+.au-chip {
+  padding: 4px 11px;
+  border: 1px solid rgba(87, 80, 168, 0.16);
+  border-radius: 99px;
+  background: #fff;
+  color: var(--pur);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.au-team-top h2 { max-width: none; font-size: 22px; font-weight: 800; letter-spacing: -0.015em; line-height: 1.15; }
+.au-team-top p { margin: 6px 0 0; color: var(--mute); font-size: 15px; line-height: 1.5; }
+.au-roles { list-style: none; margin: 0; padding: 10px 12px 12px; }
+.au-roles li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 14px;
+  padding: 13px 14px;
+  border-radius: 14px;
+  transition: background 0.2s ease;
+}
+.au-roles li:hover { background: var(--paper); }
+.au-role-num {
+  padding-top: 2px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.au-roles b { display: block; font-size: 16px; color: var(--deep); }
+.au-role-doing { display: block; margin-top: 2px; color: var(--mute); font-size: 14px; line-height: 1.45; }
+.au-team:has(.au-roles li:nth-child(1):hover) .au-face:nth-child(1),
+.au-team:has(.au-roles li:nth-child(2):hover) .au-face:nth-child(2),
+.au-team:has(.au-roles li:nth-child(3):hover) .au-face:nth-child(3) { transform: translateY(-5px); }
+
+/* How we work: three tabs beside a dark stage (styles in "About Studio" above) */
+.au-part { padding: 0; margin-top: clamp(72px, 9vw, 120px); }
+.au-h2 { max-width: 16em; font-size: clamp(30px, 3.6vw, 48px); line-height: 1.05; text-wrap: balance; }
+.au-part .ab { margin-top: clamp(28px, 4vw, 44px); }
+
+@media (min-width: 1040px) {
+  .au-hero { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 64px; }
+}
+@media (max-width: 980px) {
+  /* Clear the fixed menu bar. */
+  .au { padding-top: 120px; }
+}
+@media (max-width: 640px) {
+  /* On phones the caption sits at the top of the stage so it can't run into the toggle. */
+  .au-part .stg { min-height: 360px; }
+  .au-part .sc { padding: 56px 18px 18px; }
+  .au-part .cap { top: 22px; bottom: auto; left: 18px; }
+  .au-part .tg { left: 18px; right: auto; bottom: 18px; }
+  .au-part .pp { left: 18px; right: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .au-face, .au-roles li { transition: none; }
+}

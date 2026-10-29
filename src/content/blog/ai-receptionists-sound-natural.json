@@ -1,0 +1,68 @@
+{
+  "slug": "ai-receptionists-sound-natural",
+  "title": "Why AI receptionists finally sound natural on the phone",
+  "category": "AI Receptionists",
+  "publishedAt": "2026-10-20",
+  "summary": "Old phone robots made callers wait, repeat themselves and press buttons. Today's AI receptionists reply quickly, let people interrupt and actually get things done. Here's what changed.",
+  "keyTakeaways": [
+    "Callers hang up on slow, robotic phone menus. A quick, natural reply matters more than anything else.",
+    "Newer AI receptionists listen and answer as the conversation flows, so it feels like talking to a person.",
+    "Callers can interrupt, change their mind or ask a side question, and a good AI keeps up.",
+    "Before you choose one, call it yourself: interrupt it, go off-script and see how it copes."
+  ],
+  "content": [
+    {
+      "heading": "Remember \"press 1 for bookings\"?",
+      "body": [
+        "Most of us have shouted \"representative!\" at a phone menu at least once. Early phone robots made callers wait through long menus, misheard simple answers and asked people to repeat themselves.",
+        "The result was predictable. Callers pressed zero, hung up, or rang a competitor instead. For a small business, every one of those hang-ups can be a lost booking."
+      ]
+    },
+    {
+      "heading": "What changed",
+      "body": [
+        "The old systems worked in slow, separate steps: wait for the caller to stop, turn the speech into text, work out a reply, then turn that reply back into speech. Each step added a pause, and the pauses added up to awkward silence.",
+        "Newer AI receptionists handle the conversation as it happens. They listen while the caller is speaking and start replying almost straight away, so the call has the rhythm of a normal phone conversation.",
+        "They also understand everyday language. Callers don't need to say the right keyword. \"Have you got anything Thursday morning?\" works just as well as \"I'd like to book an appointment.\""
+      ]
+    },
+    {
+      "heading": "Letting callers interrupt",
+      "body": [
+        "Real people interrupt. They say \"actually, make that Friday\" halfway through a sentence, or ask about parking in the middle of booking.",
+        "A good AI receptionist stops talking when the caller speaks, listens to the change and carries on from there, without starting over. That one skill is often the difference between a call that feels natural and one that feels like a machine."
+      ]
+    },
+    {
+      "heading": "What this means for your business",
+      "body": [
+        "A natural-sounding AI receptionist can take care of the calls your team can't get to, without making callers feel brushed off."
+      ],
+      "points": [
+        "Every call gets answered, including after hours and when the front desk is busy",
+        "Appointments go straight into your calendar",
+        "Common questions about hours, prices and location get a quick, correct answer",
+        "Anything unusual is passed on to your team with the caller's details"
+      ]
+    },
+    {
+      "heading": "How to test one before you commit",
+      "body": [
+        "Demos are easy to polish, so test it the way your customers will use it. Call it yourself and try to trip it up."
+      ],
+      "points": [
+        "Interrupt it in the middle of a sentence",
+        "Ask something that isn't on the script",
+        "Change the day or time halfway through booking",
+        "Ask to speak to a person and see what happens",
+        "Check what your team receives after the call"
+      ]
+    },
+    {
+      "heading": "Hear one for yourself",
+      "body": [
+        "If you'd like to hear a modern AI receptionist in action, you can talk to Dep, Deptloy's own AI receptionist, on our demo page. Try interrupting it. That's the best test there is."
+      ]
+    }
+  ]
+}

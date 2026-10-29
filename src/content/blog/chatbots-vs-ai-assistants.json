@@ -1,0 +1,55 @@
+{
+  "slug": "chatbots-vs-ai-assistants",
+  "title": "Chatbots answer questions. AI assistants get things done.",
+  "category": "Automation",
+  "publishedAt": "2026-10-06",
+  "summary": "Most website chatbots can only reply with text. A newer kind of AI assistant can actually book, update and follow up for you. Here's the difference in plain words.",
+  "keyTakeaways": [
+    "A chatbot talks. An AI assistant talks and then does the job, like booking the appointment.",
+    "The difference comes from connecting the AI to your real tools: your calendar, customer list and inbox.",
+    "Good assistants check details before they act and hand tricky cases to a person.",
+    "Start with one repetitive task that eats your team's time, then add more."
+  ],
+  "content": [
+    {
+      "heading": "The chatbot problem",
+      "body": [
+        "A customer visits your website at 9 PM and types: \"Can I book a cleaning next Tuesday?\" A typical chatbot replies with something like \"Please call us during business hours\" or a link to a contact form.",
+        "The customer still has to do all the work, and many won't. They'll close the tab and try somewhere else. The chatbot answered the question, but nothing actually happened."
+      ]
+    },
+    {
+      "heading": "What an AI assistant does differently",
+      "body": [
+        "An AI assistant is connected to the tools your business already uses. Instead of pointing the customer somewhere else, it can check your calendar, offer real free times, make the booking and send a confirmation, all in the same conversation.",
+        "It's the difference between a receptionist who says \"you'll have to call back\" and one who says \"Tuesday at 2:30 works, you're booked.\""
+      ],
+      "points": [
+        "Books, moves or cancels appointments",
+        "Answers questions using your own information, like prices and opening hours",
+        "Collects the details for a quote and sends them to your team",
+        "Follows up with people who started booking but didn't finish"
+      ]
+    },
+    {
+      "heading": "Keeping it safe",
+      "body": [
+        "An assistant that can take action needs clear limits. You decide what it's allowed to do on its own, and what it should always pass to a person.",
+        "A well-built assistant confirms the important details before acting (\"Just to check: Tuesday at 2:30 for a cleaning?\"), admits when it doesn't know something, and keeps a record of everything it did, so your team can always see what happened."
+      ]
+    },
+    {
+      "heading": "Where to start",
+      "body": [
+        "You don't need to automate everything at once. Look for one task your team repeats all day: answering the same booking questions, chasing quote requests or confirming appointments.",
+        "Start there, see how it goes for a few weeks, then add the next task. Small, steady steps beat one big project that takes months to launch."
+      ]
+    },
+    {
+      "heading": "The bottom line",
+      "body": [
+        "If your current chatbot mostly tells people to call you, it's not saving anyone time. Connecting AI to the tools you already use is what turns conversations into bookings. That's the kind of system Deptloy builds for businesses."
+      ]
+    }
+  ]
+}

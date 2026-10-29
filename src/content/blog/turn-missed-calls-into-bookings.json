@@ -1,0 +1,61 @@
+{
+  "slug": "turn-missed-calls-into-bookings",
+  "title": "Turn missed calls into booked appointments",
+  "category": "AI Receptionists",
+  "publishedAt": "2026-08-25",
+  "summary": "Every unanswered call is a customer who might ring someone else next. Here's a simple way to answer every call, confirm bookings by text and cut down on no-shows.",
+  "keyTakeaways": [
+    "Many callers who reach voicemail don't leave a message. They call the next business instead.",
+    "An AI receptionist can answer every call and book the appointment while the caller is still on the line.",
+    "A text confirmation straight away, and a reminder the day before, help people turn up.",
+    "Let customers reply to reminders in their own words, and pass anything unusual to your team."
+  ],
+  "content": [
+    {
+      "heading": "The cost of voicemail",
+      "body": [
+        "When someone has a toothache, a burst pipe or a last-minute haircut to sort out, they want an answer now. If they reach voicemail, many won't leave a message. They'll simply try the next number on the list.",
+        "Even when they do leave a message, calling back later often turns into phone tag. By the time you reach them, they may have booked somewhere else."
+      ]
+    },
+    {
+      "heading": "Answer every call, book on the spot",
+      "body": [
+        "An AI receptionist picks up every call, day or night, even when your team is busy with other customers. It can check your calendar, offer real free times and book the appointment before the caller hangs up.",
+        "It can also take down the details your team needs, like the reason for the visit or the address for a home call-out, so nobody has to ring back to ask."
+      ]
+    },
+    {
+      "heading": "Confirm by text",
+      "body": [
+        "Right after the call, an automatic text can confirm the booking with the date, time and address, plus a link to change it if plans move.",
+        "A friendly reminder the day before helps too. People are busy, and a short nudge is often all it takes for them to turn up, or to let you know in time if they can't."
+      ]
+    },
+    {
+      "heading": "Let people reply naturally",
+      "body": [
+        "Customers don't reply to reminders with \"1 to confirm\". They write things like \"running 10 minutes late\" or \"can we move to Friday?\"",
+        "A well-built system can understand replies like these, update the calendar when it's allowed to, and alert your team when a person needs to step in."
+      ]
+    },
+    {
+      "heading": "Getting started",
+      "body": [
+        "You don't need to change everything at once. A few simple decisions get you most of the way."
+      ],
+      "points": [
+        "List the questions callers ask most often",
+        "Decide which bookings the AI can make on its own",
+        "Choose who on your team gets alerted for anything unusual",
+        "Start with after-hours calls, then expand once you're happy"
+      ]
+    },
+    {
+      "heading": "Put it together",
+      "body": [
+        "An AI receptionist that books appointments, plus automatic texts that confirm and remind, is one of the simplest ways to stop losing customers to voicemail. It's exactly the kind of setup Deptloy builds, connected to the calendar you already use."
+      ]
+    }
+  ]
+}

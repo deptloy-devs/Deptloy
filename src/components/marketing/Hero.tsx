@@ -144,7 +144,7 @@ export function Hero() {
               href="/projects"
               className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--pur)] hover:text-[var(--or)] ml-1 transition-colors"
             >
-              Explore Our Projects →
+              Explore Our Solutions →
             </Link>
           </div>
         </div>

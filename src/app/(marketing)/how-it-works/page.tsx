@@ -77,7 +77,7 @@ export default function HowItWorksPage() {
               </Link>
 
               <Link href="/projects" className="btn ghost">
-                Explore projects
+                Explore solutions
               </Link>
             </div>
           </div>

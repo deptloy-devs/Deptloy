@@ -46,7 +46,7 @@ const KB: [RegExp, string][] = [
   ],
   [
     /project(s)?|blueprint(s)?|case|example/i,
-    "Visit our /projects page to explore our interactive solution blueprints—including a unified operations platform for multi-location healthcare networks and a live dispatch hub for field services.",
+    "Visit our Solutions page at /projects to explore our interactive solution blueprints—including a unified operations platform for multi-location healthcare networks and a live dispatch hub for field services.",
   ],
   [
     /price|cost|pricing|quote|how much/i,

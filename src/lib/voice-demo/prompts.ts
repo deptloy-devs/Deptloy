@@ -135,7 +135,7 @@ export const DEP_PERSONA = {
     "It connects to Google Calendar, Microsoft 365 or Outlook, Calendly, or the business's own booking system.",
     "A standard AI receptionist rollout takes about 3 to 7 business days.",
     "Pricing is a fixed-scope proposal shaped around each project. There are no set prices to quote on a call; the discovery call or a quote request is how to get one.",
-    "Visitors can try sample receptionists for clinics, salons, real estate, consulting and home services on the Demo page, and see example projects on the Projects page.",
+    "Visitors can try sample receptionists for clinics, salons, real estate, consulting and home services on the Demo page, and see example solutions on the Solutions page.",
     "Data is encrypted in transit, payment details are never stored, access is role-based, and clients own their data.",
     `The team's email is ${brand.contactEmail}. Deptloy is based in San Francisco and works remotely worldwide.`,
   ],

@@ -2687,52 +2687,88 @@ footer a:hover {
 
 #launch.on { transform: scale(1); }
 
-/* Interactive Cursor */
-#dot, #ring {
+/* Interactive Cursor (InteractiveCursor.tsx): an orange hex marks the exact pointer and a mini Dep
+   floats beside it, watching it. He blinks, gets happy eyes over clickable things and says "wow" on click.
+   The script adds .dc-on to <html> only when it runs, so the system cursor never goes missing. */
+@media (pointer: fine) {
+  html.dc-on, html.dc-on * { cursor: none !important; }
+  html.dc-on :is(input:not([type='button'], [type='submit'], [type='checkbox'], [type='radio'], [type='range']), textarea, [contenteditable='true']) {
+    cursor: text !important;
+  }
+}
+
+.dc {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
+  z-index: 10000;
   pointer-events: none;
-  z-index: 99;
-  border-radius: 50%;
   opacity: 0;
+  transition: opacity 0.2s;
 }
 
-#dot {
-  width: 8px;
-  height: 8px;
-  margin: -4px 0 0 -4px;
-  background: var(--or);
-}
+.dc[data-on="1"] { opacity: 1; }
+.dc[data-state="type"] { opacity: 0; }
 
-#ring {
-  width: 40px;
-  height: 40px;
-  margin: -20px 0 0 -20px;
-  border: 1.5px solid var(--pur);
-  transition: width 0.3s, height 0.3s, margin 0.3s, background 0.3s;
-}
-
-#ring.big {
-  width: 78px;
-  height: 78px;
-  margin: -39px 0 0 -39px;
-  background: rgba(132, 120, 224, 0.14);
-}
-
-#fx {
-  position: fixed;
+.dc-fx {
+  position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 98;
-  pointer-events: none;
 }
 
-@media (pointer: fine) {
-  body.cur, body.cur a, body.cur button, body.cur .so, body.cur #robot {
-    cursor: none;
-  }
+.dc-dot, .dc-bot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+.dc svg {
+  display: block;
+  overflow: visible;
+}
+
+.dc-dot svg {
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  fill: var(--or);
+  stroke: #fff;
+  stroke-width: 14;
+  paint-order: stroke;
+  filter: drop-shadow(0 1px 2px rgba(21, 19, 74, 0.45));
+  transition: transform 0.2s;
+}
+
+.dc-bot svg {
+  width: 52px;
+  height: 43px;
+  margin: -21.5px 0 0 -26px;
+  filter: drop-shadow(0 4px 6px rgba(21, 19, 74, 0.3));
+  transition: transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+/* Over something clickable Dep grows a little, his eyes turn to ^ ^ and his antenna pulses. */
+.dc[data-state="link"] .dc-bot svg { transform: scale(1.18); }
+.dc[data-press="1"] .dc-bot svg { transform: scale(1.12, 0.86); transition-duration: 0.12s; }
+
+.dc-blink, .dc-glow {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.dc-blink { transition: transform 0.07s; }
+.dc[data-blink="1"] .dc-blink { transform: scaleY(0.1); }
+
+.dc-happy, .dc-wow { opacity: 0; }
+.dc[data-state="link"] .dc-eyes { opacity: 0; }
+.dc[data-state="link"] .dc-happy { opacity: 1; }
+.dc[data-state="link"] .dc-glow { animation: dc-pulse 0.8s ease-in-out infinite; }
+.dc[data-press="1"] .dc-smile { opacity: 0; }
+.dc[data-press="1"] .dc-wow { opacity: 1; }
+
+@keyframes dc-pulse {
+  50% { transform: scale(1.4); opacity: 0.7; }
 }
 
 /* Responsive Media Queries */

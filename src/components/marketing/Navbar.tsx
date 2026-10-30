@@ -80,9 +80,9 @@ export function Navbar() {
                 How it works
               </Link>
 
-              {/* Projects */}
+              {/* Solutions (the page itself still lives at /projects) */}
               <Link href="/projects" className={pathname === "/projects" ? "cur" : ""}>
-                Projects
+                Solutions
               </Link>
 
               {/* About */}
@@ -130,7 +130,7 @@ export function Navbar() {
           How it works
         </Link>
         <Link href="/projects" onClick={closeMenu}>
-          Projects
+          Solutions
         </Link>
         <Link href="/about" onClick={closeMenu}>
           About

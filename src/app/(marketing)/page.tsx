@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/marketing/Hero";
 import { AssemblyTrack } from "@/components/marketing/AssemblyTrack";
+import { Marquee } from "@/components/marketing/Marquee";
 import { FeaturedSolutions } from "@/components/marketing/FeaturedSolutions";
 import { SimpleFinalCta } from "@/components/marketing/SimpleFinalCta";
 
@@ -20,10 +21,13 @@ export default function HomePage() {
       {/* 2. Animated Connected System */}
       <AssemblyTrack />
 
-      {/* 3. Featured Solutions (Interactive miniature application previews) */}
+      {/* 3. Capabilities & Services Ticker */}
+      <Marquee />
+
+      {/* 4. Featured Solutions (Interactive miniature application previews) */}
       <FeaturedSolutions />
 
-      {/* 4. Final Contact CTA */}
+      {/* 5. Final Contact CTA */}
       <SimpleFinalCta />
     </>
   );

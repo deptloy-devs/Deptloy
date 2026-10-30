@@ -14,11 +14,12 @@ const items = [
 ];
 
 export function Marquee() {
-  const repeated = [...items, ...items, ...items];
+  // 4 sets (2 identical halves of 2 sets each) guarantees a seamless -50% loop on any screen width
+  const repeated = [...items, ...items, ...items, ...items];
 
   return (
-    <div className="marq" aria-hidden="true">
-      <div>
+    <div className="marq" role="region" aria-label="Capabilities and services">
+      <div className="marq-track" aria-hidden="true">
         {repeated.map((item, idx) => (
           <span key={idx}>{item}</span>
         ))}

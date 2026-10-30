@@ -3,10 +3,10 @@
 import * as React from "react";
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
-import { Modal } from "@/components/ui/Modal";
+import { useCookieConsent } from "@/components/marketing/CookieConsent";
 
 export function Footer() {
-  const [activeModal, setActiveModal] = React.useState<"privacy" | "terms" | null>(null);
+  const { openPreferences } = useCookieConsent();
 
   return (
     <footer>
@@ -40,68 +40,29 @@ export function Footer() {
 
         <div className="cp flex flex-wrap items-center justify-between gap-4">
           <div>© 2026 Deptloy. All rights reserved.</div>
-          <div className="flex items-center gap-6 text-sm">
+          <div className="flex items-center gap-5 sm:gap-6 text-sm flex-wrap">
             <Link
               href="/privacy"
-              className="text-mute hover:text-deep"
+              className="text-mute hover:text-deep transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
               href="/terms"
-              className="text-mute hover:text-deep"
+              className="text-mute hover:text-deep transition-colors"
             >
               Terms of Service
             </Link>
+            <button
+              type="button"
+              onClick={openPreferences}
+              className="text-mute hover:text-deep transition-colors cursor-pointer text-left"
+            >
+              Cookie Preferences
+            </button>
           </div>
         </div>
       </div>
-
-      <Modal
-        isOpen={activeModal === "privacy"}
-        onClose={() => setActiveModal(null)}
-        title="Privacy &amp; Data Governance Overview"
-      >
-        <div className="space-y-4 text-sm text-[var(--mute)] leading-relaxed">
-          <p className="text-xs bg-[var(--paper)] p-2.5 border border-[var(--peri)]">
-            <strong>Studio Policy Overview:</strong> This summary describes standard studio practices. Executed Master Services Agreements include customized Data Processing Addenda.
-          </p>
-          <p>
-            At Deptloy, we take data isolation and privacy seriously. Customer and patient records ingested by our AI receptionists, CRMs, and automations are never sold, rented, or used to train third-party public commercial AI models.
-          </p>
-          <p>
-            All phone recordings, call transcripts, and customer intake details are secured with TLS 1.3 encryption in transit and AES-256 encryption at rest. Inquiries submitted through our website are routed directly to our engineering team at <strong>deptloy@gmail.com</strong>.
-          </p>
-          <div className="pt-2">
-            <Link href="/privacy" className="text-xs font-mono font-bold uppercase text-[var(--pur)] hover:underline" onClick={() => setActiveModal(null)}>
-              View Full Privacy Policy Page →
-            </Link>
-          </div>
-        </div>
-      </Modal>
-
-      <Modal
-        isOpen={activeModal === "terms"}
-        onClose={() => setActiveModal(null)}
-        title="Terms of Service &amp; Engagement Overview"
-      >
-        <div className="space-y-4 text-sm text-[var(--mute)] leading-relaxed">
-          <p className="text-xs bg-[var(--paper)] p-2.5 border border-[var(--peri)]">
-            <strong>Studio Policy Overview:</strong> These terms summarize our engagement principles. Formal engineering deliverables are governed by mutually executed project agreements.
-          </p>
-          <p>
-            Deptloy provides turnkey software engineering, voice AI orchestration, and system maintenance services. Every client deployment begins with a mutual technical discovery process and fixed project architectural scope.
-          </p>
-          <p>
-            Unless explicitly agreed otherwise under a separate enterprise agreement, you retain complete ownership of your proprietary customer databases, CRM tables, and intellectual property.
-          </p>
-          <div className="pt-2">
-            <Link href="/terms" className="text-xs font-mono font-bold uppercase text-[var(--pur)] hover:underline" onClick={() => setActiveModal(null)}>
-              View Full Terms Page →
-            </Link>
-          </div>
-        </div>
-      </Modal>
     </footer>
   );
 }

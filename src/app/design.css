@@ -150,7 +150,7 @@ header .wrap {
   flex-shrink: 0;
 }
 
-nav {
+.navpill nav {
   display: flex;
   align-items: center;
   gap: 2px;
@@ -158,13 +158,13 @@ nav {
   font-weight: 600;
 }
 
-nav a:not(.btn) {
+.navpill nav a:not(.btn) {
   padding: 10px 13px;
   border-radius: 99px;
   transition: background 0.25s;
 }
 
-nav a:not(.btn):hover, nav a.cur {
+.navpill nav a:not(.btn):hover, .navpill nav a.cur {
   background: var(--mist);
 }
 
@@ -1095,35 +1095,59 @@ h2 {
 
 .marq {
   overflow: hidden;
-  border-block: 1px solid rgba(87, 80, 168, 0.15);
-  background: rgba(255, 255, 255, 0.55);
-  padding: 20px 0;
+  border-block: 1px solid rgba(87, 80, 168, 0.14);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px);
+  padding: clamp(14px, 1.8vw, 18px) 0;
+  margin-top: clamp(32px, 5vw, 56px);
+  margin-bottom: clamp(20px, 3.5vw, 36px);
+  position: relative;
+  z-index: 2;
+  mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
 }
 
-.marq div {
+.marq div,
+.marq-track {
   display: flex;
+  align-items: center;
   gap: 46px;
   width: max-content;
-  animation: mq 38s linear infinite;
+  animation: mq 36s linear infinite;
   font-family: 'Archivo', sans-serif;
   font-weight: 700;
-  font-size: 22px;
+  font-size: clamp(16px, 2vw, 20px);
   letter-spacing: -0.02em;
   color: var(--pur);
+  user-select: none;
+}
+
+.marq:hover div,
+.marq:hover .marq-track {
+  animation-play-state: paused;
+}
+
+.marq span {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
 }
 
 .marq span::after {
   content: "";
   display: inline-block;
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   margin-left: 46px;
   background: var(--or);
   transform: rotate(45deg);
+  flex-shrink: 0;
+  border-radius: 1px;
 }
 
 @keyframes mq {
-  to { transform: translateX(-50%); }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* Services Modules */
@@ -2713,7 +2737,7 @@ footer a:hover {
 
 /* Responsive Media Queries */
 @media (max-width: 1100px) {
-  nav a:not(.btn) {
+  .navpill nav a:not(.btn) {
     padding: 10px 9px;
     font-size: 13.5px;
   }
@@ -3654,6 +3678,7 @@ footer a:hover {
   .bl { padding-top: 120px; }
 }
 @media (max-width: 640px) {
+  .bl-cta { padding: 24px 18px; border-radius: 18px; }
   .bl-article { font-size: 17px; }
   .bl-cover.large { aspect-ratio: 16 / 9; }
 }
@@ -3776,3 +3801,34 @@ footer a:hover {
 @media (prefers-reduced-motion: reduce) {
   .au-face, .au-roles li { transition: none; }
 }
+
+/* Legal & Policy Document Styles */
+.legal-doc section {
+  padding: 0 !important;
+  position: static !important;
+}
+
+.legal-doc h2 {
+  max-width: none !important;
+  font-size: clamp(18px, 2.2vw, 21px);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+/* How It Works Page: Engineered compact layout & section rhythm */
+.hiw-page {
+  padding-top: clamp(84px, 7.5vw, 108px);
+  padding-bottom: clamp(48px, 6vw, 80px);
+}
+
+.hiw-page section {
+  padding: 0 !important;
+  position: relative;
+}
+
+.hiw-page h2 {
+  max-width: none;
+}
+
+

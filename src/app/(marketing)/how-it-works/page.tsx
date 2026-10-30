@@ -1,140 +1,192 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Layers3, Rocket, ShieldCheck } from "lucide-react";
-import { ArchitectureStage } from "@/components/marketing/ArchitectureStage";
+import {
+  ArrowRight,
+  ClipboardCheck,
+  MonitorCheck,
+  PackageCheck,
+} from "lucide-react";
+import { DevelopmentJourney } from "@/components/marketing/how-it-works/DevelopmentJourney";
 
 export const metadata: Metadata = {
-  title: "How We Build Custom Software | Deptloy",
-  description: "From discovery and architecture to engineering, launch and long-term care. See how Deptloy turns business challenges into connected software products.",
+  title: "How We Work | Deptloy",
+  description:
+    "From your challenge to working software. Discover, design, build, launch, and evolve custom software and AI systems built around your business.",
   alternates: { canonical: "/how-it-works" },
 };
 
-const exampleModules = [
-  { name: "Customer experience", detail: "The portals and applications people actually use." },
-  { name: "Business logic", detail: "Your rules, approvals and operational workflows." },
-  { name: "Data & integrations", detail: "A consistent data layer connected to the systems you need." },
-  { name: "AI & automation", detail: "Intelligence applied where it adds practical value." },
-];
-
-const steps = [
+const WORKING_POINTS = [
   {
-    n: "01", label: "Discover", tag: "Understand the real problem",
-    title: "First, we learn how your business works.",
-    body: "We map who uses the software, the decisions they make, where information moves and which bottlenecks matter most.",
-    output: "A clear problem statement and prioritized goals",
+    icon: ClipboardCheck,
+    tag: "Milestone Contract",
+    title: "Clear Scope",
+    description:
+      "Understand the requirements, priorities, and agreed deliverables before development begins.",
   },
   {
-    n: "02", label: "Architect", tag: "Shape the right product",
-    title: "Then we design the system around the work.",
-    body: "We define features, user journeys, data models, integration boundaries and a delivery plan that fits your situation.",
-    output: "Product blueprint, scope and milestones",
+    icon: MonitorCheck,
+    tag: "Visible Progress",
+    title: "Visible Progress",
+    description:
+      "Review working features, provide feedback, and stay informed as development progresses.",
   },
   {
-    n: "03", label: "Engineer", tag: "Make the pieces work together",
-    title: "We build and validate the complete experience.",
-    body: "Frontend, backend, APIs and any useful AI capabilities are developed as parts of one coherent product, then tested against real scenarios.",
-    output: "A working product with tested workflows",
+    icon: PackageCheck,
+    tag: "Practical Handover",
+    title: "Practical Handover",
+    description:
+      "Receive the agreed deployment, documentation, and guidance needed to start using your software.",
   },
-  {
-    n: "04", label: "Launch", tag: "Move into everyday use",
-    title: "We prepare the people as well as the platform.",
-    body: "We plan deployment, data migration where needed, operational handover and the feedback loop after launch.",
-    output: "A live system and a practical handover",
-  },
-  {
-    n: "05", label: "Evolve", tag: "Keep improving",
-    title: "Your software grows with your business.",
-    body: "We can continue supporting integrations, performance, reliability and new features as priorities change.",
-    output: "A roadmap for ongoing improvement",
-  },
-];
-
-const principles = [
-  { icon: Layers3, title: "Expertise, not a menu", text: "We choose the capabilities a product requires instead of selling a predefined bundle of services." },
-  { icon: ShieldCheck, title: "Built for real use", text: "Security, maintainability and clear interfaces are part of the engineering conversation from day one." },
-  { icon: Rocket, title: "Designed to evolve", text: "We aim for useful first releases and an architecture that can adapt as the product grows." },
 ];
 
 export default function HowItWorksPage() {
   return (
-    <div className="py-14 sm:py-20">
+    <div className="hiw-page">
       <div className="wrap">
-        <span className="k">How Deptloy works</span>
-        <div className="grid lg:grid-cols-12 gap-8 items-end">
-          <div className="lg:col-span-8">
-            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--deep)] leading-tight mt-2">
-              Your challenge is the starting point. Not a list of services.
+        {/* ================================================================== */}
+        {/* 1. COMPACT HERO                                                    */}
+        {/* ================================================================== */}
+        <section aria-labelledby="hero-title" className="mb-10 sm:mb-14 lg:mb-16">
+          <div className="max-w-3xl">
+            {/* Eyebrow */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--paper)] border border-[var(--peri)] text-xs font-mono font-bold uppercase tracking-wider text-[var(--pur)] mb-3.5">
+              <span className="w-2 h-2 rounded-full bg-[#3ccf91] shrink-0" />
+              <span>How We Work</span>
+            </div>
+
+            {/* Main Heading */}
+            <h1
+              id="hero-title"
+              style={{ fontSize: "clamp(30px, 4.2vw, 48px)", lineHeight: 1.12 }}
+              className="font-extrabold tracking-tight text-[var(--deep)]"
+            >
+              From your challenge to working software.
             </h1>
-          </div>
-          <p className="lg:col-span-4 text-sm sm:text-base text-[var(--mute)] leading-relaxed">
-            We bring software engineering, product design, data systems and AI expertise together to create whatever your business actually needs.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-4 mt-6 mb-12">
-          <Link href="/contact" className="btn" style={{ background: "var(--or)", color: "var(--deep)", fontWeight: 700 }}>
-            Discuss your project <ArrowRight size={16}/>
-          </Link>
-          <Link href="/projects" className="btn ghost">Explore blueprints</Link>
-        </div>
 
-        <ArchitectureStage modules={exampleModules} title="Your custom product" eyebrow="CAPABILITIES WORKING TOGETHER" />
-        <p className="text-sm text-[var(--mute)] mt-4 max-w-2xl">
-          Select any module to explore its role. This is an illustrative architecture, not a fixed package. Your system might use all, some or entirely different capabilities.
-        </p>
+            {/* Supporting Description */}
+            <p className="text-sm sm:text-base lg:text-lg text-[var(--mute)] mt-3 leading-relaxed max-w-2xl">
+              Every great product starts with understanding the problem. We work with you to discover, design, build,
+              and launch software around the way your business operates.
+            </p>
 
-        <section className="mt-24" id="process">
-          <span className="k">From idea to everyday use</span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-[var(--deep)] max-w-3xl mt-3">
-            Five clear stages. One engineering partner.
-          </h2>
-          <div className="mt-11 space-y-4">
-            {steps.map((step) => (
-              <article key={step.n} className="group bg-white border border-[var(--peri)] p-6 sm:p-8 grid md:grid-cols-12 gap-4 md:gap-8 items-start transition-transform duration-300 hover:-translate-y-0.5">
-                <div className="md:col-span-2 flex md:flex-col items-center md:items-start gap-3">
-                  <span className="font-mono text-3xl font-bold text-[var(--or)]">{step.n}</span>
-                  <span className="font-mono uppercase text-xs font-bold text-[var(--pur)] tracking-wider">{step.label}</span>
-                </div>
-                <div className="md:col-span-6">
-                  <span className="text-xs uppercase font-mono tracking-wider text-[var(--mute)]">{step.tag}</span>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--deep)] leading-tight mt-2 mb-3">{step.title}</h3>
-                  <p className="text-sm sm:text-base text-[var(--mute)] leading-relaxed">{step.body}</p>
-                </div>
-                <div className="md:col-span-4 md:border-l md:border-[var(--peri)] md:pl-7">
-                  <span className="text-xs font-mono uppercase text-[var(--pur)] font-bold">What comes out of it</span>
-                  <p className="mt-3 text-sm font-semibold text-[var(--deep)] flex items-start gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-[var(--pur)] shrink-0" />{step.output}
-                  </p>
-                </div>
-              </article>
-            ))}
+            {/* Action CTAs */}
+            <div className="flex flex-wrap items-center gap-3.5 sm:gap-4 mt-5 sm:mt-6">
+              <Link href="/contact#form" className="btn">
+                Discuss your project
+                <ArrowRight aria-hidden="true" />
+              </Link>
+
+              <Link href="/projects" className="btn ghost">
+                Explore projects
+              </Link>
+            </div>
           </div>
         </section>
 
-        <section className="mt-24">
-          <span className="k">Why this approach</span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-[var(--deep)] mt-3 mb-10">Systems, not disconnected tools.</h2>
-          <div className="grid md:grid-cols-3 gap-5">
-            {principles.map((principle) => {
-              const Icon = principle.icon;
+        {/* ================================================================== */}
+        {/* 2. INTERACTIVE FIVE-STAGE DEVELOPMENT JOURNEY                      */}
+        {/* ================================================================== */}
+        <DevelopmentJourney />
+
+        {/* ================================================================== */}
+        {/* 3. WHAT WORKING WITH DEPTLOY LOOKS LIKE                            */}
+        {/* ================================================================== */}
+        <section
+          aria-labelledby="working-together-title"
+          className="pt-10 sm:pt-14 lg:pt-16 pb-12 sm:pb-16 lg:pb-20 border-t border-[rgba(21,19,74,0.08)]"
+        >
+          <div className="max-w-2xl mb-6 sm:mb-8">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--pur)] bg-[var(--mist)] px-3 py-1 rounded-sm border border-[var(--peri)] inline-block mb-3">
+              WORKING TOGETHER
+            </span>
+            <h2
+              id="working-together-title"
+              style={{ fontSize: "clamp(26px, 3.5vw, 40px)", lineHeight: 1.15 }}
+              className="font-extrabold text-[var(--deep)] tracking-tight"
+            >
+              A clear process. No unnecessary complexity.
+            </h2>
+            <p className="text-sm sm:text-base text-[var(--mute)] mt-2.5 leading-relaxed">
+              We eliminate technical ambiguity with upfront architecture, weekly demo verification, and complete
+              deliverable handovers.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+            {WORKING_POINTS.map((item) => {
+              const Icon = item.icon;
               return (
-                <div key={principle.title} className="bg-[var(--mist)] border border-[var(--peri)] p-7">
-                  <Icon className="w-8 h-8 text-[var(--pur)] mb-7" />
-                  <h3 className="text-xl font-extrabold text-[var(--deep)] mb-3">{principle.title}</h3>
-                  <p className="text-sm text-[var(--mute)] leading-relaxed">{principle.text}</p>
+                <div
+                  key={item.title}
+                  className="group bg-white border border-[rgba(21,19,74,0.1)] p-6 sm:p-7 rounded-2xl shadow-[0_4px_20px_rgba(87,80,168,0.04)] hover:border-[var(--pur)]/40 hover:-translate-y-0.5 transition-all flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="w-11 h-11 rounded-xl bg-[var(--paper)] text-[var(--pur)] border border-[var(--peri)]/60 grid place-items-center mb-5 group-hover:bg-[var(--deep)] group-hover:text-white transition-colors">
+                      <Icon className="w-5 h-5" />
+                    </div>
+
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--mute)] block mb-1">
+                      {item.tag}
+                    </span>
+
+                    <h3 className="text-lg sm:text-xl font-extrabold text-[var(--deep)] mb-2.5">
+                      {item.title}
+                    </h3>
+
+                    <p className="text-xs sm:text-sm text-[var(--mute)] leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
                 </div>
               );
             })}
           </div>
         </section>
 
-        <section className="mt-24 bg-[var(--deep)] text-white p-8 sm:p-12 flex flex-wrap gap-8 items-end justify-between">
-          <div className="max-w-2xl">
-            <span className="text-xs font-mono text-[var(--peri)] uppercase tracking-wider">Understand the challenge</span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold mt-3">You bring the problem. We help define the product.</h2>
+        {/* ================================================================== */}
+        {/* 4. FINAL CONTACT CTA                                               */}
+        {/* ================================================================== */}
+        <section aria-labelledby="cta-title" className="pt-2 sm:pt-4">
+          <div className="bl-cta border border-[rgba(87,80,168,0.14)] shadow-[0_12px_40px_rgba(87,80,168,0.05)]">
+            <div>
+              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--pur)] bg-white px-2.5 py-0.5 rounded-sm border border-[var(--peri)] inline-block mb-3">
+                LET&apos;S GET STARTED
+              </span>
+
+              <h2
+                id="cta-title"
+                style={{ fontSize: "clamp(26px, 3.2vw, 38px)", lineHeight: 1.15 }}
+                className="font-extrabold text-[var(--deep)] tracking-tight"
+              >
+                Let&apos;s turn your challenge into a product.
+              </h2>
+
+              <p className="text-sm sm:text-base text-[var(--mute)] mt-3 leading-relaxed max-w-xl">
+                Tell us what you&apos;re trying to solve. We&apos;ll help explore what the right software and practical AI could look like for your business.
+              </p>
+
+              <div className="mt-4 pt-3 border-t border-[rgba(87,80,168,0.12)] flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-mono text-[var(--mute)]">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#16875b] shrink-0" />
+                  Direct scope with principal engineers
+                </span>
+                <span className="opacity-40">•</span>
+                <span>Zero sales pressure</span>
+                <span className="opacity-40">•</span>
+                <span>Fixed milestones &amp; deliverables</span>
+              </div>
+            </div>
+
+            <div className="bl-cta-buttons">
+              <Link className="btn" href="/contact#form">
+                Discuss your project
+                <ArrowRight aria-hidden="true" />
+              </Link>
+              <Link className="btn ghost" href="/demo">
+                Try our AI receptionist
+              </Link>
+            </div>
           </div>
-          <Link href="/contact" className="btn" style={{ background: "var(--or)", color: "var(--deep)" }}>
-            Start a conversation <ArrowRight size={16}/>
-          </Link>
         </section>
       </div>
     </div>

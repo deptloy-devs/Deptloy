@@ -219,7 +219,7 @@ export default function DemoPage() {
   };
 
   return (
-    <div className="py-12 sm:py-16">
+    <div className="pt-24 sm:pt-28 lg:pt-32 pb-12 sm:pb-16">
       <div className="wrap">
         {/* Header Section */}
         <div className="max-w-3xl mb-8">

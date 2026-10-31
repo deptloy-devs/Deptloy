@@ -10,7 +10,7 @@ export type ServiceShowcase = {
   /** What it does for the customer, in a few words. */
   promise: string;
   /** Who it suits, in one line. */
-  forWho: string;
+  forWho?: string;
   included: string[];
   /** Only for services with a known rollout time. */
   timeline?: string;

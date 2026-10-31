@@ -2,8 +2,10 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Mic, Send, Volume2, VolumeX, X } from "lucide-react";
+import { AlertCircle, Mic, RotateCcw, Send, Volume2, VolumeX, X } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { useChatSession } from "@/lib/chat/useChatSession";
+import type { ChatMessagePayload } from "@/lib/chat/types";
 
 export const DepChatContext = React.createContext<{
   isOpen: boolean;
@@ -19,124 +21,174 @@ export function useDepChat() {
   return React.useContext(DepChatContext);
 }
 
-const KB: [RegExp, string][] = [
-  [
-    /hi\b|hello|hey|greetings/i,
-    "Hello! I'm Dep, Deptloy's assistant. I can explain our AI receptionists, custom software capabilities, solution blueprints, or help you discuss your project.",
-  ],
-  [
-    /receptionist|phone|call(s)?|voice|answer|telephony/i,
-    "Our flagship AI receptionist answers phone calls 24/7 in your brand's voice with natural streaming conversational cadence. It checks live calendar availability, books appointments, triages urgent inquiries, and syncs directly into your CRM. You can test an interactive text-based simulation right now on our /demo page!",
-  ],
-  [
-    /demo|test|try/i,
-    "You can experience an interactive text simulation of our AI Receptionist at /demo! You can choose an industry, test caller intake, ask sample questions, and simulate real-time slot booking.",
-  ],
-  [
-    /custom|software|platform|app|web|saas|engineer/i,
-    "Beyond AI receptionists, Deptloy designs, engineers, and maintains custom software products: client portals, business management platforms, staff dispatch dashboards, SaaS apps, and relational databases tailored around how your team actually works.",
-  ],
-  [
-    /crm|database|pipeline|leads|contacts|postgres/i,
-    "We architect custom PostgreSQL and Supabase databases shaped around your sales and fulfillment workflows. Inbound calls, notes, transcripts, and stages update automatically with dedicated architecture where you retain complete data ownership.",
-  ],
-  [
-    /automat|workflow|integration|api|sync/i,
-    "We automate repetitive administrative busywork: two-way SMS reminders that reduce missed appointments, instant post-call follow-ups, team alerts, and API bridges to systems like EHRs, accounting software, and CRMs.",
-  ],
-  [
-    /project(s)?|blueprint(s)?|case|example/i,
-    "Visit our Solutions page at /projects to explore our interactive solution blueprints—including a unified operations platform for multi-location healthcare networks and a live dispatch hub for field services.",
-  ],
-  [
-    /price|cost|pricing|quote|how much/i,
-    "We provide transparent, fixed-scope engineering proposals tailored to your operational volume. You can submit a project inquiry directly on our /contact#form page.",
-  ],
-  [
-    /book|talk|contact|discuss|project|quote|inquiry|meeting/i,
-    "You can discuss your project and submit an inquiry directly at /contact#form, or email our engineering team directly at deptloy@gmail.com.",
-  ],
-  [
-    /build|what do you do|services/i,
-    "Deptloy combines two major areas of expertise: our flagship autonomous AI Receptionists and end-to-end custom software engineering (web apps, platforms, CRMs, and automations).",
-  ],
-];
-
-function getBotReply(question: string): string {
-  const q = question.toLowerCase();
-  for (const [re, answer] of KB) {
-    if (re.test(q)) return answer;
-  }
-  return "I can tell you about our AI receptionists, custom software platforms, solution blueprints, or help you discuss your project. What would you like to explore?";
-}
-
 interface Message {
   id: string;
   sender: "bot" | "user";
   text: string;
 }
 
+const INTRO_MESSAGE: Message = {
+  id: "intro",
+  sender: "bot",
+  text: "Hi, I’m Dep, Deptloy’s AI representative! I can walk you through our autonomous AI receptionists, custom software platforms, solution blueprints, or help scope your next engineering project. What would you like to explore?",
+};
+
+function renderFormattedMessage(text: string) {
+  const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    const label = match[1];
+    const url = match[2];
+    parts.push(
+      <Link
+        key={`${match.index}-${url}`}
+        href={url}
+        className="font-semibold text-[#685bc7] underline underline-offset-2 hover:text-[#15134a] transition-colors"
+      >
+        {label}
+      </Link>
+    );
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts;
+}
+
 export function DepChatProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [voiceEnabled, setVoiceEnabled] = React.useState(false);
-  const [messages, setMessages] = React.useState<Message[]>([
-    {
-      id: "intro",
-      sender: "bot",
-      text: "Hi, I’m Dep, Deptloy’s assistant. What would you like to know about our systems?",
-    },
-  ]);
+  const [messages, setMessages] = React.useState<Message[]>([INTRO_MESSAGE]);
   const [inputVal, setInputVal] = React.useState("");
   const [isTyping, setIsTyping] = React.useState(false);
+  const [isStreaming, setIsStreaming] = React.useState(false);
   const [isListening, setIsListening] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
   const msgsEndRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const lastUserPromptRef = React.useRef<string>("");
 
-  const speakText = React.useCallback((text: string) => {
-    if (!voiceEnabled || typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 1.05;
-    window.speechSynthesis.speak(utterance);
-  }, [voiceEnabled]);
+  const { containerRef: turnstileContainerRef, streamChat } = useChatSession();
 
-  const handleUserSend = React.useCallback((text: string) => {
-    const trimmed = text.trim();
-    if (!trimmed) return;
+  const speakText = React.useCallback(
+    (text: string) => {
+      if (!voiceEnabled || typeof window === "undefined" || !("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      // Remove markdown links syntax for clean audio speech
+      const cleanedText = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+      const utterance = new SpeechSynthesisUtterance(cleanedText);
+      utterance.rate = 1.05;
+      window.speechSynthesis.speak(utterance);
+    },
+    [voiceEnabled]
+  );
 
-    const userMsg: Message = {
-      id: `u-${Date.now()}`,
-      sender: "user",
-      text: trimmed,
-    };
+  const handleUserSend = React.useCallback(
+    async (text: string) => {
+      const trimmed = text.trim();
+      if (!trimmed || isStreaming) return;
 
-    setMessages((prev) => [...prev, userMsg]);
-    setInputVal("");
-    setIsTyping(true);
+      lastUserPromptRef.current = trimmed;
+      setErrorMessage(null);
 
-    setTimeout(() => {
-      const reply = getBotReply(trimmed);
-      const botMsg: Message = {
-        id: `b-${Date.now()}`,
-        sender: "bot",
-        text: reply,
+      const userMsg: Message = {
+        id: `u-${Date.now()}`,
+        sender: "user",
+        text: trimmed,
       };
-      setMessages((prev) => [...prev, botMsg]);
-      setIsTyping(false);
-      speakText(reply);
-    }, 600);
-  }, [speakText]);
 
-  const openChat = React.useCallback((initialMsg?: string) => {
-    setIsOpen(true);
-    if (initialMsg) {
-      handleUserSend(initialMsg);
+      const botMsgId = `b-${Date.now()}`;
+      const botPlaceholder: Message = {
+        id: botMsgId,
+        sender: "bot",
+        text: "",
+      };
+
+      const nextMessages = [...messages, userMsg];
+      setMessages([...nextMessages, botPlaceholder]);
+      setInputVal("");
+      setIsTyping(true);
+      setIsStreaming(true);
+
+      // Build conversation history for API
+      const historyPayload: ChatMessagePayload[] = nextMessages
+        .filter((m) => m.text.trim().length > 0)
+        .map((m) => ({
+          role: m.sender === "user" ? "user" : "assistant",
+          content: m.text,
+        }));
+
+      try {
+        let finalReply = "";
+        await streamChat({
+          assistant: "dep",
+          messages: historyPayload,
+          onChunk: (accumulated) => {
+            setIsTyping(false);
+            finalReply = accumulated;
+            setMessages((prev) =>
+              prev.map((m) => (m.id === botMsgId ? { ...m, text: accumulated } : m))
+            );
+          },
+        });
+
+        setIsStreaming(false);
+        setIsTyping(false);
+        if (finalReply) {
+          speakText(finalReply);
+        }
+      } catch (err: unknown) {
+        setIsStreaming(false);
+        setIsTyping(false);
+        // Remove empty bot placeholder if it failed with no content
+        setMessages((prev) => prev.filter((m) => m.id !== botMsgId || m.text.length > 0));
+        const message =
+          err instanceof Error ? err.message : "Unable to reach Dep. Please check your connection.";
+        setErrorMessage(message);
+      }
+    },
+    [messages, isStreaming, streamChat, speakText]
+  );
+
+  const handleRetry = React.useCallback(() => {
+    if (lastUserPromptRef.current) {
+      handleUserSend(lastUserPromptRef.current);
     }
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 300);
   }, [handleUserSend]);
+
+  const handleRestart = React.useCallback(() => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    setMessages([INTRO_MESSAGE]);
+    setErrorMessage(null);
+    setIsTyping(false);
+    setIsStreaming(false);
+    setInputVal("");
+  }, []);
+
+  const openChat = React.useCallback(
+    (initialMsg?: string) => {
+      setIsOpen(true);
+      if (initialMsg) {
+        handleUserSend(initialMsg);
+      }
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300);
+    },
+    [handleUserSend]
+  );
 
   const closeChat = React.useCallback(() => {
     setIsOpen(false);
@@ -147,7 +199,7 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     msgsEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping]);
+  }, [messages, isTyping, errorMessage]);
 
   const handleMicToggle = () => {
     if (typeof window === "undefined") return;
@@ -201,7 +253,10 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
     <DepChatContext.Provider value={{ isOpen, openChat, closeChat }}>
       {children}
 
-      {/* Floating launcher button in bottom right - responsive sizing for mobile/desktop */}
+      {/* Invisible Turnstile Verification Mount */}
+      <div ref={turnstileContainerRef} className="hidden" aria-hidden="true" />
+
+      {/* Floating launcher button in bottom right */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         aria-label="Chat with Dep"
@@ -219,17 +274,17 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
         </svg>
       </button>
 
-      {/* Chat Slide-up Modal Dialog - full responsive adaptation */}
+      {/* Chat Slide-up Modal Dialog */}
       <div
         role="dialog"
         aria-label="Chat with Dep"
         className={cn(
-          "fixed right-2.5 sm:right-6 bottom-2.5 sm:bottom-6 w-[380px] max-w-[calc(100vw-1.25rem)] h-[min(560px,calc(100svh-24px))] bg-white rounded-2xl shadow-[0_30px_90px_rgba(21,19,74,0.35)] border border-[rgba(87,80,168,0.18)] z-[75] flex flex-col overflow-hidden transition-all duration-400 ease-[cubic-bezier(0.2,0.8,0.2,1)] origin-bottom-right",
+          "fixed right-2.5 sm:right-6 bottom-2.5 sm:bottom-6 w-[390px] max-w-[calc(100vw-1.25rem)] h-[min(580px,calc(100svh-24px))] bg-white rounded-2xl shadow-[0_30px_90px_rgba(21,19,74,0.35)] border border-[rgba(87,80,168,0.18)] z-[75] flex flex-col overflow-hidden transition-all duration-400 ease-[cubic-bezier(0.2,0.8,0.2,1)] origin-bottom-right",
           isOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none translate-y-6"
         )}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#15134a] to-[#2d2a85] text-white px-4 py-3.5 flex items-center justify-between gap-3">
+        <div className="bg-gradient-to-r from-[#15134a] to-[#2d2a85] text-white px-4 py-3 flex items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-[#e8e6f7] grid place-items-center shrink-0">
               <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
@@ -241,13 +296,29 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
               </svg>
             </div>
             <div>
-              <p className="font-display font-bold text-sm tracking-tight text-white leading-tight">Dep</p>
-              <p className="text-[11px] text-[#d2cdf3]">Deptloy Assistant</p>
+              <div className="flex items-center gap-2">
+                <p className="font-display font-bold text-sm tracking-tight text-white leading-tight">Dep</p>
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9.5px] font-mono font-semibold bg-[#fd9150]/20 text-[#fd9150] border border-[#fd9150]/40">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#fd9150] animate-pulse" />
+                  Gemini AI
+                </span>
+              </div>
+              <p className="text-[11px] text-[#d2cdf3]">Deptloy Studio Assistant</p>
             </div>
           </div>
 
           <div className="flex items-center gap-1.5">
             <button
+              type="button"
+              onClick={handleRestart}
+              title="Restart conversation"
+              aria-label="Restart conversation"
+              className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white grid place-items-center transition-colors cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5 text-white/80" />
+            </button>
+            <button
+              type="button"
               onClick={() => {
                 setVoiceEnabled((v) => !v);
                 if (voiceEnabled && typeof window !== "undefined" && "speechSynthesis" in window) {
@@ -255,11 +326,13 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
                 }
               }}
               title={voiceEnabled ? "Mute speech" : "Read aloud"}
+              aria-label={voiceEnabled ? "Mute speech" : "Read aloud"}
               className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white grid place-items-center text-xs transition-colors cursor-pointer"
             >
               {voiceEnabled ? <Volume2 className="w-3.5 h-3.5 text-[#fd9150]" /> : <VolumeX className="w-3.5 h-3.5 text-white/70" />}
             </button>
             <button
+              type="button"
               onClick={closeChat}
               aria-label="Close chat"
               className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white grid place-items-center transition-colors cursor-pointer"
@@ -271,38 +344,61 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
 
         {/* Message Log */}
         <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#f4f3fb]">
-          {messages.map((m) => (
-            <div
-              key={m.id}
-              className={cn(
-                "max-w-[85%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed",
-                m.sender === "bot"
-                  ? "bg-white text-[#15134a] border border-[#e8e6f7] rounded-bl-sm shadow-sm"
-                  : "bg-[#15134a] text-white self-end ml-auto rounded-br-sm"
-              )}
-            >
-              {m.text}
-            </div>
-          ))}
+          {messages.map((m) => {
+            if (!m.text && m.sender === "bot" && isTyping) return null;
+            return (
+              <div
+                key={m.id}
+                className={cn(
+                  "max-w-[85%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap",
+                  m.sender === "bot"
+                    ? "bg-white text-[#15134a] border border-[#e8e6f7] rounded-bl-sm shadow-sm"
+                    : "bg-[#15134a] text-white self-end ml-auto rounded-br-sm"
+                )}
+              >
+                {m.sender === "bot" ? renderFormattedMessage(m.text) : m.text}
+              </div>
+            );
+          })}
 
+          {/* Typing Indicator */}
           {isTyping && (
-            <div className="bg-white border border-[#e8e6f7] text-[#15134a] max-w-[80px] px-3.5 py-2.5 rounded-2xl rounded-bl-sm flex items-center gap-1">
+            <div className="bg-white border border-[#e8e6f7] text-[#15134a] max-w-[80px] px-3.5 py-2.5 rounded-2xl rounded-bl-sm flex items-center gap-1.5 shadow-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-[#8478e0] animate-bounce" />
               <span className="w-1.5 h-1.5 rounded-full bg-[#8478e0] animate-bounce [animation-delay:0.15s]" />
               <span className="w-1.5 h-1.5 rounded-full bg-[#8478e0] animate-bounce [animation-delay:0.3s]" />
             </div>
           )}
+
+          {/* Error State with Retry Button */}
+          {errorMessage && (
+            <div className="bg-red-50 border border-red-200 text-red-800 text-xs rounded-xl p-3 flex flex-col gap-2">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                <p className="flex-1">{errorMessage}</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleRetry}
+                className="self-end px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md font-semibold text-[11px] transition-colors cursor-pointer"
+              >
+                Retry
+              </button>
+            </div>
+          )}
+
           <div ref={msgsEndRef} />
         </div>
 
         {/* Quick Suggestion Chips */}
-        <div className="flex flex-wrap gap-1.5 px-3 py-2 bg-[#f4f3fb] border-t border-[#e8e6f7]">
-          {["What do you build?", "Test AI Receptionist", "Custom software capabilities"].map((chip) => (
+        <div className="flex flex-wrap gap-1.5 px-3 py-2 bg-[#f4f3fb] border-t border-[#e8e6f7] shrink-0">
+          {["What do you build?", "Test AI Receptionist", "Custom software platforms"].map((chip) => (
             <button
               key={chip}
               type="button"
+              disabled={isStreaming}
               onClick={() => handleUserSend(chip)}
-              className="text-xs font-semibold px-2.5 py-1 rounded-full bg-white hover:bg-[#e8e6f7] border border-[#d2cdf3] text-[#15134a] transition-colors cursor-pointer"
+              className="text-xs font-semibold px-2.5 py-1 rounded-full bg-white hover:bg-[#e8e6f7] border border-[#d2cdf3] text-[#15134a] transition-colors cursor-pointer disabled:opacity-50"
             >
               {chip}
             </button>
@@ -322,31 +418,36 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
             e.preventDefault();
             handleUserSend(inputVal);
           }}
-          className="p-3 bg-white border-t border-[#e8e6f7] flex items-center gap-2"
+          className="p-3 bg-white border-t border-[#e8e6f7] flex items-center gap-2 shrink-0"
         >
           <input
             ref={inputRef}
             type="text"
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value)}
-            placeholder="Ask Dep anything…"
-            className="flex-1 min-w-0 px-3.5 py-2 text-sm rounded-full border border-[#d2cdf3] bg-[#f4f3fb] focus:outline-none focus:border-[#8478e0] text-[#15134a]"
+            disabled={isStreaming}
+            placeholder={isStreaming ? "Dep is thinking…" : "Ask Dep anything…"}
+            className="flex-1 min-w-0 px-3.5 py-2 text-sm rounded-full border border-[#d2cdf3] bg-[#f4f3fb] focus:outline-none focus:border-[#8478e0] text-[#15134a] disabled:opacity-60"
           />
           <button
             type="button"
             onClick={handleMicToggle}
+            disabled={isStreaming}
             className={cn(
-              "w-9 h-9 rounded-full grid place-items-center transition-colors cursor-pointer text-xs",
+              "w-9 h-9 rounded-full grid place-items-center transition-colors cursor-pointer text-xs disabled:opacity-50 shrink-0",
               isListening ? "bg-[#fd9150] text-[#15134a] animate-pulse" : "bg-[#e8e6f7] text-[#15134a] hover:bg-[#d2cdf3]"
             )}
             title="Speech to text"
+            aria-label="Speech to text"
           >
             <Mic className="w-4 h-4" />
           </button>
           <button
             type="submit"
-            className="w-9 h-9 rounded-full bg-[#15134a] hover:bg-[#fd9150] text-white hover:text-[#15134a] grid place-items-center transition-colors cursor-pointer shrink-0"
-            title="Send"
+            disabled={isStreaming || !inputVal.trim()}
+            className="w-9 h-9 rounded-full bg-[#15134a] hover:bg-[#fd9150] text-white hover:text-[#15134a] grid place-items-center transition-colors cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+            title="Send message"
+            aria-label="Send message"
           >
             <Send className="w-4 h-4 ml-0.5" />
           </button>

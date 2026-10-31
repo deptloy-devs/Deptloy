@@ -3,18 +3,26 @@
 import * as React from "react";
 import Link from "next/link";
 import {
-  Clock,
-  CheckCircle2,
-  RotateCcw,
   Send,
-  ChevronRight,
   ArrowRight,
   Sparkles,
   Mic,
+  Stethoscope,
+  Building2,
+  Briefcase,
+  Wrench,
+  Calendar,
+  Database,
+  Smartphone,
+  ShieldCheck,
+  RotateCcw,
+  AlertCircle,
 } from "lucide-react";
 import { VoiceReceptionist } from "@/components/marketing/voice-demo/VoiceReceptionist";
-import { demoIndustries, demoTimeSlots } from "@/lib/site";
-import type { DemoIndustryId, ChatMessage, DemoBookingState } from "@/types";
+import { demoIndustries } from "@/lib/site";
+import { useChatSession } from "@/lib/chat/useChatSession";
+import type { DemoIndustryId, ChatMessage } from "@/types";
+import type { ChatMessagePayload } from "@/lib/chat/types";
 
 let messageCounter = 100;
 function getNextId(prefix: string) {
@@ -22,9 +30,19 @@ function getNextId(prefix: string) {
   return `${prefix}-${messageCounter}`;
 }
 
+const INDUSTRY_ICONS: Record<DemoIndustryId, React.ElementType> = {
+  clinic: Stethoscope,
+  salon: Sparkles,
+  "real-estate": Building2,
+  consulting: Briefcase,
+  "home-services": Wrench,
+};
+
 export default function DemoPage() {
-  // Stepper state: 1: Industry, 2: Service, 3: Contact & Time, 4: Review/Confirm
-  const [currentStep, setCurrentStep] = React.useState<number>(1);
+  // Guarantee page stays at the top on mount (fixes auto-scrolling bug)
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // Selected industry
   const [selectedIndustryId, setSelectedIndustryId] = React.useState<DemoIndustryId>("clinic");
@@ -32,24 +50,9 @@ export default function DemoPage() {
   const currentIndustry =
     demoIndustries.find((i) => i.id === selectedIndustryId) || demoIndustries[0];
 
-  // Booking Form State
-  const [bookingData, setBookingData] = React.useState<DemoBookingState>({
-    industry: "clinic",
-    serviceId: currentIndustry.services[0].id,
-    customerName: "",
-    customerEmail: "",
-    customerPhone: "",
-    selectedDate: "2026-10-28",
-    selectedTime: "10:30 AM",
-    notes: "",
-  });
+  const selectedService = currentIndustry.services[0];
 
-  const [formErrors, setFormErrors] = React.useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [isConfirmed, setIsConfirmed] = React.useState(false);
-  const [confirmedBookingId, setConfirmedBookingId] = React.useState("");
-
-  // Simulated Chat Messages
+  // Chat Messages State
   const [messages, setMessages] = React.useState<ChatMessage[]>([
     {
       id: "msg-1",
@@ -59,19 +62,23 @@ export default function DemoPage() {
     },
   ]);
   const [inputMessage, setInputMessage] = React.useState("");
-  // Right panel: the text simulator, or a live voice call.
+  const [isTyping, setIsTyping] = React.useState(false);
+  const [isStreaming, setIsStreaming] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [panelMode, setPanelMode] = React.useState<"text" | "voice">("text");
-  const chatBottomRef = React.useRef<HTMLDivElement>(null);
 
-  // When industry changes, reset selected service & conversation greeting
+  const chatContainerRef = React.useRef<HTMLDivElement>(null);
+  const lastUserPromptRef = React.useRef<string>("");
+
+  const { containerRef: turnstileContainerRef, streamChat } = useChatSession();
+
+  // Reset conversation when industry changes
   const handleIndustryChange = (id: DemoIndustryId) => {
     setSelectedIndustryId(id);
     const ind = demoIndustries.find((i) => i.id === id) || demoIndustries[0];
-    setBookingData((prev) => ({
-      ...prev,
-      industry: id,
-      serviceId: ind.services[0].id,
-    }));
+    setErrorMessage(null);
+    setIsStreaming(false);
+    setIsTyping(false);
     setMessages([
       {
         id: getNextId("msg"),
@@ -82,17 +89,29 @@ export default function DemoPage() {
     ]);
   };
 
-  const selectedService =
-    currentIndustry.services.find((s) => s.id === bookingData.serviceId) ||
-    currentIndustry.services[0];
-
-  // Time Slots
-  const availableSlots = demoTimeSlots;
+  // Restart active industry chat
+  const handleRestartChat = () => {
+    setErrorMessage(null);
+    setIsStreaming(false);
+    setIsTyping(false);
+    setInputMessage("");
+    setMessages([
+      {
+        id: getNextId("msg"),
+        sender: "assistant",
+        text: currentIndustry.assistantGreeting,
+        timestamp: "Just now",
+      },
+    ]);
+  };
 
   // Send message in interactive chat simulator
-  const handleSendMessage = (textToSend?: string) => {
+  const handleSendMessage = async (textToSend?: string) => {
     const text = (textToSend || inputMessage).trim();
-    if (!text) return;
+    if (!text || isStreaming) return;
+
+    lastUserPromptRef.current = text;
+    setErrorMessage(null);
 
     const userMsg: ChatMessage = {
       id: getNextId("user"),
@@ -101,592 +120,190 @@ export default function DemoPage() {
       timestamp: "Just now",
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    const assistantMsgId = getNextId("assistant");
+    const assistantPlaceholder: ChatMessage = {
+      id: assistantMsgId,
+      sender: "assistant",
+      text: "",
+      timestamp: "Just now",
+    };
+
+    const nextMessages = [...messages, userMsg];
+    setMessages([...nextMessages, assistantPlaceholder]);
     if (!textToSend) setInputMessage("");
+    setIsTyping(true);
+    setIsStreaming(true);
 
-    // Simulate smart receptionist reasoning
-    setTimeout(() => {
-      let reply =
-        "I understand. I can help coordinate that. Would you like to reserve an available time slot right now?";
-      const lower = text.toLowerCase();
+    // Build payload for API
+    const historyPayload: ChatMessagePayload[] = nextMessages
+      .filter((m) => m.text.trim().length > 0 && m.sender !== "system")
+      .map((m) => ({
+        role: m.sender === "customer" ? "user" : "assistant",
+        content: m.text,
+      }));
 
-      if (lower.includes("hour") || lower.includes("open") || lower.includes("close")) {
-        reply =
-          "We are open Monday through Friday from 8:00 AM to 6:00 PM, and Saturdays from 9:00 AM to 2:00 PM. Would a morning or afternoon slot work better for you?";
-      } else if (lower.includes("price") || lower.includes("cost") || lower.includes("fee")) {
-        reply = `For ${selectedService.name}, the rate is ${selectedService.price} with an estimated duration of ${selectedService.duration}.`;
-      } else if (lower.includes("reschedule") || lower.includes("cancel")) {
-        reply =
-          "You can reschedule or modify bookings at any time up to 24 hours prior to your slot. Just reply to your confirmation SMS or call back.";
-      } else if (lower.includes("insurance") || lower.includes("delta") || lower.includes("payment")) {
-        reply =
-          "We accept most major PPO insurance plans and health benefit networks. We can collect your policy details during digital intake to verify coverage.";
-      } else if (lower.includes("book") || lower.includes("appointment") || lower.includes("schedule") || lower.includes("tomorrow")) {
-        reply = `I would be happy to schedule that for you. I have ${availableSlots[1]} or ${availableSlots[2]} open. Which one would you prefer?`;
-      }
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: getNextId("ai"),
-          sender: "assistant",
-          text: reply,
-          timestamp: "Just now",
+    try {
+      await streamChat({
+        assistant: "receptionist",
+        messages: historyPayload,
+        industryId: currentIndustry.id,
+        serviceId: selectedService.id,
+        onChunk: (accumulated) => {
+          setIsTyping(false);
+          setMessages((prev) =>
+            prev.map((m) => (m.id === assistantMsgId ? { ...m, text: accumulated } : m))
+          );
         },
-      ]);
-    }, 550);
+      });
+
+      setIsStreaming(false);
+      setIsTyping(false);
+    } catch (err: unknown) {
+      setIsStreaming(false);
+      setIsTyping(false);
+      setMessages((prev) => prev.filter((m) => m.id !== assistantMsgId || m.text.length > 0));
+      const msg =
+        err instanceof Error ? err.message : "Unable to reach receptionist. Please try again.";
+      setErrorMessage(msg);
+    }
   };
 
+  const handleRetry = () => {
+    if (lastUserPromptRef.current) {
+      handleSendMessage(lastUserPromptRef.current);
+    }
+  };
+
+  // ONLY scroll internal chat container when messages change (NEVER window scroll)
   React.useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  // Quick prefill helper for rapid tester convenience
-  const handleFillDemoData = () => {
-    setBookingData((prev) => ({
-      ...prev,
-      customerName: "Alex Jordan",
-      customerEmail: "alex.jordan@example.com",
-      customerPhone: "+1 (555) 234-5678",
-      notes: "First-time consultation. Please send SMS reminder.",
-    }));
-    setFormErrors({});
-  };
-
-  // Form Validation for Step 3
-  const validateStep3 = (): boolean => {
-    const errs: Record<string, string> = {};
-    if (!bookingData.customerName.trim()) {
-      errs.customerName = "Name is required";
+    if (messages.length > 1 && chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
-    if (!bookingData.customerEmail.trim()) {
-      errs.customerEmail = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(bookingData.customerEmail)) {
-      errs.customerEmail = "Enter a valid email address";
-    }
-    if (!bookingData.customerPhone.trim()) {
-      errs.customerPhone = "Phone number is required";
-    }
-
-    setFormErrors(errs);
-    return Object.keys(errs).length === 0;
-  };
-
-  const handleNextStep = () => {
-    if (currentStep === 1) setCurrentStep(2);
-    else if (currentStep === 2) setCurrentStep(3);
-    else if (currentStep === 3) {
-      if (validateStep3()) setCurrentStep(4);
-    }
-  };
-
-  const handleConfirmBooking = () => {
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsConfirmed(true);
-      const ref = `BK-${Math.floor(100000 + Math.random() * 900000)}`;
-      setConfirmedBookingId(ref);
-
-      // Add confirmation event to chat
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: getNextId("conf"),
-          sender: "assistant",
-          text: `Great news, ${bookingData.customerName}! Your simulated booking for "${selectedService.name}" on ${bookingData.selectedDate} at ${bookingData.selectedTime} is confirmed (Reference: ${ref}). In a live deployment, a calendar invite and confirmation SMS would now be dispatched.`,
-          timestamp: "Just now",
-        },
-      ]);
-    }, 800);
-  };
-
-  const handleStartAgain = () => {
-    setCurrentStep(1);
-    setIsConfirmed(false);
-    setBookingData({
-      industry: "clinic",
-      serviceId: demoIndustries[0].services[0].id,
-      customerName: "",
-      customerEmail: "",
-      customerPhone: "",
-      selectedDate: "2026-10-28",
-      selectedTime: "10:30 AM",
-      notes: "",
-    });
-    setFormErrors({});
-    handleIndustryChange("clinic");
-  };
+  }, [messages, isTyping, errorMessage]);
 
   return (
-    <div className="pt-24 sm:pt-28 lg:pt-32 pb-12 sm:pb-16">
-      <div className="wrap">
-        {/* Header Section */}
-        <div className="max-w-3xl mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-[var(--paper)] text-[var(--pur)] border border-[var(--peri)] mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-[var(--or)]" />
-            Text &amp; Live Voice Simulation
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--deep)] leading-tight">
-            AI Receptionist Simulator
-          </h1>
-          <p className="lead2 mt-2 text-sm sm:text-base">
-            Experience how a tailored AI receptionist handles customer inquiries, service catalogs, and calendar slot booking.
-          </p>
+    <div className="pt-20 sm:pt-24 pb-12 sm:pb-16 min-h-screen">
+      {/* Invisible Turnstile Verification Mount */}
+      <div ref={turnstileContainerRef} className="hidden" aria-hidden="true" />
 
-          {/* Honest Prototype Notice & Distinction from Dep Mascot */}
-          <div className="mt-4 p-3 bg-white border-l-4 border-[var(--or)] text-xs text-[var(--mute)] shadow-sm space-y-1">
-            <div>
-              <strong>Demonstration Prototype:</strong> Chat by text, or switch to Voice and talk to the receptionist live in your browser. Bookings use sample data only.
+      <div className="wrap max-w-6xl">
+        {/* Compact, Clean Studio Header (Starts at the top with zero unwanted scroll) */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10.5px] font-mono font-bold uppercase bg-[var(--mist)] text-[var(--pur)] border border-[var(--peri)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#16875b] animate-pulse" />
+                Live Voice &amp; Text Simulator
+              </span>
+              <span className="text-[11px] font-mono text-[var(--mute)] hidden md:inline">
+                · Sample business verticals · Instant browser testing
+              </span>
             </div>
-            <div className="text-[11px] text-[var(--pur)] font-mono">
-              Note: This simulator represents the receptionist Deptloy builds for your company. In voice mode, Dep, our studio mascot, gives it a face.
-            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--deep)]">
+              AI Receptionist Simulator
+            </h1>
+            <p className="text-xs sm:text-sm text-[var(--mute)] mt-1 max-w-xl">
+              Experience how Deptloy&apos;s custom AI receptionist handles inbound calls, answers customer inquiries, and schedules appointments in real time.
+            </p>
+          </div>
+
+          {/* Prototype Notice Pill */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white border border-[rgba(21,19,74,0.1)] text-xs text-[var(--mute)] shadow-2xs self-start md:self-auto shrink-0">
+            <span className="w-2 h-2 rounded-full bg-[var(--or)] shrink-0" />
+            <span className="text-[11.5px]">
+              Chat by text or switch to <strong>Voice</strong> to speak live.
+            </span>
           </div>
         </div>
 
-        {/* Stepper Progress Indicator */}
-        <div className="mb-8 p-3 sm:p-4 bg-white border border-[rgba(21,19,74,0.12)] shadow-sm flex items-center justify-between text-xs font-mono">
-          {[
-            { step: 1, label: "1. Industry" },
-            { step: 2, label: "2. Service" },
-            { step: 3, label: "3. Details & Time" },
-            { step: 4, label: "4. Confirm" },
-          ].map((s, idx) => (
-            <div key={idx} className="flex items-center gap-1.5 sm:gap-2">
-              <span
-                className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${
-                  isConfirmed
-                    ? "bg-[#16875b]/15 text-[#16875b] border border-[#16875b]/30"
-                    : currentStep === s.step
-                    ? "bg-[var(--deep)] text-white shadow-sm"
-                    : currentStep > s.step
-                    ? "bg-[var(--peri)] text-[var(--deep)] font-bold"
-                    : "bg-[var(--paper)] text-[var(--mute)] border border-[var(--peri)]"
-                }`}
-              >
-                {s.step}
-              </span>
-              <span
-                className={`hidden md:inline font-semibold ${
-                  currentStep === s.step ? "text-[var(--deep)] font-bold" : "text-[var(--mute)]"
-                }`}
-              >
-                {s.label}
-              </span>
-              {idx < 3 && <ChevronRight className="w-3.5 h-3.5 text-[var(--peri)] hidden sm:block" />}
-            </div>
-          ))}
+        {/* 1-CLICK HORIZONTAL INDUSTRY SWITCHER BAR */}
+        <div className="bg-white border border-[rgba(21,19,74,0.12)] p-2 rounded-2xl shadow-xs mb-6">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+            {demoIndustries.map((ind) => {
+              const Icon = INDUSTRY_ICONS[ind.id as DemoIndustryId] || Stethoscope;
+              const isSelected = ind.id === selectedIndustryId;
+              return (
+                <button
+                  key={ind.id}
+                  type="button"
+                  onClick={() => handleIndustryChange(ind.id as DemoIndustryId)}
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                    isSelected
+                      ? "bg-[var(--deep)] text-white shadow-sm"
+                      : "bg-[var(--paper)] text-[var(--mute)] hover:text-[var(--deep)] hover:bg-[var(--mist)]"
+                  }`}
+                >
+                  <Icon className={`w-3.5 h-3.5 ${isSelected ? "text-[var(--or)]" : "text-[var(--pur)]"}`} />
+                  <span>{ind.name}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Main 2-Column Interactive Workspace */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-          {/* LEFT COLUMN (7 cols): Stepper Workflow Container */}
-          <div className="lg:col-span-7 bg-white border border-[rgba(21,19,74,0.14)] p-6 sm:p-8 shadow-[0_16px_40px_rgba(87,80,168,0.08)] flex flex-col justify-between min-h-[500px]"
-            style={{
-              clipPath: "polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)",
-            }}
-          >
-            {/* Confirmed Screen */}
-            {isConfirmed ? (
-              <div className="py-6 text-center space-y-5 my-auto">
-                <div className="w-14 h-14 rounded-full bg-[#16875b]/15 text-[#16875b] grid place-items-center mx-auto border border-[#16875b]/30">
-                  <CheckCircle2 className="w-8 h-8" />
-                </div>
-
-                <div>
-                  <span className="text-xs font-mono font-bold uppercase text-[#16875b] tracking-wider">
-                    Simulated Booking Successful
-                  </span>
-                  <h3 className="text-2xl font-extrabold text-[var(--deep)] mt-1">
-                    Appointment Reserved
-                  </h3>
-                  <p className="text-xs font-mono text-[var(--pur)] mt-1">
-                    Simulation Ref: {confirmedBookingId}
-                  </p>
-                </div>
-
-                <div className="p-4 bg-[var(--paper)] border border-[var(--peri)] text-left text-xs space-y-2 max-w-md mx-auto rounded-sm">
-                  <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
-                    <span className="text-[var(--mute)]">Industry:</span>
-                    <span className="font-bold text-[var(--deep)]">{currentIndustry.name}</span>
-                  </div>
-                  <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
-                    <span className="text-[var(--mute)]">Service:</span>
-                    <span className="font-bold text-[var(--deep)]">{selectedService.name}</span>
-                  </div>
-                  <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
-                    <span className="text-[var(--mute)]">Scheduled Slot:</span>
-                    <span className="font-bold text-[var(--or)]">{bookingData.selectedDate} at {bookingData.selectedTime}</span>
-                  </div>
-                  <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
-                    <span className="text-[var(--mute)]">Caller Name:</span>
-                    <span className="font-bold text-[var(--deep)]">{bookingData.customerName}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[var(--mute)]">Simulated SMS:</span>
-                    <span className="font-bold text-[#16875b]">Dispatched to {bookingData.customerPhone}</span>
-                  </div>
-                </div>
-
-                <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
-                  <button
-                    type="button"
-                    onClick={handleStartAgain}
-                    className="btn ghost sm inline-flex items-center gap-1.5"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    <span>Test Another Vertical</span>
-                  </button>
-                  <Link
-                    href="/contact#form"
-                    className="btn sm"
-                    style={{ background: "var(--or)", color: "var(--deep)", fontWeight: 700 }}
-                  >
-                    <span>Deploy For Your Business</span>
-                    <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <div>
-                {/* STEP 1: Select Industry */}
-                {currentStep === 1 && (
-                  <div className="space-y-5">
-                    <div>
-                      <span className="text-xs font-mono text-[var(--pur)] uppercase font-bold">Step 1 of 4</span>
-                      <h2 className="text-xl sm:text-2xl font-extrabold text-[var(--deep)] mt-1">
-                        Select a Sample Business Industry
-                      </h2>
-                      <p className="text-xs sm:text-sm text-[var(--mute)] mt-1">
-                        Choose an industry to see how the assistant adapts its greeting, service catalog, and conversational tone.
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {demoIndustries.map((ind) => (
-                        <button
-                          key={ind.id}
-                          type="button"
-                          onClick={() => handleIndustryChange(ind.id)}
-                          className={`p-3.5 text-left border rounded-sm transition-all cursor-pointer ${
-                            selectedIndustryId === ind.id
-                              ? "bg-[var(--paper)] border-[var(--pur)] ring-2 ring-[var(--pur)]/40 shadow-sm"
-                              : "bg-white border-[var(--peri)] hover:bg-[var(--mist)]/40"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-sm font-bold text-[var(--deep)]">{ind.name}</span>
-                            <span className="text-[10px] font-mono text-[var(--pur)] uppercase font-bold bg-white px-1.5 py-0.5 border border-[var(--peri)]">
-                              {ind.category}
-                            </span>
-                          </div>
-                          <p className="text-xs text-[var(--mute)] truncate">{ind.services[0].name}</p>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* STEP 2: Select Service */}
-                {currentStep === 2 && (
-                  <div className="space-y-5">
-                    <div>
-                      <span className="text-xs font-mono text-[var(--pur)] uppercase font-bold">Step 2 of 4</span>
-                      <h2 className="text-xl sm:text-2xl font-extrabold text-[var(--deep)] mt-1">
-                        Select Service for {currentIndustry.name}
-                      </h2>
-                      <p className="text-xs sm:text-sm text-[var(--mute)] mt-1">
-                        The AI checks real calendar slot availability based on configured service durations.
-                      </p>
-                    </div>
-
-                    <div className="space-y-2.5">
-                      {currentIndustry.services.map((srv) => (
-                        <button
-                          key={srv.id}
-                          type="button"
-                          onClick={() => setBookingData({ ...bookingData, serviceId: srv.id })}
-                          className={`w-full p-3.5 text-left border rounded-sm transition-all cursor-pointer flex items-center justify-between ${
-                            bookingData.serviceId === srv.id
-                              ? "bg-[var(--paper)] border-[var(--pur)] ring-2 ring-[var(--pur)]/40 shadow-sm"
-                              : "bg-white border-[var(--peri)] hover:bg-[var(--mist)]/40"
-                          }`}
-                        >
-                          <div>
-                            <h3 className="text-sm font-bold text-[var(--deep)]">{srv.name}</h3>
-                            <div className="flex items-center gap-3 text-xs text-[var(--mute)] mt-1">
-                              <span className="flex items-center gap-1 font-mono">
-                                <Clock className="w-3 h-3 text-[var(--pur)]" /> {srv.duration}
-                              </span>
-                              <span>•</span>
-                              <span className="font-mono font-bold text-[var(--deep)]">{srv.price}</span>
-                            </div>
-                          </div>
-                          <span
-                            className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                              bookingData.serviceId === srv.id
-                                ? "border-[var(--pur)] bg-[var(--pur)]"
-                                : "border-slate-300"
-                            }`}
-                          >
-                            {bookingData.serviceId === srv.id && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* STEP 3: Contact & Slot Selection */}
-                {currentStep === 3 && (
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-xs font-mono text-[var(--pur)] uppercase font-bold">Step 3 of 4</span>
-                        <h2 className="text-xl sm:text-2xl font-extrabold text-[var(--deep)] mt-1">
-                          Caller Details &amp; Preferred Time
-                        </h2>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleFillDemoData}
-                        className="px-2.5 py-1 text-xs font-mono font-bold uppercase text-[var(--pur)] bg-[var(--paper)] border border-[var(--peri)] hover:bg-[var(--mist)] transition-colors cursor-pointer"
-                      >
-                        ⚡ Pre-fill Sample
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-mono font-bold uppercase text-[var(--mute)] mb-1">
-                          Preferred Date
-                        </label>
-                        <input
-                          type="date"
-                          value={bookingData.selectedDate}
-                          min="2026-10-25"
-                          onChange={(e) => setBookingData({ ...bookingData, selectedDate: e.target.value })}
-                          className="w-full bg-[var(--paper)] border border-[var(--peri)] p-2.5 text-xs rounded-sm"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-mono font-bold uppercase text-[var(--mute)] mb-1">
-                          Caller Full Name *
-                        </label>
-                        <input
-                          type="text"
-                          value={bookingData.customerName}
-                          placeholder="e.g. Alex Jordan"
-                          onChange={(e) => {
-                            setBookingData({ ...bookingData, customerName: e.target.value });
-                            setFormErrors((prev) => ({ ...prev, customerName: "" }));
-                          }}
-                          className={`w-full bg-[var(--paper)] border p-2.5 text-xs rounded-sm ${
-                            formErrors.customerName ? "border-red-500" : "border-[var(--peri)]"
-                          }`}
-                        />
-                        {formErrors.customerName && (
-                          <span className="text-[10px] text-red-500 mt-0.5 block">{formErrors.customerName}</span>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-mono font-bold uppercase text-[var(--mute)] mb-1">
-                          Caller Email *
-                        </label>
-                        <input
-                          type="email"
-                          value={bookingData.customerEmail}
-                          placeholder="alex@example.com"
-                          onChange={(e) => {
-                            setBookingData({ ...bookingData, customerEmail: e.target.value });
-                            setFormErrors((prev) => ({ ...prev, customerEmail: "" }));
-                          }}
-                          className={`w-full bg-[var(--paper)] border p-2.5 text-xs rounded-sm ${
-                            formErrors.customerEmail ? "border-red-500" : "border-[var(--peri)]"
-                          }`}
-                        />
-                        {formErrors.customerEmail && (
-                          <span className="text-[10px] text-red-500 mt-0.5 block">{formErrors.customerEmail}</span>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-mono font-bold uppercase text-[var(--mute)] mb-1">
-                          Mobile Phone * (For SMS Preview)
-                        </label>
-                        <input
-                          type="tel"
-                          value={bookingData.customerPhone}
-                          placeholder="+1 (555) 000-0000"
-                          onChange={(e) => {
-                            setBookingData({ ...bookingData, customerPhone: e.target.value });
-                            setFormErrors((prev) => ({ ...prev, customerPhone: "" }));
-                          }}
-                          className={`w-full bg-[var(--paper)] border p-2.5 text-xs rounded-sm ${
-                            formErrors.customerPhone ? "border-red-500" : "border-[var(--peri)]"
-                          }`}
-                        />
-                        {formErrors.customerPhone && (
-                          <span className="text-[10px] text-red-500 mt-0.5 block">{formErrors.customerPhone}</span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Time Slots */}
-                    <div>
-                      <label className="block text-xs font-mono font-bold uppercase text-[var(--mute)] mb-1.5">
-                        Available Calendar Slots ({selectedService.duration})
-                      </label>
-                      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                        {availableSlots.map((slot) => (
-                          <button
-                            key={slot}
-                            type="button"
-                            onClick={() => setBookingData({ ...bookingData, selectedTime: slot })}
-                            className={`p-2 text-center text-xs font-mono font-bold rounded-xs border transition-colors cursor-pointer ${
-                              bookingData.selectedTime === slot
-                                ? "bg-[var(--deep)] text-white border-[var(--deep)] shadow-sm"
-                                : "bg-white text-[var(--deep)] border-[var(--peri)] hover:bg-[var(--paper)]"
-                            }`}
-                          >
-                            {slot}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* STEP 4: Review Parameters */}
-                {currentStep === 4 && (
-                  <div className="space-y-4">
-                    <div>
-                      <span className="text-xs font-mono text-[var(--pur)] uppercase font-bold">Step 4 of 4</span>
-                      <h2 className="text-xl sm:text-2xl font-extrabold text-[var(--deep)] mt-1">
-                        Review Booking Parameters
-                      </h2>
-                      <p className="text-xs sm:text-sm text-[var(--mute)] mt-1">
-                        Confirming writes this reservation into the simulator state and sends an assistant confirmation.
-                      </p>
-                    </div>
-
-                    <div className="p-4 bg-[var(--paper)] border border-[var(--peri)] text-xs space-y-2 rounded-sm">
-                      <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
-                        <span className="text-[var(--mute)]">Selected Vertical:</span>
-                        <span className="font-bold text-[var(--deep)]">{currentIndustry.name}</span>
-                      </div>
-                      <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
-                        <span className="text-[var(--mute)]">Service &amp; Price:</span>
-                        <span className="font-bold text-[var(--deep)]">{selectedService.name} ({selectedService.price})</span>
-                      </div>
-                      <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
-                        <span className="text-[var(--mute)]">Date &amp; Time Slot:</span>
-                        <span className="font-bold text-[var(--or)]">{bookingData.selectedDate} at {bookingData.selectedTime}</span>
-                      </div>
-                      <div className="flex justify-between pb-1.5 border-b border-[var(--mist)]">
-                        <span className="text-[var(--mute)]">Caller Name:</span>
-                        <span className="font-bold text-[var(--deep)]">{bookingData.customerName}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-[var(--mute)]">Phone &amp; Email:</span>
-                        <span className="font-bold text-[var(--deep)]">{bookingData.customerPhone} • {bookingData.customerEmail}</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Stepper Navigation Buttons */}
-            {!isConfirmed && (
-              <div className="pt-6 mt-6 border-t border-[var(--mist)] flex items-center justify-between">
-                {currentStep > 1 ? (
-                  <button
-                    type="button"
-                    onClick={() => setCurrentStep((prev) => prev - 1)}
-                    className="btn ghost sm"
-                  >
-                    Back
-                  </button>
-                ) : (
-                  <span className="text-xs font-mono text-[var(--mute)]">Industry: {currentIndustry.name}</span>
-                )}
-
-                {currentStep < 4 ? (
-                  <button
-                    type="button"
-                    onClick={handleNextStep}
-                    className="btn sm"
-                    style={{ background: "var(--deep)", color: "#fff" }}
-                  >
-                    <span>Continue to Step {currentStep + 1}</span>
-                    <ChevronRight className="w-3.5 h-3.5 ml-1" />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleConfirmBooking}
-                    disabled={isSubmitting}
-                    className="btn sm"
-                    style={{ background: "var(--or)", color: "var(--deep)", fontWeight: 700 }}
-                  >
-                    <CheckCircle2 className="w-4 h-4 mr-1" />
-                    <span>{isSubmitting ? "Locking Slot..." : "Simulate Instant Booking"}</span>
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* RIGHT COLUMN (5 cols): Conversational Phone / Chat Simulator */}
-          <div className="lg:col-span-5 bg-[var(--deep)] text-white rounded-sm shadow-xl flex flex-col justify-between h-[540px] border border-white/10 relative overflow-hidden"
-            style={{
-              clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%)",
-            }}
-          >
-            {/* Receptionist Header Bar */}
-            <div className="p-4 bg-black/20 border-b border-white/10 flex items-center justify-between shrink-0">
+        {/* MAIN 2-COLUMN COCKPIT (Fixed equal height on desktop) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          {/* LEFT COLUMN (7 cols): Interactive Live Voice & Text Intake Terminal */}
+          <div className="lg:col-span-7 bg-[#0b0a1d] rounded-2xl border border-[rgba(87,80,168,0.25)] shadow-xl overflow-hidden flex flex-col justify-between h-[560px]">
+            {/* Terminal Header */}
+            <div className="p-3.5 bg-black/25 border-b border-white/10 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-[var(--or)] text-[var(--deep)] grid place-items-center font-bold font-mono text-xs shadow-sm">
-                  AI
+                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[var(--pur)] to-[var(--or)] p-0.5 shadow-sm shrink-0">
+                  <div className="w-full h-full rounded-full bg-[#0f0e26] grid place-items-center text-white font-mono font-bold text-xs">
+                    AI
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xs font-bold text-white flex items-center gap-1.5">
+                <div className="min-w-0">
+                  <h3 className="text-xs sm:text-[13px] font-bold text-white flex items-center gap-1.5 truncate">
                     {currentIndustry.name} Receptionist
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   </h3>
-                  <span className="text-[10px] font-mono text-[var(--peri)]">
-                    {panelMode === "voice" ? "Live Voice Engine Active" : "Text Intake Engine Active"}
+                  <span className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    {panelMode === "voice" ? "Live Voice Engine Active" : "Gemini AI Receptionist Active"}
                   </span>
                 </div>
               </div>
 
-              {/* Text / live voice switch */}
-              <div
-                role="tablist"
-                aria-label="Receptionist demo mode"
-                className="flex items-center p-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono"
-              >
-                {(["text", "voice"] as const).map((mode) => (
+              <div className="flex items-center gap-2">
+                {panelMode === "text" && (
                   <button
-                    key={mode}
                     type="button"
-                    role="tab"
-                    aria-selected={panelMode === mode}
-                    onClick={() => setPanelMode(mode)}
-                    className={`flex items-center gap-1 px-2.5 py-0.5 rounded-full transition-colors cursor-pointer ${
-                      panelMode === mode ? "bg-white text-[var(--deep)] font-bold" : "text-[#cfd2ee] hover:text-white"
-                    }`}
+                    onClick={handleRestartChat}
+                    title="Restart Conversation"
+                    aria-label="Restart Conversation"
+                    className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white grid place-items-center transition-colors cursor-pointer text-xs"
                   >
-                    {mode === "voice" && <Mic className="w-3 h-3" />}
-                    {mode === "voice" ? "Voice" : "Text"}
-                    {mode === "voice" && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" aria-label="live" />}
+                    <RotateCcw className="w-3.5 h-3.5 text-white/80" />
                   </button>
-                ))}
+                )}
+
+                {/* Text / Live Voice Switch */}
+                <div
+                  role="tablist"
+                  aria-label="Receptionist demo mode"
+                  className="flex items-center p-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono shrink-0"
+                >
+                  {(["text", "voice"] as const).map((mode) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      role="tab"
+                      aria-selected={panelMode === mode}
+                      onClick={() => setPanelMode(mode)}
+                      className={`flex items-center gap-1 px-3 py-1 rounded-full transition-colors cursor-pointer ${
+                        panelMode === mode
+                          ? mode === "voice"
+                            ? "bg-[var(--or)] text-[var(--deep)] font-bold shadow-xs"
+                            : "bg-white text-[var(--deep)] font-bold shadow-xs"
+                          : "text-[#cfd2ee] hover:text-white"
+                      }`}
+                    >
+                      {mode === "voice" && <Mic className="w-3 h-3" />}
+                      {mode === "voice" ? "Voice" : "Text"}
+                      {mode === "voice" && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" aria-label="live" />}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -698,86 +315,222 @@ export default function DemoPage() {
               />
             ) : (
               <>
-            {/* Quick Sample Questions Bar */}
-            <div className="p-2.5 bg-black/10 border-b border-white/10 shrink-0">
-              <span className="text-[10px] font-mono uppercase text-[var(--peri)] block mb-1.5">
-                Ask Sample Question:
-              </span>
-              <div className="flex flex-wrap gap-1.5">
-                {currentIndustry.sampleQuestions.map((q) => (
+                {/* Quick Sample Questions Bar */}
+                <div className="px-3.5 py-2.5 bg-black/20 border-b border-white/10 shrink-0">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--peri)] block mb-1.5 font-bold">
+                    SAMPLE INQUIRIES (CLICK TO ASK):
+                  </span>
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                    {currentIndustry.sampleQuestions.map((q) => (
+                      <button
+                        key={q}
+                        type="button"
+                        disabled={isStreaming}
+                        onClick={() => handleSendMessage(q)}
+                        className="px-2.5 py-1 text-[11px] font-mono bg-white/10 hover:bg-white/20 border border-white/15 hover:border-[var(--or)]/60 text-[#e4e6fb] hover:text-white rounded-md whitespace-nowrap transition-colors cursor-pointer shrink-0 disabled:opacity-50"
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Message Thread */}
+                <div
+                  ref={chatContainerRef}
+                  className="p-3.5 sm:p-4 flex-1 overflow-y-auto space-y-3 text-xs leading-relaxed"
+                >
+                  {messages.map((msg) => {
+                    if (!msg.text && msg.sender === "assistant" && isTyping) return null;
+                    const isSummary = msg.text.includes("[APPOINTMENT SUMMARY]");
+                    return (
+                      <div
+                        key={msg.id}
+                        className={`flex flex-col ${
+                          msg.sender === "customer" ? "items-end" : "items-start"
+                        }`}
+                      >
+                        <span className="text-[9.5px] font-mono text-slate-400 mb-1 px-1">
+                          {msg.sender === "customer" ? "You (Caller)" : `${currentIndustry.name} AI`}
+                        </span>
+                        <div
+                          className={`p-3 max-w-[88%] text-xs sm:text-[12.5px] leading-relaxed rounded-xl shadow-xs whitespace-pre-wrap ${
+                            msg.sender === "customer"
+                              ? "bg-[var(--or)] text-[var(--deep)] font-semibold rounded-tr-xs"
+                              : isSummary
+                              ? "bg-[#141d33] text-white border-2 border-emerald-400/60 rounded-tl-xs shadow-[0_0_20px_rgba(52,211,153,0.15)]"
+                              : "bg-white/10 text-white border border-white/10 rounded-tl-xs"
+                          }`}
+                        >
+                          {msg.text}
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Typing Indicator */}
+                  {isTyping && (
+                    <div className="bg-white/10 border border-white/10 text-white max-w-[70px] px-3 py-2 rounded-xl rounded-tl-xs flex items-center gap-1.5 shadow-xs">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--or)] animate-bounce" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--or)] animate-bounce [animation-delay:0.15s]" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--or)] animate-bounce [animation-delay:0.3s]" />
+                    </div>
+                  )}
+
+                  {/* Error Box */}
+                  {errorMessage && (
+                    <div className="bg-red-950/60 border border-red-500/40 text-red-200 text-xs rounded-xl p-3 flex flex-col gap-2">
+                      <div className="flex items-start gap-2">
+                        <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                        <p className="flex-1 text-[11.5px]">{errorMessage}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleRetry}
+                        className="self-end px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md font-semibold text-[10.5px] transition-colors cursor-pointer"
+                      >
+                        Retry
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Chat Input Bar */}
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }}
+                  className="p-3 bg-black/25 border-t border-white/10 flex items-center gap-2 shrink-0"
+                >
+                  <input
+                    type="text"
+                    value={inputMessage}
+                    onChange={(e) => setInputMessage(e.target.value)}
+                    disabled={isStreaming}
+                    placeholder={isStreaming ? "Receptionist is replying…" : "Ask about hours, fees, or slot availability..."}
+                    className="flex-1 bg-white/10 border border-white/15 text-white placeholder:text-slate-400 px-3 py-2 text-xs rounded-lg focus:outline-none focus:border-[var(--or)] transition-colors disabled:opacity-60"
+                  />
                   <button
-                    key={q}
                     type="button"
-                    onClick={() => handleSendMessage(q)}
-                    className="px-2 py-1 text-[10px] font-mono bg-white/10 hover:bg-white/20 border border-white/15 text-white rounded-xs truncate max-w-[200px] transition-colors cursor-pointer"
+                    onClick={() => setPanelMode("voice")}
+                    aria-label="Talk to the receptionist"
+                    title="Talk to the receptionist"
+                    className="h-8 px-2.5 rounded-lg border border-white/20 bg-white/10 text-white text-[10.5px] font-mono font-bold flex items-center gap-1.5 hover:bg-white/20 transition-colors cursor-pointer shrink-0"
                   >
-                    {q}
+                    <Mic className="w-3.5 h-3.5 text-[var(--or)]" />
+                    <span className="hidden sm:inline">Talk</span>
                   </button>
-                ))}
+                  <button
+                    type="submit"
+                    disabled={isStreaming || !inputMessage.trim()}
+                    aria-label="Send message"
+                    className="w-8 h-8 rounded-lg bg-[var(--or)] text-[var(--deep)] grid place-items-center hover:bg-white transition-colors cursor-pointer shrink-0 shadow-xs disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
+
+          {/* RIGHT COLUMN (5 cols): AI Receptionist Capabilities & Live Connected Systems */}
+          <div className="lg:col-span-5 bg-white border border-[rgba(21,19,74,0.12)] p-5 sm:p-6 rounded-2xl shadow-[0_12px_36px_rgba(87,80,168,0.06)] flex flex-col justify-between h-[560px]">
+            <div>
+              {/* Header */}
+              <div className="pb-3 border-b border-[rgba(21,19,74,0.08)] mb-3.5">
+                <div className="flex items-center justify-between gap-1 mb-1">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--pur)]">
+                    AI SYSTEM CAPABILITIES
+                  </span>
+                  <span className="text-[10px] font-mono font-bold text-[#16875b] bg-[#edfbf4] px-2 py-0.5 rounded border border-[#c2eed8] flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#16875b] animate-pulse" />
+                    Connected Live
+                  </span>
+                </div>
+                <h3 className="text-base font-extrabold text-[var(--deep)]">
+                  How Deptloy Powers This Receptionist
+                </h3>
+                <p className="text-xs text-[var(--mute)] mt-0.5">
+                  Behind the voice and chat, this assistant connects to your business tools and workflows.
+                </p>
+              </div>
+
+              {/* 3 Core Connected Capabilities */}
+              <div className="space-y-2.5 mb-3.5">
+                <div className="p-3 rounded-xl bg-[var(--paper)]/80 border border-[var(--peri)]/80 flex items-start gap-2.5">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-[var(--peri)] grid place-items-center text-[var(--pur)] shrink-0 shadow-2xs mt-0.5">
+                    <Calendar className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-[var(--deep)]">Real-Time Calendar Booking</h4>
+                    <p className="text-[11px] text-[var(--mute)] leading-relaxed mt-0.5">
+                      Checks live open slots, prevents double bookings, and books directly into Google or Outlook calendars.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-[var(--paper)]/80 border border-[var(--peri)]/80 flex items-start gap-2.5">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-[var(--peri)] grid place-items-center text-[var(--pur)] shrink-0 shadow-2xs mt-0.5">
+                    <Database className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-[var(--deep)]">CRM &amp; Lead Ingestion</h4>
+                    <p className="text-[11px] text-[var(--mute)] leading-relaxed mt-0.5">
+                      Caller names, inquiry topics, and phone numbers are automatically logged into your CRM database.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-[var(--paper)]/80 border border-[var(--peri)]/80 flex items-start gap-2.5">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-[var(--peri)] grid place-items-center text-[var(--pur)] shrink-0 shadow-2xs mt-0.5">
+                    <Smartphone className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-[var(--deep)]">Automated SMS &amp; Webhooks</h4>
+                    <p className="text-[11px] text-[var(--mute)] leading-relaxed mt-0.5">
+                      Dispatches instant text confirmations and reminders to callers so appointments never slip away.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Active Verification Stats Bar */}
+              <div className="p-3 rounded-xl bg-[#0f0e26] text-white space-y-2">
+                <div className="flex items-center justify-between text-[10px] font-mono text-[var(--peri)]">
+                  <span className="flex items-center gap-1.5">
+                    <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                    <span>PRODUCTION TELEMETRY</span>
+                  </span>
+                  <span className="text-emerald-400 font-bold">99.9% Uptime</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-center font-mono">
+                  <div className="p-1.5 rounded bg-white/10">
+                    <span className="text-[8.5px] text-slate-400 block truncate">VOICE LATENCY</span>
+                    <span className="text-xs font-bold text-white">~280ms</span>
+                  </div>
+                  <div className="p-1.5 rounded bg-white/10">
+                    <span className="text-[8.5px] text-slate-400 block truncate">CALENDAR SYNC</span>
+                    <span className="text-xs font-bold text-emerald-400">Instant</span>
+                  </div>
+                  <div className="p-1.5 rounded bg-white/10">
+                    <span className="text-[8.5px] text-slate-400 block truncate">HALLUCINATION</span>
+                    <span className="text-xs font-bold text-[var(--or)]">Guarded</span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Message Thread */}
-            <div className="p-4 flex-1 overflow-y-auto space-y-3 text-xs leading-relaxed">
-              {messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`flex flex-col ${
-                    msg.sender === "customer" ? "items-end" : "items-start"
-                  }`}
-                >
-                  <span className="text-[9px] font-mono text-slate-400 mb-0.5">
-                    {msg.sender === "customer" ? "Caller" : "AI Receptionist"}
-                  </span>
-                  <div
-                    className={`p-3 max-w-[85%] rounded-sm ${
-                      msg.sender === "customer"
-                        ? "bg-[var(--or)] text-[var(--deep)] font-medium rounded-tr-none"
-                        : "bg-white/10 text-white border border-white/10 rounded-tl-none"
-                    }`}
-                  >
-                    {msg.text}
-                  </div>
-                </div>
-              ))}
-              <div ref={chatBottomRef} />
+            {/* Direct CTA at Bottom of Right Panel */}
+            <div className="pt-3 border-t border-[rgba(21,19,74,0.08)]">
+              <Link
+                href="/contact#form"
+                className="btn sm w-full inline-flex items-center justify-center gap-1.5 text-xs font-bold"
+              >
+                <span>Deploy an AI Receptionist for Your Business</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
-
-            {/* Chat Input Bar */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSendMessage();
-              }}
-              className="p-3 bg-black/20 border-t border-white/10 flex items-center gap-2 shrink-0"
-            >
-              <input
-                type="text"
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                placeholder="Ask about hours, fees, or slot availability..."
-                className="flex-1 bg-white/10 border border-white/15 text-white placeholder:text-slate-400 p-2 text-xs rounded-sm focus:outline-none focus:border-[var(--or)]"
-              />
-              <button
-                type="button"
-                onClick={() => setPanelMode("voice")}
-                aria-label="Talk to the receptionist"
-                title="Talk to the receptionist"
-                className="h-8 px-2.5 rounded-sm border border-white/20 bg-white/10 text-white text-[10px] font-mono font-bold flex items-center gap-1.5 hover:bg-white/20 transition-colors cursor-pointer shrink-0"
-              >
-                <Mic className="w-3.5 h-3.5 text-[var(--or)]" />
-                <span className="hidden sm:inline">Talk</span>
-              </button>
-              <button
-                type="submit"
-                aria-label="Send message"
-                className="w-8 h-8 rounded-sm bg-[var(--or)] text-[var(--deep)] grid place-items-center hover:bg-white transition-colors cursor-pointer shrink-0"
-              >
-                <Send className="w-3.5 h-3.5" />
-              </button>
-            </form>
-              </>
-            )}
           </div>
         </div>
       </div>

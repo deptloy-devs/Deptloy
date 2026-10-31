@@ -10,7 +10,7 @@ export type ShowcaseItem = {
   title: string;
   href: string;
   promise: string;
-  forWho: string;
+  forWho?: string;
   included: string[];
   timeline?: string;
   color: string;
@@ -41,7 +41,6 @@ export function ServiceShowcase({ items }: { items: ShowcaseItem[] }) {
           <div>
             <h3>{item.title}</h3>
             <p className="wd-promise">{item.promise}</p>
-            <p className="wd-body">{item.forWho}</p>
             <ul className="wd-list">
               {item.included.map((point) => (
                 <li key={point}>

@@ -130,7 +130,7 @@ export async function POST(req: Request): Promise<Response> {
     const errMsg = err instanceof Error ? err.message : String(err);
     if (errMsg.includes("ResourceExhausted") || errMsg.includes("quota")) {
       return Response.json(
-        { error: "High traffic: Gemini quota temporarily exceeded. Please try again in a moment." },
+        { error: "High traffic: System capacity temporarily reached. Please try again in a moment." },
         { status: 429 }
       );
     }

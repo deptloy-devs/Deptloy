@@ -300,7 +300,7 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
                 <p className="font-display font-bold text-sm tracking-tight text-white leading-tight">Dep</p>
                 <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9.5px] font-mono font-semibold bg-[#fd9150]/20 text-[#fd9150] border border-[#fd9150]/40">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#fd9150] animate-pulse" />
-                  Gemini AI
+                  AI Assistant
                 </span>
               </div>
               <p className="text-[11px] text-[#d2cdf3]">Deptloy Studio Assistant</p>

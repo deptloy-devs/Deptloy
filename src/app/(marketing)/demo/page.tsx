@@ -259,7 +259,7 @@ export default function DemoPage() {
                   </h3>
                   <span className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 font-medium">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    {panelMode === "voice" ? "Live Voice Engine Active" : "Gemini AI Receptionist Active"}
+                    {panelMode === "voice" ? "Live Voice Engine Active" : "AI Receptionist Active"}
                   </span>
                 </div>
               </div>

@@ -24,7 +24,7 @@ export function readMailSettings(env: Env = process.env): MailSettings | null {
   const user = (env.GMAIL_USER || env.EMAIL_USER || "").trim();
   const pass = (env.GMAIL_APP_PASSWORD || env.EMAIL_PASS || "").replace(/\s+/g, "");
   if (!user || !pass) return null;
-  const to = (env.CONTACT_EMAIL || user || "deptloy@gmail.com").trim();
+  const to = (env.CONTACT_EMAIL || user || "contact@deptloy.com").trim();
   return { user, pass, to };
 }
 

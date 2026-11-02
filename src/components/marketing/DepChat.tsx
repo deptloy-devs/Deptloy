@@ -418,39 +418,43 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
             e.preventDefault();
             handleUserSend(inputVal);
           }}
-          className="p-3 bg-white border-t border-[#e8e6f7] flex items-center gap-2 shrink-0"
+          className="p-3 bg-white border-t border-[#e8e6f7] shrink-0"
         >
-          <input
-            ref={inputRef}
-            type="text"
-            value={inputVal}
-            onChange={(e) => setInputVal(e.target.value)}
-            disabled={isStreaming}
-            placeholder={isStreaming ? "Dep is thinking…" : "Ask Dep anything…"}
-            className="flex-1 min-w-0 px-3.5 py-2 text-sm rounded-full border border-[#d2cdf3] bg-[#f4f3fb] focus:outline-none focus:border-[#8478e0] text-[#15134a] disabled:opacity-60"
-          />
-          <button
-            type="button"
-            onClick={handleMicToggle}
-            disabled={isStreaming}
-            className={cn(
-              "w-9 h-9 rounded-full grid place-items-center transition-colors cursor-pointer text-xs disabled:opacity-50 shrink-0",
-              isListening ? "bg-[#fd9150] text-[#15134a] animate-pulse" : "bg-[#e8e6f7] text-[#15134a] hover:bg-[#d2cdf3]"
-            )}
-            title="Speech to text"
-            aria-label="Speech to text"
-          >
-            <Mic className="w-4 h-4" />
-          </button>
-          <button
-            type="submit"
-            disabled={isStreaming || !inputVal.trim()}
-            className="w-9 h-9 rounded-full bg-[#15134a] hover:bg-[#fd9150] text-white hover:text-[#15134a] grid place-items-center transition-colors cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
-            title="Send message"
-            aria-label="Send message"
-          >
-            <Send className="w-4 h-4 ml-0.5" />
-          </button>
+          <div className="flex items-center gap-1.5 bg-[#f4f3fb] border border-[#d2cdf3] rounded-full px-2.5 py-1.5 focus-within:border-[#8478e0] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#8478e0]/20 transition-all">
+            <input
+              ref={inputRef}
+              type="text"
+              value={inputVal}
+              onChange={(e) => setInputVal(e.target.value)}
+              disabled={isStreaming}
+              placeholder={isStreaming ? "Dep is thinking…" : "Ask Dep anything…"}
+              className="flex-1 min-w-0 bg-transparent border-0 outline-none px-1 text-sm text-[#15134a] placeholder:text-slate-400 disabled:opacity-60"
+            />
+            <button
+              type="button"
+              onClick={handleMicToggle}
+              disabled={isStreaming}
+              className={cn(
+                "w-8 h-8 rounded-full grid place-items-center transition-colors cursor-pointer text-xs disabled:opacity-50 shrink-0",
+                isListening
+                  ? "bg-[#fd9150] text-[#15134a] animate-pulse"
+                  : "bg-transparent hover:bg-[#e8e6f7] text-[#8478e0]"
+              )}
+              title="Speech to text"
+              aria-label="Speech to text"
+            >
+              <Mic className="w-4 h-4" />
+            </button>
+            <button
+              type="submit"
+              disabled={isStreaming || !inputVal.trim()}
+              className="w-8 h-8 rounded-full bg-[#15134a] hover:bg-[#fd9150] text-white hover:text-[#15134a] grid place-items-center transition-colors cursor-pointer shrink-0 disabled:opacity-30 disabled:cursor-not-allowed shadow-xs"
+              title="Send message"
+              aria-label="Send message"
+            >
+              <Send className="w-3.5 h-3.5 ml-0.5" />
+            </button>
+          </div>
         </form>
       </div>
     </DepChatContext.Provider>

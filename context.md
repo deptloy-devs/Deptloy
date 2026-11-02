@@ -2,7 +2,7 @@
 
 > **Target Audience**: AI Coding Assistants, Codex, Developers, and LLM Agents working on the Deptloy codebase.  
 > **Repository**: [https://github.com/deptloy-devs/Deptloy](https://github.com/deptloy-devs/Deptloy)  
-> **Contact / Lead Routing**: `deptloy@gmail.com`  
+> **Contact / Lead Routing**: `contact@deptloy.com`  
 > **Tagline**: *"Software built to outlast the hype."* / *"Let AI Handle the Busywork. You Build the Business."*
 
 ---
@@ -112,7 +112,7 @@ Deptloy designs specialized system blueprints for sectors running on high-stakes
 ## 5. Contact, Quote Ingestion & Backend Routing
 
 ### Business Lead Destination
-- **Official Lead Recipient**: `deptloy@gmail.com`
+- **Official Lead Recipient**: `contact@deptloy.com`
 - **Response SLA**: Sub-4 hour response time on business days.
 - **Quote Form Philosophy**: **Minimal & Frictionless**.
   - Fields: **Name**, **Email** (never "Business Email"), and **Message / Project Details** ("What would you like to improve?").
@@ -120,7 +120,7 @@ Deptloy designs specialized system blueprints for sectors running on high-stakes
   - Zero bloated fields (no estimate range, no desired rollout timeline selects).
 
 ### Backend Lead Ingestion (`src/app/api/contact/route.ts`)
-- **Direct Web Dispatch**: Utilizes FormSubmit / custom HTTP dispatch to deliver clean lead records directly to `deptloy@gmail.com` with `_replyto` set to the customer's email.
+- **Direct Web Dispatch**: Utilizes FormSubmit / custom HTTP dispatch to deliver clean lead records directly to `contact@deptloy.com` with `_replyto` set to the customer's email.
 - **Production SMTP / Resend Support**: Seamlessly dispatches via `GMAIL_APP_PASSWORD` or `RESEND_API_KEY` if configured in `.env.local` / host environment.
 - **Local Persistence Fail-Safe**: Every inquiry is automatically written to `data/leads.json` so no lead is ever lost even during network downtime.
 - **Routing Structure**: All contact links across the site navigate to the canonical `#contact` anchor.
@@ -177,7 +177,7 @@ Deptloy/
     │   │   ├── contact/page.tsx  # Direct quote form & appointment scheduler
     │   │   └── demo/page.tsx     # Interactive AI receptionist simulator
     │   ├── api/
-    │   │   └── contact/route.ts  # Quote ingestion & dispatch to deptloy@gmail.com
+    │   │   └── contact/route.ts  # Quote ingestion & dispatch to contact@deptloy.com
     │   └── dashboard/page.tsx    # Interactive client administrative analytics demo
     ├── components/
     │   ├── marketing/
@@ -216,7 +216,7 @@ When modifying or generating code for Deptloy, all agents and developers **MUST*
 2. **Contact Form Minimalism**:
    - The contact form is always a minimal 3-field quote form (`name`, `email`, `message`) with the submit button labeled **"Get the quote"**.
    - The email field must always be labeled **"Email"** (never "Business Email").
-   - Quote leads must always route to **`deptloy@gmail.com`**.
+   - Quote leads must always route to **`contact@deptloy.com`**.
 3. **Styling & CSS Separation**:
    - Custom tokens, chamfered clips, and keyframes live in [`src/app/design.css`](file:///Users/ahmad/Documents/Deptloy/src/app/design.css).
    - Tailwind utility styles live in [`src/app/globals.css`](file:///Users/ahmad/Documents/Deptloy/src/app/globals.css).

@@ -68,7 +68,7 @@ export default function ContactPage() {
       e.stopPropagation();
     }
     if (typeof navigator !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText("deptloy@gmail.com");
+      navigator.clipboard.writeText("contact@deptloy.com");
       setCopiedEmail(true);
       setTimeout(() => setCopiedEmail(false), 2000);
     }
@@ -91,7 +91,7 @@ export default function ContactPage() {
   };
 
   const openEmail = () => {
-    window.location.href = "mailto:deptloy@gmail.com";
+    window.location.href = "mailto:contact@deptloy.com";
   };
 
   // Handle Quote Submit
@@ -127,7 +127,7 @@ export default function ContactPage() {
       const msg =
         err instanceof Error
           ? err.message
-          : "Could not deliver your inquiry. Please try again or email deptloy@gmail.com directly.";
+          : "Could not deliver your inquiry. Please try again or email contact@deptloy.com directly.";
       setQuoteError(msg);
     }
   };
@@ -168,7 +168,7 @@ export default function ContactPage() {
                     <p className="text-sm text-[var(--mute)] max-w-md mx-auto mt-2 leading-relaxed">
                       Thank you, <strong className="text-[var(--deep)]">{quoteName}</strong>. Your project inquiry has
                       been dispatched to our engineering team at{" "}
-                      <strong className="text-[var(--deep)]">deptloy@gmail.com</strong>.
+                      <strong className="text-[var(--deep)]">contact@deptloy.com</strong>.
                     </p>
                   </div>
 
@@ -374,7 +374,7 @@ export default function ContactPage() {
                     openEmail();
                   }
                 }}
-                aria-label="Send email to deptloy@gmail.com"
+                aria-label="Send email to contact@deptloy.com"
                 className="p-3.5 rounded-xl border border-[rgba(21,19,74,0.1)] bg-[var(--paper)]/50 hover:bg-white hover:border-[var(--or)] hover:shadow-[0_6px_20px_rgba(253,145,80,0.12)] transition-all duration-200 cursor-pointer group select-none"
               >
                 <div className="flex items-center justify-between gap-2">
@@ -411,7 +411,7 @@ export default function ContactPage() {
                   </button>
 
                   <span className="text-sm sm:text-base font-bold text-[var(--deep)] group-hover:text-[var(--or)] tracking-tight transition-colors break-all">
-                    deptloy@gmail.com
+                    contact@deptloy.com
                   </span>
 
                   {copiedEmail && (

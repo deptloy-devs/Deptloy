@@ -15,7 +15,7 @@ export const brand = {
   heroHeadline: "Let AI Handle the Busywork. You Build the Business.",
   heroSubheadline:
     "AI receptionists, intelligent automation, CRM pipelines, and custom software that capture every inbound lead, eliminate manual coordination, and scale your operations 24/7.",
-  contactEmail: "deptloy@gmail.com",
+  contactEmail: "contact@deptloy.com",
   phone: "+1 (888) 433-7856",
   address: "San Francisco, CA & Global Remote",
 };

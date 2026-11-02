@@ -425,8 +425,8 @@ export default function PrivacyPage() {
             </ul>
             <div className="p-4 bg-[var(--paper)] rounded-xl border border-[var(--peri)] text-xs text-[var(--mute)]">
               To exercise any of these statutory rights, please send an email to{" "}
-              <a href="mailto:deptloy@gmail.com" className="text-[var(--pur)] font-bold hover:underline">
-                deptloy@gmail.com
+              <a href="mailto:contact@deptloy.com" className="text-[var(--pur)] font-bold hover:underline">
+                contact@deptloy.com
               </a>
               . We verify identity prior to fulfilling requests and respond within thirty (30) days.
             </div>
@@ -472,11 +472,11 @@ export default function PrivacyPage() {
 
             <div className="flex flex-wrap items-center gap-3 pt-1 text-xs sm:text-sm">
               <a
-                href="mailto:deptloy@gmail.com"
+                href="mailto:contact@deptloy.com"
                 className="inline-flex items-center gap-2 text-[var(--deep)] font-semibold hover:text-[var(--or)] transition-colors p-2.5 sm:px-3.5 bg-[var(--paper)] rounded-lg border border-[var(--peri)]"
               >
                 <Mail className="w-4 h-4 text-[var(--or)]" />
-                <span>deptloy@gmail.com</span>
+                <span>contact@deptloy.com</span>
               </a>
 
               <a

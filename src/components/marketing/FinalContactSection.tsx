@@ -39,7 +39,7 @@ export function FinalContactSection() {
       throw new Error(data.error || "Failed to deliver quote request.");
     } catch (err) {
       setStatus("error");
-      const msg = err instanceof Error ? err.message : "Could not deliver your inquiry. Please try again or email deptloy@gmail.com directly.";
+      const msg = err instanceof Error ? err.message : "Could not deliver your inquiry. Please try again or email contact@deptloy.com directly.";
       setErrorMsg(msg);
     }
   };
@@ -112,7 +112,7 @@ export function FinalContactSection() {
 
             <p style={{ fontSize: "15px", color: "var(--mute)", margin: "4px 0 10px", lineHeight: 1.5 }}>
               Thank you, <strong>{name}</strong>. Your request was delivered directly to{" "}
-              <strong style={{ color: "var(--deep)" }}>deptloy@gmail.com</strong>. We’ll review your inquiry and reply within 4 hours.
+              <strong style={{ color: "var(--deep)" }}>contact@deptloy.com</strong>. We’ll review your inquiry and reply within 4 hours.
             </p>
 
             <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center" }}>
@@ -125,7 +125,7 @@ export function FinalContactSection() {
                 Submit another inquiry
               </button>
               <a
-                href={`mailto:deptloy@gmail.com?subject=Quote%20Inquiry%20from%20${encodeURIComponent(name)}%20(${submissionId})&body=${encodeURIComponent(message)}`}
+                href={`mailto:contact@deptloy.com?subject=Quote%20Inquiry%20from%20${encodeURIComponent(name)}%20(${submissionId})&body=${encodeURIComponent(message)}`}
                 className="btn sm"
                 style={{ borderRadius: "99px", background: "var(--or)", color: "var(--deep)" }}
               >
@@ -180,10 +180,10 @@ export function FinalContactSection() {
                 {errorMsg}
                 <div style={{ marginTop: "6px" }}>
                   <a
-                    href={`mailto:deptloy@gmail.com?subject=Inquiry%20from%20${encodeURIComponent(name)}&body=${encodeURIComponent(message)}`}
+                    href={`mailto:contact@deptloy.com?subject=Inquiry%20from%20${encodeURIComponent(name)}&body=${encodeURIComponent(message)}`}
                     style={{ textDecoration: "underline", fontWeight: 700, color: "var(--deep)" }}
                   >
-                    Click here to send directly to deptloy@gmail.com
+                    Click here to send directly to contact@deptloy.com
                   </a>
                 </div>
               </div>

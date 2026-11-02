@@ -95,7 +95,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           error:
-            "Email service is currently unconfigured on the server. Please contact deptloy@gmail.com directly while we configure server credentials.",
+            "Email service is currently unconfigured on the server. Please contact contact@deptloy.com directly while we configure server credentials.",
         },
         { status: 503 }
       );
@@ -125,7 +125,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           error:
-            "Failed to send email. Please check server credentials or email deptloy@gmail.com directly.",
+            "Failed to send email. Please check server credentials or email contact@deptloy.com directly.",
         },
         { status: 500 }
       );
@@ -160,7 +160,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          "An unexpected error occurred while processing your request. Please try again or email deptloy@gmail.com directly.",
+          "An unexpected error occurred while processing your request. Please try again or email contact@deptloy.com directly.",
       },
       { status: 500 }
     );

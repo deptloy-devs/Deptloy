@@ -2431,7 +2431,7 @@ h2 {
   background: #fff;
 }
 
-form {
+.final form {
   background: #fff;
   color: var(--deep);
   border-radius: 0;
@@ -2442,7 +2442,7 @@ form {
   box-shadow: 0 30px 80px rgba(21, 19, 74, 0.3);
 }
 
-form input, form textarea {
+.final form input, .final form textarea {
   width: 100%;
   border: 1.5px solid var(--peri);
   border-radius: 0;
@@ -2451,13 +2451,13 @@ form input, form textarea {
   resize: none;
 }
 
-form input:focus, form textarea:focus {
+.final form input:focus, .final form textarea:focus {
   outline: 0;
   border-color: var(--pur);
   background: #fff;
 }
 
-form .btn {
+.final form .btn {
   justify-content: center;
   width: 100%;
 }

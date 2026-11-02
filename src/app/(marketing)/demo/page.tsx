@@ -401,34 +401,41 @@ export default function DemoPage() {
                     e.preventDefault();
                     handleSendMessage();
                   }}
-                  className="p-3 bg-black/25 border-t border-white/10 flex items-center gap-2 shrink-0"
+                  className="p-3 bg-black/40 border-t border-white/10 shrink-0"
                 >
-                  <input
-                    type="text"
-                    value={inputMessage}
-                    onChange={(e) => setInputMessage(e.target.value)}
-                    disabled={isStreaming}
-                    placeholder={isStreaming ? "Receptionist is replying…" : "Ask about hours, fees, or slot availability..."}
-                    className="flex-1 bg-white/10 border border-white/15 text-white placeholder:text-slate-400 px-3 py-2 text-xs rounded-lg focus:outline-none focus:border-[var(--or)] transition-colors disabled:opacity-60"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setPanelMode("voice")}
-                    aria-label="Talk to the receptionist"
-                    title="Talk to the receptionist"
-                    className="h-8 px-2.5 rounded-lg border border-white/20 bg-white/10 text-white text-[10.5px] font-mono font-bold flex items-center gap-1.5 hover:bg-white/20 transition-colors cursor-pointer shrink-0"
-                  >
-                    <Mic className="w-3.5 h-3.5 text-[var(--or)]" />
-                    <span className="hidden sm:inline">Talk</span>
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isStreaming || !inputMessage.trim()}
-                    aria-label="Send message"
-                    className="w-8 h-8 rounded-lg bg-[var(--or)] text-[var(--deep)] grid place-items-center hover:bg-white transition-colors cursor-pointer shrink-0 shadow-xs disabled:opacity-40 disabled:cursor-not-allowed"
-                  >
-                    <Send className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="flex items-center gap-2 bg-white/10 border border-white/15 focus-within:border-[var(--or)] focus-within:bg-black/60 focus-within:ring-2 focus-within:ring-[var(--or)]/20 rounded-full px-3 py-1.5 transition-all">
+                    <input
+                      type="text"
+                      value={inputMessage}
+                      onChange={(e) => setInputMessage(e.target.value)}
+                      disabled={isStreaming}
+                      placeholder={
+                        isStreaming
+                          ? "Receptionist is replying…"
+                          : "Ask about hours, fees, or slot availability..."
+                      }
+                      className="flex-1 min-w-0 bg-transparent border-0 outline-none text-white placeholder:text-slate-400 text-xs py-1 disabled:opacity-60"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setPanelMode("voice")}
+                      aria-label="Talk to the receptionist with voice"
+                      title="Switch to live voice call"
+                      className="h-7 px-2.5 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white text-[10.5px] font-mono font-bold flex items-center gap-1.5 transition-colors cursor-pointer shrink-0"
+                    >
+                      <Mic className="w-3.5 h-3.5 text-[var(--or)]" />
+                      <span className="hidden sm:inline">Voice</span>
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isStreaming || !inputMessage.trim()}
+                      aria-label="Send message"
+                      title="Send message"
+                      className="w-7 h-7 rounded-full bg-[var(--or)] text-[var(--deep)] grid place-items-center hover:bg-white transition-colors cursor-pointer shrink-0 shadow-xs disabled:opacity-35 disabled:cursor-not-allowed"
+                    >
+                      <Send className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </form>
               </>
             )}

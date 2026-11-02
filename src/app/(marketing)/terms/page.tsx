@@ -435,11 +435,11 @@ export default function TermsPage() {
 
             <div className="flex flex-wrap items-center gap-3 pt-1 text-xs sm:text-sm">
               <a
-                href="mailto:deptloy@gmail.com"
+                href="mailto:contact@deptloy.com"
                 className="inline-flex items-center gap-2 text-[var(--deep)] font-semibold hover:text-[var(--or)] transition-colors p-2.5 sm:px-3.5 bg-[var(--paper)] rounded-lg border border-[var(--peri)]"
               >
                 <Mail className="w-4 h-4 text-[var(--or)]" />
-                <span>deptloy@gmail.com</span>
+                <span>contact@deptloy.com</span>
               </a>
 
               <a

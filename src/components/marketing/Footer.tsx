@@ -35,7 +35,7 @@ export function Footer() {
           <Link href="/about">About Studio</Link>
           <Link href="/blogs">Engineering Blogs</Link>
           <Link href="/contact#form">Let&apos;s Connect</Link>
-          <a href="mailto:deptloy@gmail.com">deptloy@gmail.com</a>
+          <a href="mailto:contact@deptloy.com">contact@deptloy.com</a>
         </div>
 
         <div className="cp flex flex-wrap items-center justify-between gap-4">

@@ -4,24 +4,29 @@ import * as React from "react";
 import Link from "next/link";
 import {
   Mail,
-  Phone,
-  Clock,
   Sparkles,
   ArrowRight,
+  ArrowUpRight,
   ShieldCheck,
   Send,
   CheckCircle2,
   Copy,
   Check,
-  Lock,
-  Headphones,
+  Code2,
 } from "lucide-react";
 
-const TIME_SLOTS = [
-  "Morning (9 AM–12 PM)",
-  "Afternoon (12–5 PM)",
-  "Evening (5–8 PM)",
-];
+function WhatsAppIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+    </svg>
+  );
+}
 
 export default function ContactPage() {
   // Form State
@@ -29,11 +34,6 @@ export default function ContactPage() {
   const [quoteEmail, setQuoteEmail] = React.useState("");
   const [quoteCompany, setQuoteCompany] = React.useState("");
   const [quoteMessage, setQuoteMessage] = React.useState("");
-
-  // Preferred Date & Time preferences (from picture)
-  const [selectedDate, setSelectedDate] = React.useState("");
-  const [preferredTimeZone, setPreferredTimeZone] = React.useState("");
-  const [selectedSlot, setSelectedSlot] = React.useState(TIME_SLOTS[0]);
 
   const [quoteStatus, setQuoteStatus] = React.useState<"idle" | "submitting" | "success" | "error">("idle");
   const [quoteRefId, setQuoteRefId] = React.useState("");
@@ -62,7 +62,11 @@ export default function ContactPage() {
     return () => window.removeEventListener("hashchange", handleHash);
   }, []);
 
-  const handleCopyEmail = () => {
+  const handleCopyEmail = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText("deptloy@gmail.com");
       setCopiedEmail(true);
@@ -70,12 +74,24 @@ export default function ContactPage() {
     }
   };
 
-  const handleCopyPhone = () => {
+  const handleCopyPhone = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText("+14743491561");
       setCopiedPhone(true);
       setTimeout(() => setCopiedPhone(false), 2000);
     }
+  };
+
+  const openWhatsApp = () => {
+    window.open("https://wa.me/14743491561", "_blank", "noopener,noreferrer");
+  };
+
+  const openEmail = () => {
+    window.location.href = "mailto:deptloy@gmail.com";
   };
 
   // Handle Quote Submit
@@ -86,18 +102,6 @@ export default function ContactPage() {
 
     const refId = `DEP-${Math.floor(100000 + Math.random() * 900000)}`;
 
-    const timingDetails = [
-      selectedDate ? `Preferred Date: ${selectedDate}` : null,
-      selectedSlot ? `Window: ${selectedSlot}` : null,
-      preferredTimeZone ? `Time Zone: ${preferredTimeZone}` : null,
-    ]
-      .filter(Boolean)
-      .join(" | ");
-
-    const finalMessage = timingDetails
-      ? `${quoteMessage.trim()}\n\n[Suggested Timing: ${timingDetails}]`
-      : quoteMessage.trim();
-
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
@@ -106,8 +110,8 @@ export default function ContactPage() {
           fullName: quoteName,
           email: quoteEmail,
           companyName: quoteCompany || "Direct Inquiry",
-          serviceRequired: timingDetails ? "Project Inquiry & Consultation" : "Project Inquiry",
-          message: finalMessage,
+          serviceRequired: "Project Inquiry",
+          message: quoteMessage.trim(),
         }),
       });
 
@@ -129,206 +133,26 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="pt-24 sm:pt-28 lg:pt-32 pb-14 sm:pb-20">
+    <div className="pt-12 sm:pt-16 lg:pt-20 pb-10 sm:pb-14">
       <div className="wrap">
-        {/* Responsive Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-start">
-          {/* Left Column: Direct Channels & Trust (order-2 on mobile so form appears first) */}
-          <div className="order-2 lg:order-1 lg:col-span-5 space-y-6">
-            {/* Direct Engineering Channels Card */}
-            <div className="bg-white border border-[rgba(21,19,74,0.12)] p-6 sm:p-7 rounded-2xl shadow-[0_12px_36px_rgba(87,80,168,0.06)] space-y-5">
-              <div className="flex items-center justify-between border-b border-[var(--mist)] pb-3.5">
-                <span
-                  style={{ fontSize: "11px", letterSpacing: "0.08em" }}
-                  className="font-mono font-bold uppercase text-[var(--pur)]"
-                >
-                  Direct Engineering Channels
-                </span>
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[#16875b] bg-[#16875b]/10 px-2.5 py-0.5 rounded-full">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#16875b]" />
-                  Active
-                </span>
-              </div>
+        {/* Page Header (Tightened gap, no extra paragraph) */}
+        <div className="mb-3 sm:mb-4">
+          <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-[var(--or)]">
+            Get In Touch
+          </span>
+          <h1
+            style={{ fontSize: "clamp(26px, 3.8vw, 38px)", fontWeight: 800, lineHeight: 1.15 }}
+            className="text-[var(--deep)] mt-1 tracking-tight"
+          >
+            Let&apos;s Connect
+          </h1>
+        </div>
 
-              <ul className="space-y-4">
-                {/* Phone Channel */}
-                <li className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[var(--paper)] border border-[var(--peri)] grid place-items-center text-[var(--deep)] shrink-0 mt-0.5">
-                    <Phone className="w-4 h-4 text-[#3ccf91]" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <span className="block text-[11px] font-mono font-semibold uppercase tracking-wider text-[var(--mute)]">
-                      Direct Phone &amp; SMS
-                    </span>
-                    <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                      <a
-                        href="tel:+14743491561"
-                        className="text-sm font-bold text-[var(--deep)] hover:text-[var(--or)] transition-colors"
-                      >
-                        +1 (474) 349-1561
-                      </a>
-                      <button
-                        type="button"
-                        onClick={handleCopyPhone}
-                        className="inline-flex items-center gap-1 text-[11px] font-mono text-[var(--mute)] hover:text-[var(--deep)] bg-[var(--paper)] border border-[var(--peri)] px-2 py-0.5 rounded hover:border-[var(--pur)] transition-colors cursor-pointer"
-                        title="Copy phone number to clipboard"
-                      >
-                        {copiedPhone ? (
-                          <>
-                            <Check className="w-3 h-3 text-[#16875b]" />
-                            <span className="text-[#16875b]">Copied</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-3 h-3" />
-                            <span>Copy</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </li>
-
-                {/* Email Channel */}
-                <li className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[var(--paper)] border border-[var(--peri)] grid place-items-center text-[var(--deep)] shrink-0 mt-0.5">
-                    <Mail className="w-4 h-4 text-[var(--or)]" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <span className="block text-[11px] font-mono font-semibold uppercase tracking-wider text-[var(--mute)]">
-                      Primary Engineering Inquiries
-                    </span>
-                    <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                      <a
-                        href="mailto:deptloy@gmail.com"
-                        className="text-sm font-bold text-[var(--deep)] hover:text-[var(--or)] transition-colors break-all"
-                      >
-                        deptloy@gmail.com
-                      </a>
-                      <button
-                        type="button"
-                        onClick={handleCopyEmail}
-                        className="inline-flex items-center gap-1 text-[11px] font-mono text-[var(--mute)] hover:text-[var(--deep)] bg-[var(--paper)] border border-[var(--peri)] px-2 py-0.5 rounded hover:border-[var(--pur)] transition-colors cursor-pointer"
-                        title="Copy email to clipboard"
-                      >
-                        {copiedEmail ? (
-                          <>
-                            <Check className="w-3 h-3 text-[#16875b]" />
-                            <span className="text-[#16875b]">Copied</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-3 h-3" />
-                            <span>Copy</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </li>
-
-                {/* Response SLA */}
-                <li className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[var(--paper)] border border-[var(--peri)] grid place-items-center text-[var(--deep)] shrink-0 mt-0.5">
-                    <Clock className="w-4 h-4 text-[var(--lav)]" />
-                  </div>
-                  <div>
-                    <span className="block text-[11px] font-mono font-semibold uppercase tracking-wider text-[var(--mute)]">
-                      Engineering Response SLA
-                    </span>
-                    <span className="text-sm font-semibold text-[var(--deep)]">
-                      Monday – Friday • Within 4 Hours
-                    </span>
-                  </div>
-                </li>
-
-                {/* Turnkey Scope Guarantee */}
-                <li className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[var(--paper)] border border-[var(--peri)] grid place-items-center text-[var(--deep)] shrink-0 mt-0.5">
-                    <ShieldCheck className="w-4 h-4 text-[#16875b]" />
-                  </div>
-                  <div>
-                    <span className="block text-[11px] font-mono font-semibold uppercase tracking-wider text-[var(--mute)]">
-                      Scope Guarantee
-                    </span>
-                    <span className="text-sm font-semibold text-[var(--deep)]">
-                      Fixed Turnkey Architecture • Transparent Milestones
-                    </span>
-                  </div>
-                </li>
-
-                {/* Direct Consultation */}
-                <li className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[var(--paper)] border border-[var(--peri)] grid place-items-center text-[var(--deep)] shrink-0 mt-0.5">
-                    <Headphones className="w-4 h-4 text-[var(--pur)]" />
-                  </div>
-                  <div>
-                    <span className="block text-[11px] font-mono font-semibold uppercase tracking-wider text-[var(--mute)]">
-                      Technical Discovery
-                    </span>
-                    <span className="text-sm font-semibold text-[var(--deep)]">
-                      Direct review with senior systems architects
-                    </span>
-                  </div>
-                </li>
-              </ul>
-            </div>
-
-            {/* Interactive Voice Demo Callout Card */}
-            <div className="bg-[var(--deep)] text-white p-6 sm:p-7 rounded-2xl relative overflow-hidden shadow-[0_16px_40px_rgba(21,19,74,0.18)]">
-              {/* Radial gradient glow */}
-              <div
-                className="absolute top-0 right-0 w-64 h-64 rounded-full pointer-events-none opacity-20"
-                style={{
-                  background: "radial-gradient(circle, var(--lav) 0%, transparent 70%)",
-                  transform: "translate(30%, -30%)",
-                }}
-              />
-
-              <div className="relative z-10 space-y-3">
-                <div className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--peri)]">
-                  <Sparkles className="w-3.5 h-3.5 text-[var(--or)]" />
-                  <span>Interactive Voice Demo</span>
-                </div>
-                <h3
-                  style={{ fontSize: "18px", fontWeight: 700, lineHeight: 1.25 }}
-                  className="text-white"
-                >
-                  Experience our AI receptionist live
-                </h3>
-                <p className="text-xs sm:text-sm text-[#cfd2ee] leading-relaxed">
-                  Test conversational caller intake, dynamic calendar availability, and CRM sync directly in your
-                  browser.
-                </p>
-                <div className="pt-1">
-                  <Link
-                    href="/demo"
-                    className="btn sm inline-flex items-center gap-2"
-                    style={{ background: "var(--or)", color: "var(--deep)", fontWeight: 700 }}
-                  >
-                    <span>Test AI Receptionist</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Studio Principles Card */}
-            <div className="bg-[var(--paper)] border border-[var(--peri)] rounded-2xl p-5 space-y-2.5 text-xs text-[var(--mute)]">
-              <div className="font-mono font-bold uppercase tracking-wider text-[var(--deep)] text-[11px] flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-[#16875b]" />
-                <span>Client Privacy &amp; Data Sovereignty</span>
-              </div>
-              <p className="leading-relaxed">
-                We never train third-party public models on client data. You retain 100% intellectual property ownership
-                of all custom code, workflows, and database schemas.
-              </p>
-            </div>
-          </div>
-
-          {/* Right Column: Project Inquiry Form (order-1 on mobile so it displays directly at the top) */}
-          <div className="order-1 lg:order-2 lg:col-span-7" id="form" style={{ scrollMarginTop: "105px" }}>
-            <div className="bg-white border border-[rgba(21,19,74,0.12)] p-6 sm:p-8 lg:p-10 rounded-2xl shadow-[0_20px_50px_rgba(87,80,168,0.08)]">
+        {/* Responsive Grid: Form on Left (col-span-7), Direct Channels Card on Right (col-span-5) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-7 lg:gap-8 items-start">
+          {/* Left Column: Project Inquiry Form */}
+          <div className="order-1 lg:col-span-7" id="form" style={{ scrollMarginTop: "90px" }}>
+            <div className="bg-white border border-[rgba(21,19,74,0.12)] p-5 sm:p-7 rounded-2xl shadow-[0_16px_45px_rgba(87,80,168,0.07)]">
               {quoteStatus === "success" ? (
                 <div className="text-center py-8 sm:py-12 space-y-5">
                   <div className="w-16 h-16 rounded-full bg-[#16875b]/12 text-[#16875b] grid place-items-center mx-auto ring-8 ring-[#16875b]/5">
@@ -362,8 +186,6 @@ export default function ContactPage() {
                         setQuoteEmail("");
                         setQuoteCompany("");
                         setQuoteMessage("");
-                        setSelectedDate("");
-                        setPreferredTimeZone("");
                       }}
                       className="btn sm ghost"
                     >
@@ -372,24 +194,19 @@ export default function ContactPage() {
                   </div>
                 </div>
               ) : (
-                <form onSubmit={handleQuoteSubmit} className="space-y-5">
-                  {/* Form Header */}
-                  <div className="border-b border-[var(--mist)] pb-4">
-                    <h1
-                      style={{ fontSize: "clamp(22px, 2.5vw, 26px)", fontWeight: 800, lineHeight: 1.2 }}
-                      className="text-[var(--deep)]"
-                    >
-                      Tell Us About Your Project
-                    </h1>
-                    <p className="text-xs sm:text-sm text-[var(--mute)] mt-1.5 leading-relaxed">
-                      Share your requirements below. Our principal engineers review every inquiry and reply within 4 hours.
+                <form onSubmit={handleQuoteSubmit} className="space-y-3.5">
+                  {/* Form Header: Shortened, concise, no excessive gaps */}
+                  <div className="border-b border-[var(--mist)] pb-3 mb-1">
+                    <p className="text-sm sm:text-[14.5px] text-[var(--deep)] leading-snug font-medium">
+                      Have a project in mind, an operational bottleneck to automate, or need an AI receptionist?{" "}
+                      <span className="font-bold text-[var(--pur)]">Let&apos;s discuss.</span>
                     </p>
                   </div>
 
                   {/* Name and Email Fields */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                     <div>
-                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--mute)] mb-1.5">
+                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--mute)] mb-1">
                         Your Name *
                       </label>
                       <input
@@ -398,12 +215,12 @@ export default function ContactPage() {
                         value={quoteName}
                         onChange={(e) => setQuoteName(e.target.value)}
                         placeholder="e.g. Jordan Hayes"
-                        className="w-full bg-[var(--paper)] border border-[var(--peri)] p-3 text-[16px] sm:text-sm rounded-xl focus:outline-none focus:bg-white focus:border-[var(--pur)] focus:ring-2 focus:ring-[var(--pur)]/15 transition-all"
+                        className="w-full bg-[var(--paper)] border border-[var(--peri)] p-2.5 sm:p-3 text-[15px] sm:text-sm rounded-xl focus:outline-none focus:bg-white focus:border-[var(--pur)] focus:ring-2 focus:ring-[var(--pur)]/15 transition-all text-[var(--deep)]"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--mute)] mb-1.5">
+                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--mute)] mb-1">
                         Email *
                       </label>
                       <input
@@ -412,14 +229,14 @@ export default function ContactPage() {
                         value={quoteEmail}
                         onChange={(e) => setQuoteEmail(e.target.value)}
                         placeholder="jordan@company.com"
-                        className="w-full bg-[var(--paper)] border border-[var(--peri)] p-3 text-[16px] sm:text-sm rounded-xl focus:outline-none focus:bg-white focus:border-[var(--pur)] focus:ring-2 focus:ring-[var(--pur)]/15 transition-all"
+                        className="w-full bg-[var(--paper)] border border-[var(--peri)] p-2.5 sm:p-3 text-[15px] sm:text-sm rounded-xl focus:outline-none focus:bg-white focus:border-[var(--pur)] focus:ring-2 focus:ring-[var(--pur)]/15 transition-all text-[var(--deep)]"
                       />
                     </div>
                   </div>
 
                   {/* Company / Organization (Optional) */}
                   <div>
-                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--mute)] mb-1.5">
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--mute)] mb-1">
                       Company or Project Name (Optional)
                     </label>
                     <input
@@ -427,62 +244,13 @@ export default function ContactPage() {
                       value={quoteCompany}
                       onChange={(e) => setQuoteCompany(e.target.value)}
                       placeholder="e.g. Acme Health or Startup Idea"
-                      className="w-full bg-[var(--paper)] border border-[var(--peri)] p-3 text-[16px] sm:text-sm rounded-xl focus:outline-none focus:bg-white focus:border-[var(--pur)] focus:ring-2 focus:ring-[var(--pur)]/15 transition-all"
+                      className="w-full bg-[var(--paper)] border border-[var(--peri)] p-2.5 sm:p-3 text-[15px] sm:text-sm rounded-xl focus:outline-none focus:bg-white focus:border-[var(--pur)] focus:ring-2 focus:ring-[var(--pur)]/15 transition-all text-[var(--deep)]"
                     />
                   </div>
 
-                  {/* Suggest a Date and Time preferences (from picture) */}
-                  <div className="pt-2 border-t border-[var(--mist)] space-y-2.5">
-                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--mute)]">
-                      Suggest a Date and Time (Optional)
-                    </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <input
-                        type="date"
-                        value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                        aria-label="Preferred call date"
-                        className="w-full bg-[var(--paper)] border border-[var(--peri)] p-3 text-[16px] sm:text-sm rounded-xl focus:outline-none focus:bg-white focus:border-[var(--pur)] focus:ring-2 focus:ring-[var(--pur)]/15 transition-all text-[var(--deep)]"
-                      />
-                      <input
-                        type="text"
-                        value={preferredTimeZone}
-                        onChange={(e) => setPreferredTimeZone(e.target.value)}
-                        placeholder="Your time zone (e.g. PKT, UTC+5)"
-                        aria-label="Your time zone"
-                        className="w-full bg-[var(--paper)] border border-[var(--peri)] p-3 text-[16px] sm:text-sm rounded-xl focus:outline-none focus:bg-white focus:border-[var(--pur)] focus:ring-2 focus:ring-[var(--pur)]/15 transition-all"
-                      />
-                    </div>
-
-                    {/* Preferred Time Window Slots */}
-                    <div className="flex flex-wrap gap-2 pt-1">
-                      {TIME_SLOTS.map((slot) => {
-                        const isSelected = selectedSlot === slot;
-                        return (
-                          <button
-                            key={slot}
-                            type="button"
-                            onClick={() => setSelectedSlot(isSelected ? "" : slot)}
-                            className={`px-3.5 py-2 text-xs font-mono font-semibold rounded-lg border transition-all cursor-pointer ${
-                              isSelected
-                                ? "bg-[var(--deep)] text-white border-[var(--deep)] shadow-sm"
-                                : "bg-[var(--paper)] text-[var(--deep)] border-[var(--peri)] hover:border-[var(--deep)] hover:bg-white"
-                            }`}
-                          >
-                            {slot}
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    <p className="text-xs text-[var(--mute)] leading-relaxed">
-                      These are preferences, not real-time available slots. We will confirm the date and time by email.
-                    </p>
-                  </div>
-
                   {/* Project Details */}
-                  <div className="pt-2 border-t border-[var(--mist)]">
-                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--mute)] mb-1.5">
+                  <div>
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--mute)] mb-1">
                       Project Details &amp; Goals *
                     </label>
                     <textarea
@@ -490,26 +258,26 @@ export default function ContactPage() {
                       rows={4}
                       value={quoteMessage}
                       onChange={(e) => setQuoteMessage(e.target.value)}
-                      placeholder="Describe what you want to build, current operational bottlenecks, integrations needed (e.g. CRM, Calendly, Postgres), or desired launch timeline..."
-                      className="w-full bg-[var(--paper)] border border-[var(--peri)] p-3 text-[16px] sm:text-sm rounded-xl focus:outline-none focus:bg-white focus:border-[var(--pur)] focus:ring-2 focus:ring-[var(--pur)]/15 transition-all leading-relaxed"
+                      placeholder="Describe what you want to build, current operational bottlenecks, systems to connect (e.g. CRM, Calendly, Postgres, AI phone line), or your target launch timeline..."
+                      className="w-full bg-[var(--paper)] border border-[var(--peri)] p-2.5 sm:p-3 text-[15px] sm:text-sm rounded-xl focus:outline-none focus:bg-white focus:border-[var(--pur)] focus:ring-2 focus:ring-[var(--pur)]/15 transition-all leading-relaxed text-[var(--deep)]"
                     />
                   </div>
 
                   {quoteStatus === "error" && (
-                    <div className="p-3.5 bg-[rgba(217,56,58,0.08)] border border-[rgba(217,56,58,0.25)] text-[#d9383a] text-xs rounded-xl text-center leading-relaxed font-medium">
+                    <div className="p-3 bg-[rgba(217,56,58,0.08)] border border-[rgba(217,56,58,0.25)] text-[#d9383a] text-xs rounded-xl text-center leading-relaxed font-medium">
                       {quoteError}
                     </div>
                   )}
 
                   {/* Submit Button & Assurance */}
-                  <div className="pt-2 space-y-3">
+                  <div className="pt-1.5 space-y-2.5">
                     <button
                       type="submit"
                       disabled={quoteStatus === "submitting"}
-                      className="btn w-full justify-center text-sm font-bold py-3.5 rounded-xl cursor-pointer"
-                      style={{ background: "var(--or)", color: "var(--deep)" }}
+                      className="btn w-full justify-center text-sm font-bold py-3 rounded-xl cursor-pointer hover:brightness-110 hover:shadow-lg transition-all disabled:opacity-60 disabled:cursor-wait"
+                      style={{ background: "var(--deep)", color: "#ffffff" }}
                     >
-                      <Send className="w-4 h-4 mr-2" />
+                      <Send className="w-4 h-4 mr-2 text-white shrink-0" />
                       {quoteStatus === "submitting" ? "Dispatching to Engineering..." : "Submit Project Inquiry"}
                     </button>
 
@@ -521,6 +289,198 @@ export default function ContactPage() {
                 </form>
               )}
             </div>
+          </div>
+
+          {/* Right Column: Direct Channels & Information */}
+          <div className="order-2 lg:col-span-5 space-y-4">
+            {/* Direct Contact Card */}
+            <div className="bg-white border border-[rgba(21,19,74,0.12)] p-5 sm:p-6 rounded-2xl shadow-[0_12px_36px_rgba(87,80,168,0.06)] space-y-3.5">
+              <div className="border-b border-[var(--mist)] pb-2.5">
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--pur)]">
+                  Direct Lines
+                </span>
+                <h3 className="text-base sm:text-lg font-bold text-[var(--deep)] tracking-tight mt-0.5">
+                  Prefer chatting or direct emails?
+                </h3>
+              </div>
+
+              {/* WhatsApp & Phone Item: Clicking anywhere triggers WhatsApp, copy button works independently */}
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={openWhatsApp}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openWhatsApp();
+                  }
+                }}
+                aria-label="Chat with Deptloy on WhatsApp at +1 474 349-1561"
+                className="p-3.5 rounded-xl border border-[rgba(21,19,74,0.1)] bg-[var(--paper)]/50 hover:bg-white hover:border-[#25D366] hover:shadow-[0_6px_20px_rgba(37,211,102,0.12)] transition-all duration-200 cursor-pointer group select-none"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-[#25D366]/15 text-[#128C7E] grid place-items-center shrink-0">
+                      <WhatsAppIcon className="w-4 h-4" />
+                    </div>
+                    <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--mute)]">
+                      WhatsApp &amp; Direct Line
+                    </span>
+                  </div>
+                  <span className="inline-flex items-center gap-0.5 text-xs font-mono font-bold text-[#128C7E] group-hover:underline">
+                    Chat on WhatsApp <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </span>
+                </div>
+
+                <div className="mt-2.5 flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCopyPhone(e);
+                    }}
+                    onKeyDown={(e) => e.stopPropagation()}
+                    className="p-1.5 rounded-md text-[var(--mute)] hover:text-[var(--deep)] hover:bg-[var(--mist)] border border-transparent hover:border-[var(--peri)] transition-all cursor-copy shrink-0 z-10"
+                    title={copiedPhone ? "Copied!" : "Click to copy phone number"}
+                    aria-label="Copy phone number"
+                  >
+                    {copiedPhone ? (
+                      <Check className="w-3.5 h-3.5 text-[#16875b]" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" />
+                    )}
+                  </button>
+
+                  <span className="text-sm sm:text-base font-bold text-[var(--deep)] group-hover:text-[#128C7E] tracking-tight transition-colors">
+                    +1 (474) 349-1561
+                  </span>
+
+                  {copiedPhone && (
+                    <span className="text-[11px] font-mono text-[#16875b] font-bold ml-auto">
+                      Copied!
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Email Inquiries Item: Clicking anywhere triggers email client, copy button works independently */}
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={openEmail}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openEmail();
+                  }
+                }}
+                aria-label="Send email to deptloy@gmail.com"
+                className="p-3.5 rounded-xl border border-[rgba(21,19,74,0.1)] bg-[var(--paper)]/50 hover:bg-white hover:border-[var(--or)] hover:shadow-[0_6px_20px_rgba(253,145,80,0.12)] transition-all duration-200 cursor-pointer group select-none"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-[var(--or)]/15 text-[var(--or)] grid place-items-center shrink-0">
+                      <Mail className="w-4 h-4" />
+                    </div>
+                    <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--mute)]">
+                      Primary Engineering Inbox
+                    </span>
+                  </div>
+                  <span className="inline-flex items-center gap-0.5 text-xs font-mono font-bold text-[var(--or)] group-hover:underline">
+                    Open Mail <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </span>
+                </div>
+
+                <div className="mt-2.5 flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCopyEmail(e);
+                    }}
+                    onKeyDown={(e) => e.stopPropagation()}
+                    className="p-1.5 rounded-md text-[var(--mute)] hover:text-[var(--deep)] hover:bg-[var(--mist)] border border-transparent hover:border-[var(--peri)] transition-all cursor-copy shrink-0 z-10"
+                    title={copiedEmail ? "Copied!" : "Click to copy email address"}
+                    aria-label="Copy email address"
+                  >
+                    {copiedEmail ? (
+                      <Check className="w-3.5 h-3.5 text-[#16875b]" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" />
+                    )}
+                  </button>
+
+                  <span className="text-sm sm:text-base font-bold text-[var(--deep)] group-hover:text-[var(--or)] tracking-tight transition-colors break-all">
+                    deptloy@gmail.com
+                  </span>
+
+                  {copiedEmail && (
+                    <span className="text-[11px] font-mono text-[#16875b] font-bold ml-auto shrink-0">
+                      Copied!
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Relevant Studio Highlights */}
+              <div className="pt-2.5 border-t border-[var(--mist)] space-y-2 text-xs text-[var(--mute)]">
+                <div className="flex items-start gap-2.5">
+                  <Code2 className="w-4 h-4 text-[var(--pur)] shrink-0 mt-0.5" />
+                  <p className="leading-relaxed">
+                    <strong className="text-[var(--deep)]">Direct Engineer Access:</strong> You communicate directly with
+                    lead architects — zero account managers or sales runaround.
+                  </p>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <ShieldCheck className="w-4 h-4 text-[#16875b] shrink-0 mt-0.5" />
+                  <p className="leading-relaxed">
+                    <strong className="text-[var(--deep)]">100% IP &amp; Data Sovereignty:</strong> You own all source
+                    code and schemas. Client data is never used to train commercial models.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Interactive Voice Demo Callout Card */}
+            <div className="bg-[var(--deep)] text-white p-5 rounded-2xl relative overflow-hidden shadow-[0_16px_40px_rgba(21,19,74,0.18)]">
+              {/* Radial gradient glow */}
+              <div
+                className="absolute top-0 right-0 w-64 h-64 rounded-full pointer-events-none opacity-20"
+                style={{
+                  background: "radial-gradient(circle, var(--lav) 0%, transparent 70%)",
+                  transform: "translate(30%, -30%)",
+                }}
+              />
+
+              <div className="relative z-10 space-y-2">
+                <div className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--peri)]">
+                  <Sparkles className="w-3.5 h-3.5 text-[var(--or)]" />
+                  <span>Interactive Voice Demo</span>
+                </div>
+                <h3
+                  style={{ fontSize: "16px", fontWeight: 700, lineHeight: 1.25 }}
+                  className="text-white"
+                >
+                  Experience our AI receptionist live
+                </h3>
+                <p className="text-xs text-[#cfd2ee] leading-relaxed">
+                  Test conversational caller intake, dynamic calendar availability, and CRM sync directly in your
+                  browser.
+                </p>
+                <div className="pt-0.5">
+                  <Link
+                    href="/demo"
+                    className="btn sm inline-flex items-center gap-2"
+                    style={{ background: "var(--or)", color: "var(--deep)", fontWeight: 700 }}
+                  >
+                    <span>Test AI Receptionist</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+
           </div>
         </div>
       </div>

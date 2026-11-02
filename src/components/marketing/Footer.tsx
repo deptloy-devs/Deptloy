@@ -34,7 +34,7 @@ export function Footer() {
           <Link href="/projects">Solutions</Link>
           <Link href="/about">About Studio</Link>
           <Link href="/blogs">Engineering Blogs</Link>
-          <Link href="/contact#form">Contact Us</Link>
+          <Link href="/contact#form">Let&apos;s Connect</Link>
           <a href="mailto:deptloy@gmail.com">deptloy@gmail.com</a>
         </div>
 

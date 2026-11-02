@@ -97,7 +97,7 @@ export function Navbar() {
 
               {/* CTA Button */}
               <Link className="btn sm" href="/contact#form">
-                Contact Us
+                Let&apos;s Connect
               </Link>
             </nav>
 
@@ -139,7 +139,7 @@ export function Navbar() {
           Blogs
         </Link>
         <Link href="/contact#form" onClick={closeMenu} style={{ color: "var(--or)" }}>
-          Contact Us
+          Let&apos;s Connect
         </Link>
       </div>
     </>

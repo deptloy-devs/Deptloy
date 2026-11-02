@@ -14,6 +14,10 @@
   --sky: #bfe3f5;
   --mute: #5c5a86;
 
+  --font-archivo: 'Archivo', system-ui, -apple-system, sans-serif;
+  --font-ibm-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --font-ibm-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
   color-scheme: light;
   box-sizing: border-box;
 }
@@ -30,7 +34,7 @@ html {
 
 body {
   margin: 0;
-  background: var(--paper) linear-gradient(rgba(21, 19, 74, 0.04) 1px, transparent 1px) 0 0/56px 56px fixed;
+  background: var(--paper);
   color: var(--deep);
   font: 500 17px/1.6 "IBM Plex Sans", system-ui, -apple-system, sans-serif;
   overflow-x: clip;

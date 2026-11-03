@@ -1,5 +1,4 @@
 import type {
-  Stat,
   ServiceItem,
   IndustryItem,
   CaseStudyItem,
@@ -38,7 +37,7 @@ export const trustPoints = [
 export const services: ServiceItem[] = [
   {
     slug: "ai-receptionist",
-    href: "/services/ai-receptionist",
+    href: "/demo",
     title: "AI Receptionist",
     short: "Never miss a customer inquiry, call, or booking opportunity again.",
     description:
@@ -54,7 +53,7 @@ export const services: ServiceItem[] = [
   },
   {
     slug: "automation",
-    href: "/services/automation",
+    href: "/how-it-works",
     title: "Business Automation",
     short: "Eliminate repetitive administrative tasks and accelerate team throughput.",
     description:
@@ -70,7 +69,7 @@ export const services: ServiceItem[] = [
   },
   {
     slug: "crm",
-    href: "/services/crm",
+    href: "/how-it-works",
     title: "CRM Solutions",
     short: "Organize customer relationships, track sales pipelines, and prevent lost deals.",
     description:
@@ -86,7 +85,7 @@ export const services: ServiceItem[] = [
   },
   {
     slug: "development",
-    href: "/services/development",
+    href: "/how-it-works",
     title: "Web & App Development",
     short: "Bespoke digital platforms built for scale, speed, and conversion.",
     description:
@@ -364,7 +363,7 @@ export const faqList = [
 /** Primary navigation (Services also has a dropdown in the navbar). */
 export const mainNav = [
   { href: "/", label: "Home" },
-  { href: "/services", label: "Services" },
+  { href: "/how-it-works", label: "How It Works" },
   { href: "/projects", label: "Solutions" },
   { href: "/about", label: "About" },
   { href: "/blogs", label: "Blogs" },

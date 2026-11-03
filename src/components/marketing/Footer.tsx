@@ -14,7 +14,7 @@ export function Footer() {
         <div>
           <Logo />
           <p style={{ color: "var(--mute)", maxWidth: "22em", margin: "14px 0 0", fontSize: "14.5px" }}>
-            Software built to outlast the hype. Custom products, intelligent workflows and connected systems engineered around your business.
+            Deptloy builds custom software, AI receptionists, CRM systems, and intelligent business automation tailored to the way your company works.
           </p>
         </div>
 

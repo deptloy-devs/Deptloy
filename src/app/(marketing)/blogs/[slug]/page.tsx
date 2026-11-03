@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { BlogCover } from "@/components/marketing/blog/BlogCover";
 import { BlogCta } from "@/components/marketing/blog/BlogCta";
 import { PostCard, PostMeta } from "@/components/marketing/blog/PostCard";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { headingId, relatedPosts } from "@/lib/blog-post";
 import { getAllPosts, getPost } from "@/lib/blogs";
 
@@ -21,15 +22,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = getPost(slug);
   if (!post) return { title: "Post not found | Deptloy" };
   return {
-    title: `${post.title} | Deptloy Blog`,
+    title: `${post.title} | Deptloy Insights`,
     description: post.summary,
     alternates: { canonical: `/blogs/${post.slug}` },
     // A page's openGraph replaces the site's, so the share image is repeated here.
     openGraph: {
       type: "article",
-      title: post.title,
+      title: `${post.title} | Deptloy Insights`,
       description: post.summary,
-      url: `/blogs/${post.slug}`,
+      url: `https://www.deptloy.com/blogs/${post.slug}`,
       siteName: "Deptloy",
       locale: "en_US",
       publishedTime: post.publishedAt,
@@ -52,13 +53,29 @@ export default async function BlogPostPage({ params }: PageProps) {
     headline: post.title,
     description: post.summary,
     datePublished: post.publishedAt,
-    mainEntityOfPage: `https://deptloy.com/blogs/${post.slug}`,
-    author: { "@type": "Organization", name: "Deptloy", url: "https://deptloy.com" },
-    publisher: { "@type": "Organization", name: "Deptloy", url: "https://deptloy.com" },
+    image: "https://www.deptloy.com/opengraph-image.png",
+    mainEntityOfPage: `https://www.deptloy.com/blogs/${post.slug}`,
+    author: { "@type": "Organization", name: "Deptloy", url: "https://www.deptloy.com" },
+    publisher: {
+      "@type": "Organization",
+      name: "Deptloy",
+      url: "https://www.deptloy.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://www.deptloy.com/icon-512.png",
+      },
+    },
   };
 
   return (
     <div className="bl">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", item: "/" },
+          { name: "Blogs", item: "/blogs" },
+          { name: post.title, item: `/blogs/${post.slug}` },
+        ]}
+      />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
       <div className="wrap">
         <Link href="/blogs" className="bl-back">

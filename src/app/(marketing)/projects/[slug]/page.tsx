@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { ArchitectureStage } from "@/components/marketing/ArchitectureStage";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { projectBlueprints } from "@/lib/project-blueprints";
 
 interface PageProps { params: Promise<{ slug: string }> }
@@ -30,6 +31,13 @@ export default async function BlueprintPage({ params }: PageProps) {
 
   return (
     <div className="pt-24 sm:pt-28 lg:pt-32 pb-14 sm:pb-20">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", item: "/" },
+          { name: "Projects", item: "/projects" },
+          { name: project.title, item: `/projects/${project.slug}` },
+        ]}
+      />
       <div className="wrap">
         <Link href="/projects" className="inline-flex items-center gap-2 text-xs font-mono uppercase font-bold text-[var(--pur)] hover:text-[var(--deep)] mb-6">
           <ArrowLeft size={14} /> All blueprints

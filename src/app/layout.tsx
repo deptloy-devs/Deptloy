@@ -1,43 +1,65 @@
 import type { Metadata, Viewport } from "next";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/JsonLd";
 import "./globals.css";
 import "./design.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://deptloy.com"),
-  title: "Deptloy – Software built to outlast the hype",
+  metadataBase: new URL("https://www.deptloy.com"),
+  title: {
+    default: "Deptloy | Custom Software & AI Receptionists",
+    template: "%s | Deptloy",
+  },
   description:
-    "Deptloy designs, engineers and maintains custom software products, intelligent workflows and connected business systems.",
+    "Deptloy builds custom software, AI receptionists, CRM systems, and intelligent business automation tailored to the way your company works.",
   keywords: [
     "custom software engineering",
-    "business systems architecture",
-    "custom SaaS development",
-    "AI integration",
+    "AI receptionists",
+    "business automation",
+    "custom CRM systems",
     "enterprise application development",
-    "custom software development",
+    "software engineering studio",
     "workflow automation",
+    "conversational AI",
   ],
-  authors: [{ name: "Deptloy" }],
+  authors: [{ name: "Deptloy", url: "https://www.deptloy.com" }],
+  creator: "Deptloy",
+  publisher: "Deptloy",
+  alternates: {
+    canonical: "https://www.deptloy.com",
+  },
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "any" },
       { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/icon-512.png", type: "image/png", sizes: "512x512" },
     ],
-    apple: [{ url: "/apple-icon.png" }],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
+  manifest: "/manifest.webmanifest",
   openGraph: {
-    title: "Deptloy – Software built to outlast the hype",
+    title: "Deptloy | Custom Software & AI Receptionists",
     description:
-      "Deptloy designs, engineers and maintains custom software products, intelligent workflows and connected business systems.",
-    url: "https://deptloy.com",
+      "Deptloy builds custom software, AI receptionists, CRM systems, and intelligent business automation tailored to the way your company works.",
+    url: "https://www.deptloy.com",
     siteName: "Deptloy",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Deptloy — Custom Software & AI Receptionists",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Deptloy – Software built to outlast the hype",
+    title: "Deptloy | Custom Software & AI Receptionists",
     description:
-      "Deptloy designs, engineers and maintains custom software products, intelligent workflows and connected business systems.",
+      "Deptloy builds custom software, AI receptionists, CRM systems, and intelligent business automation tailored to the way your company works.",
+    images: ["/twitter-image.png"],
   },
 };
 
@@ -66,6 +88,8 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
         {/* Global SVG Symbol & Gradient Definitions */}
         <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
           <defs>

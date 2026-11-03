@@ -3,11 +3,12 @@ import Link from "next/link";
 import { ArrowRight, MonitorSmartphone, PhoneCall, Workflow } from "lucide-react";
 import { AboutStudioSection } from "@/components/marketing/AboutStudioSection";
 import { BlogCta } from "@/components/marketing/blog/BlogCta";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
-  title: "About Deptloy | Software that fits how your business works",
+  title: "About Deptloy | Software Engineering Studio",
   description:
-    "Deptloy designs and builds AI receptionists, automations, customer systems and websites for growing businesses, all connected so they work as one.",
+    "Deptloy is a software engineering and AI solutions studio. We build custom software, AI receptionists, CRM systems, and intelligent business automation tailored to your operations.",
   alternates: { canonical: "/about" },
 };
 
@@ -36,6 +37,12 @@ const founders = [
 export default function AboutPage() {
   return (
     <div className="au">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", item: "/" },
+          { name: "About", item: "/about" },
+        ]}
+      />
       <div className="wrap">
         <div className="au-hero">
           <div>

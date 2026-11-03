@@ -7,11 +7,12 @@ import {
   PackageCheck,
 } from "lucide-react";
 import { DevelopmentJourney } from "@/components/marketing/how-it-works/DevelopmentJourney";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
-  title: "How We Work | Deptloy",
+  title: "How We Build Custom Software | Deptloy",
   description:
-    "From your challenge to working software. Discover, design, build, launch, and evolve custom software and AI systems built around your business.",
+    "Explore Deptloy's rapid 5-stage engineering journey from initial blueprint to full-stack development, production hardening, and autonomous operations.",
   alternates: { canonical: "/how-it-works" },
 };
 
@@ -42,6 +43,12 @@ const WORKING_POINTS = [
 export default function HowItWorksPage() {
   return (
     <div className="hiw-page">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", item: "/" },
+          { name: "How It Works", item: "/how-it-works" },
+        ]}
+      />
       <div className="wrap">
         {/* ================================================================== */}
         {/* 1. COMPACT HERO                                                    */}

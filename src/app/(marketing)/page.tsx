@@ -6,9 +6,9 @@ import { FeaturedSolutions } from "@/components/marketing/FeaturedSolutions";
 import { SimpleFinalCta } from "@/components/marketing/SimpleFinalCta";
 
 export const metadata: Metadata = {
-  title: "Deptloy – Software built to outlast the hype",
+  title: "Deptloy | Custom Software & AI Receptionists",
   description:
-    "From intelligent AI receptionists to complete custom software platforms, Deptloy designs, builds and maintains software tailored to how your business actually operates.",
+    "Deptloy builds custom software, AI receptionists, CRM systems, and intelligent business automation tailored to the way your company works.",
   alternates: { canonical: "/" },
 };
 

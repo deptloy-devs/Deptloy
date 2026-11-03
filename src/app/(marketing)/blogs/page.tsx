@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { BlogCta } from "@/components/marketing/blog/BlogCta";
 import { PostCard } from "@/components/marketing/blog/PostCard";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { latestPosts } from "@/lib/blog-post";
 import { getAllPosts } from "@/lib/blogs";
 
 export const metadata: Metadata = {
-  title: "Blog | Practical AI for Business Owners | Deptloy",
+  title: "Software Engineering & AI Insights | Deptloy",
   description:
-    "Plain-English reads for business owners on using AI to answer every call and take admin off your plate.",
+    "Practical engineering insights, architectural teardowns, and guides on building custom software, AI receptionists, and modern business automation.",
   alternates: { canonical: "/blogs" },
 };
 
@@ -19,6 +20,12 @@ export default function BlogsPage() {
 
   return (
     <div className="bl">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", item: "/" },
+          { name: "Blogs", item: "/blogs" },
+        ]}
+      />
       <div className="wrap">
         <div className="bl-head">
           <span className="k">Deptloy blog</span>

@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { VoiceReceptionist } from "@/components/marketing/voice-demo/VoiceReceptionist";
 import { demoIndustries } from "@/lib/site";
+import { cleanChatText } from "@/lib/chat/format";
 import { useChatSession } from "@/lib/chat/useChatSession";
 import type { DemoIndustryId, ChatMessage } from "@/types";
 import type { ChatMessagePayload } from "@/lib/chat/types";
@@ -69,11 +70,21 @@ export default function DemoPage() {
 
   const chatContainerRef = React.useRef<HTMLDivElement>(null);
   const lastUserPromptRef = React.useRef<string>("");
+  // The reply being streamed. Aborted on restart or industry change so it can't land in the new chat.
+  const replyRef = React.useRef<AbortController | null>(null);
 
-  const { containerRef: turnstileContainerRef, streamChat } = useChatSession();
+  const { containerRef: turnstileContainerRef, streamChat } = useChatSession("dark");
+
+  const stopReply = React.useCallback(() => {
+    replyRef.current?.abort();
+    replyRef.current = null;
+  }, []);
+
+  React.useEffect(() => stopReply, [stopReply]);
 
   // Reset conversation when industry changes
   const handleIndustryChange = (id: DemoIndustryId) => {
+    stopReply();
     setSelectedIndustryId(id);
     const ind = demoIndustries.find((i) => i.id === id) || demoIndustries[0];
     setErrorMessage(null);
@@ -91,6 +102,7 @@ export default function DemoPage() {
 
   // Restart active industry chat
   const handleRestartChat = () => {
+    stopReply();
     setErrorMessage(null);
     setIsStreaming(false);
     setIsTyping(false);
@@ -106,7 +118,7 @@ export default function DemoPage() {
   };
 
   // Send message in interactive chat simulator
-  const handleSendMessage = async (textToSend?: string) => {
+  const handleSendMessage = async (textToSend?: string, { retry = false }: { retry?: boolean } = {}) => {
     const text = (textToSend || inputMessage).trim();
     if (!text || isStreaming) return;
 
@@ -128,7 +140,9 @@ export default function DemoPage() {
       timestamp: "Just now",
     };
 
-    const nextMessages = [...messages, userMsg];
+    // A retry resends the message that failed instead of adding it twice.
+    const base = retry && messages.at(-1)?.sender === "customer" ? messages.slice(0, -1) : messages;
+    const nextMessages = [...base, userMsg];
     setMessages([...nextMessages, assistantPlaceholder]);
     if (!textToSend) setInputMessage("");
     setIsTyping(true);
@@ -142,35 +156,49 @@ export default function DemoPage() {
         content: m.text,
       }));
 
+    const controller = new AbortController();
+    replyRef.current = controller;
+
     try {
-      await streamChat({
+      const reply = await streamChat({
         assistant: "receptionist",
         messages: historyPayload,
         industryId: currentIndustry.id,
         serviceId: selectedService.id,
+        signal: controller.signal,
         onChunk: (accumulated) => {
+          if (controller.signal.aborted) return;
           setIsTyping(false);
           setMessages((prev) =>
             prev.map((m) => (m.id === assistantMsgId ? { ...m, text: accumulated } : m))
           );
         },
       });
+      if (controller.signal.aborted) return;
 
       setIsStreaming(false);
       setIsTyping(false);
+      if (!reply.trim()) {
+        setMessages((prev) => prev.filter((m) => m.id !== assistantMsgId));
+        setErrorMessage("The receptionist didn't reply. Please try again.");
+      }
     } catch (err: unknown) {
+      if (controller.signal.aborted) return;
       setIsStreaming(false);
       setIsTyping(false);
-      setMessages((prev) => prev.filter((m) => m.id !== assistantMsgId || m.text.length > 0));
+      // Drop the unfinished reply so Retry starts clean from the caller's message.
+      setMessages((prev) => prev.filter((m) => m.id !== assistantMsgId));
       const msg =
         err instanceof Error ? err.message : "Unable to reach receptionist. Please try again.";
       setErrorMessage(msg);
+    } finally {
+      if (replyRef.current === controller) replyRef.current = null;
     }
   };
 
   const handleRetry = () => {
     if (lastUserPromptRef.current) {
-      handleSendMessage(lastUserPromptRef.current);
+      handleSendMessage(lastUserPromptRef.current, { retry: true });
     }
   };
 
@@ -183,9 +211,6 @@ export default function DemoPage() {
 
   return (
     <div className="pt-20 sm:pt-24 pb-12 sm:pb-16 min-h-screen">
-      {/* Invisible Turnstile Verification Mount */}
-      <div ref={turnstileContainerRef} className="hidden" aria-hidden="true" />
-
       <div className="wrap max-w-6xl">
         {/* Compact, Clean Studio Header (Starts at the top with zero unwanted scroll) */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
@@ -362,7 +387,7 @@ export default function DemoPage() {
                               : "bg-white/10 text-white border border-white/10 rounded-tl-xs"
                           }`}
                         >
-                          {msg.text}
+                          {cleanChatText(msg.text)}
                         </div>
                       </div>
                     );
@@ -394,6 +419,9 @@ export default function DemoPage() {
                     </div>
                   )}
                 </div>
+
+                {/* Cloudflare's human check. Stays invisible unless Cloudflare needs the visitor to tick a box. */}
+                <div ref={turnstileContainerRef} className="flex justify-center bg-black/40 shrink-0 empty:hidden" />
 
                 {/* Chat Input Bar */}
                 <form

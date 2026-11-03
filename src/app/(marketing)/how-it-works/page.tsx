@@ -10,7 +10,7 @@ import { DevelopmentJourney } from "@/components/marketing/how-it-works/Developm
 import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
-  title: "How We Build Custom Software | Deptloy",
+  title: "How We Build Custom Software",
   description:
     "Explore Deptloy's rapid 5-stage engineering journey from initial blueprint to full-stack development, production hardening, and autonomous operations.",
   alternates: { canonical: "/how-it-works" },

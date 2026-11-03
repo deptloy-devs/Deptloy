@@ -6,7 +6,7 @@ import { latestPosts } from "@/lib/blog-post";
 import { getAllPosts } from "@/lib/blogs";
 
 export const metadata: Metadata = {
-  title: "Software Engineering & AI Insights | Deptloy",
+  title: "Software Engineering & AI Insights",
   description:
     "Practical engineering insights, architectural teardowns, and guides on building custom software, AI receptionists, and modern business automation.",
   alternates: { canonical: "/blogs" },

@@ -20,9 +20,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
-  if (!post) return { title: "Post not found | Deptloy" };
+  if (!post) return { title: "Post not found" };
   return {
-    title: `${post.title} | Deptloy Insights`,
+    title: post.title,
     description: post.summary,
     alternates: { canonical: `/blogs/${post.slug}` },
     // A page's openGraph replaces the site's, so the share image is repeated here.

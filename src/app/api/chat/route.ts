@@ -1,16 +1,38 @@
 import { GoogleGenAI } from "@google/genai";
+import { allowChatMessage, logChatOutcome, readChatLimits, refusalResponse, refuse } from "@/lib/chat/guard";
+import { cleanHistory } from "@/lib/chat/history";
 import { buildDepPrompt, buildReceptionistPrompt } from "@/lib/chat/prompts";
-import { checkChatRateLimit, getClientIp, verifyChatSessionToken } from "@/lib/chat/session";
-import type { ChatApiRequest, ChatMessagePayload } from "@/lib/chat/types";
+import { getChatStore, getClientIp, verifyChatSessionToken } from "@/lib/chat/session";
+import type { ChatApiRequest } from "@/lib/chat/types";
+import { isAllowedOrigin, readVoiceDemoConfig } from "@/lib/voice-demo/config";
 
 const MODEL_NAME = process.env.GEMINI_CHAT_MODEL || "gemini-3.5-flash-lite";
-const MAX_MESSAGE_LENGTH = 1500;
-const MAX_CONVERSATION_MESSAGES = 24;
 
+function isQuotaError(err: unknown): boolean {
+  if ((err as { status?: unknown })?.status === 429) return true;
+  const message = err instanceof Error ? err.message : String(err);
+  return /RESOURCE_EXHAUSTED|ResourceExhausted|quota/i.test(message);
+}
+
+/**
+ * Streams one chat reply. Order of checks: our own site, a valid session from
+ * the human check, a well-formed conversation, then the rate limits.
+ */
 export async function POST(req: Request): Promise<Response> {
   const ip = getClientIp(req.headers);
 
-  // 1. Parse JSON body
+  if (!isAllowedOrigin(req.headers.get("origin"), readVoiceDemoConfig())) {
+    logChatOutcome(ip, "origin");
+    return refusalResponse(refuse(403, "origin"));
+  }
+
+  // GEMINI_CHAT_API_KEY keeps chat on its own quota; otherwise share the voice demo's key.
+  const apiKey = process.env.GEMINI_CHAT_API_KEY || process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    console.error("[chat] Neither GEMINI_CHAT_API_KEY nor GEMINI_API_KEY is set.");
+    return refusalResponse(refuse(503, "not_configured"));
+  }
+
   let body: ChatApiRequest;
   try {
     body = await req.json();
@@ -18,71 +40,33 @@ export async function POST(req: Request): Promise<Response> {
     return Response.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { assistant, messages, sessionToken, industryId, serviceId } = body;
-
-  if (!assistant || (assistant !== "dep" && assistant !== "receptionist")) {
+  const { assistant, sessionToken, industryId, serviceId } = body ?? {};
+  if (assistant !== "dep" && assistant !== "receptionist") {
     return Response.json({ error: "Invalid assistant specified" }, { status: 400 });
   }
 
-  if (!Array.isArray(messages) || messages.length === 0) {
-    return Response.json({ error: "Messages array cannot be empty" }, { status: 400 });
+  if (!verifyChatSessionToken(sessionToken, ip)) {
+    return refusalResponse(refuse(401, "session"));
   }
 
-  // 2. Verify Session Security
-  // In development, allow testing if session token is omitted or in test mode
-  let sessionId = "anonymous";
-  if (sessionToken) {
-    const session = verifyChatSessionToken(sessionToken);
-    if (!session) {
-      return Response.json({ error: "Session expired or invalid. Please refresh the page." }, { status: 401 });
-    }
-    sessionId = session.sid;
-  } else if (process.env.NODE_ENV === "production") {
-    return Response.json({ error: "Missing required chat session token" }, { status: 401 });
+  const history = cleanHistory(body.messages);
+  if (!history.ok) return Response.json({ error: history.error }, { status: 400 });
+
+  const allowed = await allowChatMessage(getChatStore(), ip, readChatLimits(), Date.now());
+  if (!allowed.ok) {
+    logChatOutcome(ip, allowed.reason);
+    return refusalResponse(allowed);
   }
 
-  // 3. Rate Limiting (per session/IP)
-  const rateLimitKey = `${ip}:${sessionId}`;
-  const rateCheck = checkChatRateLimit(rateLimitKey, 30, 60_000);
-  if (!rateCheck.allowed) {
-    return Response.json(
-      { error: "Too many messages in a short time. Please slow down and try again shortly." },
-      { status: 429, headers: { "Retry-After": "10" } }
-    );
-  }
-
-  // 4. Validate and Sanitize Conversation History
-  const recentMessages: ChatMessagePayload[] = messages.slice(-MAX_CONVERSATION_MESSAGES);
-  for (const m of recentMessages) {
-    if (!m.content || typeof m.content !== "string") {
-      return Response.json({ error: "Invalid message content" }, { status: 400 });
-    }
-    if (m.content.length > MAX_MESSAGE_LENGTH) {
-      return Response.json(
-        { error: `Message is too long (maximum ${MAX_MESSAGE_LENGTH} characters)` },
-        { status: 400 }
-      );
-    }
-  }
-
-  // 5. Check Server Gemini Chat API Key
-  const apiKey = process.env.GEMINI_CHAT_API_KEY;
-  if (!apiKey) {
-    console.error("[Deptloy Chat] GEMINI_CHAT_API_KEY is not configured.");
-    return Response.json(
-      { error: "AI Chat is temporarily unconfigured. Please contact support." },
-      { status: 503 }
-    );
-  }
-
-  // 6. Build System Instructions and Conversation Format
   const systemInstruction =
     assistant === "dep"
       ? buildDepPrompt()
-      : buildReceptionistPrompt(industryId, serviceId);
+      : buildReceptionistPrompt(
+          typeof industryId === "string" ? industryId : undefined,
+          typeof serviceId === "string" ? serviceId : undefined,
+        );
 
-  // Map messages to GenAI contents structure
-  const contents = recentMessages.map((m) => ({
+  const contents = history.messages.map((m) => ({
     role: m.role === "assistant" ? "model" : "user",
     parts: [{ text: m.content }],
   }));
@@ -105,13 +89,11 @@ export async function POST(req: Request): Promise<Response> {
         try {
           for await (const chunk of responseStream) {
             const text = chunk.text;
-            if (text) {
-              controller.enqueue(encoder.encode(text));
-            }
+            if (text) controller.enqueue(encoder.encode(text));
           }
           controller.close();
         } catch (streamErr) {
-          console.error("[Deptloy Chat] Stream iteration error:", streamErr);
+          console.error("[chat] Stream error:", streamErr);
           controller.error(streamErr);
         }
       },
@@ -126,17 +108,11 @@ export async function POST(req: Request): Promise<Response> {
       },
     });
   } catch (err: unknown) {
-    console.error("[Deptloy Chat] Gemini error:", err);
-    const errMsg = err instanceof Error ? err.message : String(err);
-    if (errMsg.includes("ResourceExhausted") || errMsg.includes("quota")) {
-      return Response.json(
-        { error: "High traffic: System capacity temporarily reached. Please try again in a moment." },
-        { status: 429 }
-      );
+    console.error("[chat] Gemini error:", err);
+    if (isQuotaError(err)) {
+      logChatOutcome(ip, "busy");
+      return refusalResponse(refuse(503, "busy", 30));
     }
-    return Response.json(
-      { error: "An error occurred while connecting to Deptloy AI. Please try again." },
-      { status: 500 }
-    );
+    return refusalResponse(refuse(500, "failed"));
   }
 }

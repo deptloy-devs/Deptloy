@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Privacy & Data Governance Policy | Deptloy",
+  title: "Privacy & Data Governance Policy",
   description:
     "Explore Deptloy's comprehensive privacy policy, client data sovereignty standards, zero model training guarantees, and security architecture.",
   alternates: { canonical: "/privacy" },

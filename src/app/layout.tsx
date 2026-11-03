@@ -1,7 +1,14 @@
 import type { Metadata, Viewport } from "next";
+import { Archivo, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/JsonLd";
 import "./globals.css";
 import "./design.css";
+
+// Fonts are served from our own domain, so the first paint doesn't wait on Google Fonts.
+// design.css reads them through --font-archivo, --font-ibm-sans and --font-ibm-mono.
+const archivo = Archivo({ subsets: ["latin"], variable: "--nf-archivo" });
+const plexSans = IBM_Plex_Sans({ subsets: ["latin"], variable: "--nf-plex-sans" });
+const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--nf-plex-mono" });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.deptloy.com"),
@@ -78,15 +85,8 @@ export default function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
+      className={`${archivo.variable} ${plexSans.variable} ${plexMono.variable}`}
     >
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
-          rel="stylesheet"
-        />
-      </head>
       <body>
         <OrganizationJsonLd />
         <WebSiteJsonLd />

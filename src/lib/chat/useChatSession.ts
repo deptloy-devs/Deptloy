@@ -1,208 +1,145 @@
 "use client";
 
 import * as React from "react";
+import { useTurnstile } from "@/components/marketing/voice-demo/useTurnstile";
 import type { ChatAssistantType, ChatMessagePayload, ChatSessionResponse } from "./types";
 
 const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-const SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
 const STORAGE_KEY = "deptloy_chat_session";
 
-let scriptLoadingPromise: Promise<void> | null = null;
+const HUMAN_CHECK_FAILED = "We couldn't confirm you're human. Refresh the page and try again.";
+const CONNECTION_FAILED = "We couldn't reach the chat. Check your connection and try again.";
 
-function loadTurnstileScript(): Promise<void> {
-  if (typeof window === "undefined") return Promise.resolve();
-  if (window.turnstile) return Promise.resolve();
-
-  scriptLoadingPromise ??= new Promise<void>((resolve, reject) => {
-    // Check if script already exists in DOM
-    const existing = document.querySelector(`script[src^="https://challenges.cloudflare.com/turnstile"]`);
-    if (existing) {
-      existing.addEventListener("load", () => resolve());
-      existing.addEventListener("error", () => reject(new Error("Turnstile script failed")));
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = SCRIPT_SRC;
-    script.async = true;
-    script.onload = () => resolve();
-    script.onerror = () => {
-      scriptLoadingPromise = null;
-      reject(new Error("Turnstile script failed to load"));
-    };
-    document.head.appendChild(script);
-  });
-
-  return scriptLoadingPromise;
+function readStoredToken(): string | null {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw) as { token?: string; exp?: number };
+    // Treat it as expired a minute early so it can't run out mid-request.
+    if (data.token && data.exp && Date.now() < data.exp - 60_000) return data.token;
+    sessionStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // Storage blocked: we just ask for a new session.
+  }
+  return null;
 }
 
-export function useChatSession() {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const widgetIdRef = React.useRef<string | null>(null);
+function storeToken(token: string, exp: number) {
+  try {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ token, exp }));
+  } catch {
+    // Storage blocked.
+  }
+}
 
-  // Retrieve cached session from sessionStorage if still valid
-  const getStoredToken = React.useCallback((): string | null => {
-    if (typeof window === "undefined") return null;
-    try {
-      const raw = sessionStorage.getItem(STORAGE_KEY);
-      if (!raw) return null;
-      const data = JSON.parse(raw) as { token: string; exp: number };
-      // Buffer by 60 seconds
-      if (data.token && data.exp && Date.now() < data.exp - 60_000) {
-        return data.token;
-      }
-      sessionStorage.removeItem(STORAGE_KEY);
-      return null;
-    } catch {
-      return null;
-    }
-  }, []);
+function forgetToken() {
+  try {
+    sessionStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // Storage blocked.
+  }
+}
 
-  const saveToken = React.useCallback((token: string, expiresAt: number) => {
-    if (typeof window === "undefined") return;
-    try {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ token, exp: expiresAt }));
-    } catch {
-      // Storage unavailable or disabled
-    }
-  }, []);
+async function errorFrom(res: Response, fallback: string): Promise<string> {
+  const data = (await res.json().catch(() => ({}))) as { error?: unknown };
+  return typeof data.error === "string" && data.error ? data.error : fallback;
+}
 
-  // Obtains a single-use Turnstile token and exchanges it for a 1-hour session token
+function isAbort(err: unknown): boolean {
+  return err instanceof DOMException && err.name === "AbortError";
+}
+
+/**
+ * Talks to /api/chat. A Turnstile check opens a 1-hour session, which is reused
+ * across messages and tabs-in-session. Put `containerRef` on a visible element in
+ * the chat panel: Cloudflare shows a checkbox there when it needs one.
+ */
+export function useChatSession(theme: "light" | "dark") {
+  const { containerRef, getToken } = useTurnstile(SITE_KEY, theme);
+
   const acquireSessionToken = React.useCallback(async (): Promise<string> => {
-    const cached = getStoredToken();
+    const cached = readStoredToken();
     if (cached) return cached;
 
-    let turnstileToken = "test-turnstile-token";
-
-    if (SITE_KEY && typeof window !== "undefined") {
+    let turnstileToken = "";
+    if (SITE_KEY) {
       try {
-        await loadTurnstileScript();
-        const api = window.turnstile;
-
-        if (api && containerRef.current) {
-          if (widgetIdRef.current) {
-            try {
-              api.remove(widgetIdRef.current);
-            } catch {
-              // Ignore
-            }
-          }
-
-          turnstileToken = await new Promise<string>((resolve, reject) => {
-            const timeout = setTimeout(() => {
-              reject(new Error("Turnstile timed out"));
-            }, 30_000);
-
-            try {
-              widgetIdRef.current = api.render(containerRef.current!, {
-                sitekey: SITE_KEY,
-                action: "deptloy_chat",
-                appearance: "interaction-only",
-                callback: (token) => {
-                  clearTimeout(timeout);
-                  resolve(token);
-                },
-                "error-callback": () => {
-                  clearTimeout(timeout);
-                  reject(new Error("Turnstile verification failed"));
-                },
-              });
-            } catch (err) {
-              clearTimeout(timeout);
-              reject(err);
-            }
-          });
-        }
-      } catch (e) {
-        console.warn("[Deptloy Chat] Turnstile challenge error:", e);
-        // Fallback for local development or mock environments
+        turnstileToken = await getToken();
+      } catch {
+        throw new Error(HUMAN_CHECK_FAILED);
       }
     }
 
-    // Exchange turnstileToken for signed 1-hour sessionToken
     const res = await fetch("/api/chat/session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ turnstileToken }),
     });
-
-    if (!res.ok) {
-      const errorData = (await res.json().catch(() => ({}))) as ChatSessionResponse;
-      throw new Error(errorData.error || `Session creation failed (${res.status})`);
-    }
+    if (!res.ok) throw new Error(await errorFrom(res, "We couldn't start the chat. Please try again."));
 
     const data = (await res.json()) as ChatSessionResponse;
-    if (!data.sessionToken || !data.expiresAt) {
-      throw new Error("No session token returned");
-    }
+    if (!data.sessionToken || !data.expiresAt) throw new Error("We couldn't start the chat. Please try again.");
 
-    saveToken(data.sessionToken, data.expiresAt);
+    storeToken(data.sessionToken, data.expiresAt);
     return data.sessionToken;
-  }, [getStoredToken, saveToken]);
+  }, [getToken]);
 
-  // Sends message with streaming updates
+  /** Sends the conversation and calls `onChunk` with the reply so far. Resolves with the full reply. */
   const streamChat = React.useCallback(
     async ({
       assistant,
       messages,
       industryId,
       serviceId,
+      signal,
       onChunk,
     }: {
       assistant: ChatAssistantType;
       messages: ChatMessagePayload[];
       industryId?: string;
       serviceId?: string;
+      signal?: AbortSignal;
       onChunk: (accumulated: string) => void;
     }): Promise<string> => {
-      let sessionToken: string | undefined;
+      const send = async (sessionToken: string) =>
+        fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ assistant, messages, sessionToken, industryId, serviceId }),
+          signal,
+        });
+
       try {
-        sessionToken = await acquireSessionToken();
+        let res = await send(await acquireSessionToken());
+        if (res.status === 401) {
+          // The session ran out or the visitor's network changed. Open a new one once.
+          forgetToken();
+          res = await send(await acquireSessionToken());
+        }
+        if (!res.ok) throw new Error(await errorFrom(res, `Request failed (${res.status})`));
+
+        const reader = res.body?.getReader();
+        if (!reader) throw new Error("Streaming is not supported by your browser");
+
+        const decoder = new TextDecoder("utf-8");
+        let accumulated = "";
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          accumulated += decoder.decode(value, { stream: true });
+          onChunk(accumulated);
+        }
+        accumulated += decoder.decode();
+        return accumulated;
       } catch (err) {
-        console.warn("[Deptloy Chat] Proceeding without verified session:", err);
+        if (isAbort(err)) throw err;
+        // fetch and stream reads throw TypeError when the network drops.
+        if (err instanceof TypeError || !(err instanceof Error)) throw new Error(CONNECTION_FAILED);
+        throw err;
       }
-
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          assistant,
-          messages,
-          sessionToken,
-          industryId,
-          serviceId,
-        }),
-      });
-
-      if (!res.ok) {
-        const errorJson = (await res.json().catch(() => ({}))) as { error?: string };
-        throw new Error(errorJson.error || `Request failed with status ${res.status}`);
-      }
-
-      const reader = res.body?.getReader();
-      if (!reader) {
-        throw new Error("Streaming is not supported by your browser");
-      }
-
-      const decoder = new TextDecoder("utf-8");
-      let accumulated = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const text = decoder.decode(value, { stream: true });
-        accumulated += text;
-        onChunk(accumulated);
-      }
-
-      return accumulated;
     },
-    [acquireSessionToken]
+    [acquireSessionToken],
   );
 
-  return {
-    containerRef,
-    streamChat,
-    acquireSessionToken,
-  };
+  return { containerRef, streamChat };
 }

@@ -3,7 +3,7 @@ import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 
 // The demo page is a client component, so its metadata lives here.
 export const metadata: Metadata = {
-  title: "AI Receptionist Interactive Simulator | Deptloy",
+  title: "AI Receptionist Interactive Simulator",
   description:
     "Test Deptloy's custom AI receptionist in real time. Choose your industry vertical and experience live simulated caller intake and calendar booking.",
   alternates: { canonical: "/demo" },

@@ -18,7 +18,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const blueprint = projectBlueprints.find((item) => item.slug === slug);
   return {
-    title: blueprint ? `${blueprint.title} | Solution Blueprint | Deptloy` : "Solution blueprint | Deptloy",
+    // The projects layout sets its own title, so the site's " | Deptloy" template doesn't reach here.
+    title: blueprint ? `${blueprint.title.replace(/\.$/, "")} | Deptloy` : "Solution blueprint | Deptloy",
     description: blueprint?.solution,
     alternates: { canonical: `/projects/${slug}` },
   };

@@ -19,18 +19,18 @@ export function Footer() {
         </div>
 
         <div>
-          <h4>How It Works</h4>
+          <h2>How It Works</h2>
           <Link href="/how-it-works">Our Approach</Link>
           <Link href="/how-it-works#process">The Five Stages</Link>
           <Link href="/projects">Solution Blueprints</Link>
           <Link href="/demo">AI Receptionist Demo</Link>
-          <Link href="/how-it-works" style={{ color: "var(--or)", fontWeight: 700 }}>
+          <Link href="/how-it-works" className="footer-accent">
             Explore Methodology →
           </Link>
         </div>
 
         <div>
-          <h4>Company</h4>
+          <h2>Company</h2>
           <Link href="/projects">Solutions</Link>
           <Link href="/about">About Studio</Link>
           <Link href="/blogs">Engineering Blogs</Link>

@@ -54,18 +54,12 @@ export function CookieConsentProvider({ children }: { children: React.ReactNode 
       return null;
     }
   });
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [preferencesOpen, setPreferencesOpen] = React.useState(false);
   const [isCustomizing, setIsCustomizing] = React.useState(false);
 
-  // Show banner after brief delay if no preference has been saved yet
-  React.useEffect(() => {
-    if (!preferences) {
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-      }, 800);
-      return () => clearTimeout(timer);
-    }
-  }, [preferences]);
+  // Show the banner straight away until a choice is saved. A delayed pop-in became the
+  // largest thing painted on phones, which made Google's load-time score (LCP) worse.
+  const isOpen = preferencesOpen || !preferences;
 
   const savePreferences = (prefs: CookiePreferences) => {
     try {
@@ -74,7 +68,7 @@ export function CookieConsentProvider({ children }: { children: React.ReactNode 
       // Storage might be disabled
     }
     setPreferences(prefs);
-    setIsOpen(false);
+    setPreferencesOpen(false);
     setIsCustomizing(false);
   };
 
@@ -104,7 +98,7 @@ export function CookieConsentProvider({ children }: { children: React.ReactNode 
 
   const openPreferences = () => {
     setIsCustomizing(true);
-    setIsOpen(true);
+    setPreferencesOpen(true);
   };
 
   const closeBanner = () => {
@@ -181,7 +175,7 @@ function CookieConsentBanner() {
               We value data sovereignty.
             </h3>
             <p className="text-xs text-[var(--mute)] mt-1.5 leading-relaxed">
-              We use strictly necessary cookies for site security and session edge routing. Optional anonymous telemetry helps us monitor performance. We do not use third-party advertising trackers.
+              Essential cookies keep the site secure. Optional anonymous analytics help us improve it. No ad trackers.
             </p>
             <div className="pt-1.5">
               <Link

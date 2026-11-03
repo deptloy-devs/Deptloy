@@ -171,9 +171,9 @@ export function AssemblyTrack() {
                 cardRefs.current[0] = el;
               }}
             >
-              <h4>
+              <h3>
                 <i></i>AI receptionist<em>Live call</em>
-              </h4>
+              </h3>
               <div>
                 <div className="wave">
                   {Array.from({ length: 12 }).map((_, i) => (
@@ -202,9 +202,9 @@ export function AssemblyTrack() {
                 cardRefs.current[1] = el;
               }}
             >
-              <h4>
+              <h3>
                 <i></i>CRM<em>3 new today</em>
-              </h4>
+              </h3>
               <div>
                 <div className="kb">
                   <div style={{ "--c2": "var(--or)" } as React.CSSProperties}>
@@ -256,9 +256,9 @@ export function AssemblyTrack() {
                 cardRefs.current[2] = el;
               }}
             >
-              <h4>
+              <h3>
                 <i></i>Automation<em>Running</em>
-              </h4>
+              </h3>
               <div className="full">
                 <svg className="flow" viewBox="0 0 440 130" preserveAspectRatio="xMidYMid meet">
                   <g>
@@ -302,9 +302,9 @@ export function AssemblyTrack() {
                 cardRefs.current[3] = el;
               }}
             >
-              <h4>
+              <h3>
                 <i></i>Web &amp; apps<em>Live</em>
-              </h4>
+              </h3>
               <div>
                 <div className="browser">
                   <div className="bar">

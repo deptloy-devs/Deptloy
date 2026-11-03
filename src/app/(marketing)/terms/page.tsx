@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Terms of Service & Engagement | Deptloy",
+  title: "Terms of Service & Engagement",
   description:
     "Comprehensive terms of service, engagement standards, and legal guidelines governing Deptloy's software engineering, AI receptionist deployments, and website use.",
   alternates: { canonical: "/terms" },

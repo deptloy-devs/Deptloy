@@ -6,7 +6,7 @@ import { BlogCta } from "@/components/marketing/blog/BlogCta";
 import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
-  title: "About Deptloy | Software Engineering Studio",
+  title: { absolute: "About Deptloy | Software Engineering Studio" },
   description:
     "Deptloy is a software engineering and AI solutions studio. We build custom software, AI receptionists, CRM systems, and intelligent business automation tailored to your operations.",
   alternates: { canonical: "/about" },

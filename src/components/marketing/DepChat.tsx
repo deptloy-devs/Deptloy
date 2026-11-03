@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { AlertCircle, Mic, RotateCcw, Send, Volume2, VolumeX, X } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { cleanChatText, splitChatLinks } from "@/lib/chat/format";
 import { useChatSession } from "@/lib/chat/useChatSession";
 import type { ChatMessagePayload } from "@/lib/chat/types";
 
@@ -33,35 +34,25 @@ const INTRO_MESSAGE: Message = {
   text: "Hi, I’m Dep, Deptloy’s AI representative! I can walk you through our autonomous AI receptionists, custom software platforms, solution blueprints, or help scope your next engineering project. What would you like to explore?",
 };
 
+const LINK_CLASS = "font-semibold text-[#685bc7] underline underline-offset-2 hover:text-[#15134a] transition-colors";
+
+/** Plain text with [label](href) links. Unsafe links show as plain text. */
 function renderFormattedMessage(text: string) {
-  const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
-  const parts: React.ReactNode[] = [];
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-
-  while ((match = regex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push(text.slice(lastIndex, match.index));
+  return splitChatLinks(cleanChatText(text)).map((part, i) => {
+    if (!part.href) return <React.Fragment key={i}>{part.text}</React.Fragment>;
+    if (part.href.startsWith("/")) {
+      return (
+        <Link key={i} href={part.href} className={LINK_CLASS}>
+          {part.text}
+        </Link>
+      );
     }
-    const label = match[1];
-    const url = match[2];
-    parts.push(
-      <Link
-        key={`${match.index}-${url}`}
-        href={url}
-        className="font-semibold text-[#685bc7] underline underline-offset-2 hover:text-[#15134a] transition-colors"
-      >
-        {label}
-      </Link>
+    return (
+      <a key={i} href={part.href} target="_blank" rel="noopener noreferrer" className={LINK_CLASS}>
+        {part.text}
+      </a>
     );
-    lastIndex = regex.lastIndex;
-  }
-
-  if (lastIndex < text.length) {
-    parts.push(text.slice(lastIndex));
-  }
-
-  return parts;
+  });
 }
 
 export function DepChatProvider({ children }: { children: React.ReactNode }) {
@@ -77,8 +68,17 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
   const msgsEndRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const lastUserPromptRef = React.useRef<string>("");
+  // The reply being streamed. Aborted on restart so an old reply can't land in a new chat.
+  const replyRef = React.useRef<AbortController | null>(null);
 
-  const { containerRef: turnstileContainerRef, streamChat } = useChatSession();
+  const { containerRef: turnstileContainerRef, streamChat } = useChatSession("light");
+
+  const stopReply = React.useCallback(() => {
+    replyRef.current?.abort();
+    replyRef.current = null;
+  }, []);
+
+  React.useEffect(() => stopReply, [stopReply]);
 
   const speakText = React.useCallback(
     (text: string) => {
@@ -94,7 +94,7 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
   );
 
   const handleUserSend = React.useCallback(
-    async (text: string) => {
+    async (text: string, { retry = false }: { retry?: boolean } = {}) => {
       const trimmed = text.trim();
       if (!trimmed || isStreaming) return;
 
@@ -114,9 +114,11 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
         text: "",
       };
 
-      const nextMessages = [...messages, userMsg];
+      // A retry resends the message that failed instead of adding it twice.
+      const base = retry && messages.at(-1)?.sender === "user" ? messages.slice(0, -1) : messages;
+      const nextMessages = [...base, userMsg];
       setMessages([...nextMessages, botPlaceholder]);
-      setInputVal("");
+      if (!retry) setInputVal("");
       setIsTyping(true);
       setIsStreaming(true);
 
@@ -128,33 +130,43 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
           content: m.text,
         }));
 
+      const controller = new AbortController();
+      replyRef.current = controller;
+
       try {
-        let finalReply = "";
-        await streamChat({
+        const finalReply = await streamChat({
           assistant: "dep",
           messages: historyPayload,
+          signal: controller.signal,
           onChunk: (accumulated) => {
+            if (controller.signal.aborted) return;
             setIsTyping(false);
-            finalReply = accumulated;
             setMessages((prev) =>
               prev.map((m) => (m.id === botMsgId ? { ...m, text: accumulated } : m))
             );
           },
         });
+        if (controller.signal.aborted) return;
 
         setIsStreaming(false);
         setIsTyping(false);
-        if (finalReply) {
+        if (finalReply.trim()) {
           speakText(finalReply);
+        } else {
+          setMessages((prev) => prev.filter((m) => m.id !== botMsgId));
+          setErrorMessage("Dep didn't reply. Please try again.");
         }
       } catch (err: unknown) {
+        if (controller.signal.aborted) return;
         setIsStreaming(false);
         setIsTyping(false);
-        // Remove empty bot placeholder if it failed with no content
-        setMessages((prev) => prev.filter((m) => m.id !== botMsgId || m.text.length > 0));
+        // Drop the unfinished reply so Retry starts clean from the visitor's message.
+        setMessages((prev) => prev.filter((m) => m.id !== botMsgId));
         const message =
           err instanceof Error ? err.message : "Unable to reach Dep. Please check your connection.";
         setErrorMessage(message);
+      } finally {
+        if (replyRef.current === controller) replyRef.current = null;
       }
     },
     [messages, isStreaming, streamChat, speakText]
@@ -162,11 +174,12 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
 
   const handleRetry = React.useCallback(() => {
     if (lastUserPromptRef.current) {
-      handleUserSend(lastUserPromptRef.current);
+      handleUserSend(lastUserPromptRef.current, { retry: true });
     }
   }, [handleUserSend]);
 
   const handleRestart = React.useCallback(() => {
+    stopReply();
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
@@ -175,7 +188,7 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
     setIsTyping(false);
     setIsStreaming(false);
     setInputVal("");
-  }, []);
+  }, [stopReply]);
 
   const openChat = React.useCallback(
     (initialMsg?: string) => {
@@ -252,9 +265,6 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
   return (
     <DepChatContext.Provider value={{ isOpen, openChat, closeChat }}>
       {children}
-
-      {/* Invisible Turnstile Verification Mount */}
-      <div ref={turnstileContainerRef} className="hidden" aria-hidden="true" />
 
       {/* Floating launcher button in bottom right */}
       <button
@@ -411,6 +421,9 @@ export function DepChatProvider({ children }: { children: React.ReactNode }) {
             Discuss Your Project
           </Link>
         </div>
+
+        {/* Cloudflare's human check. Stays invisible unless Cloudflare needs the visitor to tick a box. */}
+        <div ref={turnstileContainerRef} className="flex justify-center bg-white shrink-0 empty:hidden" />
 
         {/* Input Bar */}
         <form

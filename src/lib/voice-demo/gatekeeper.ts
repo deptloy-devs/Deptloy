@@ -65,11 +65,11 @@ export const keys = {
 const PACIFIC = "America/Los_Angeles";
 
 /** Gemini's daily quotas reset at midnight Pacific, so our daily budget does too. */
-function pacificDate(nowMs: number): string {
+export function pacificDate(nowMs: number): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: PACIFIC }).format(nowMs);
 }
 
-function secondsUntilPacificMidnight(nowMs: number): number {
+export function secondsUntilPacificMidnight(nowMs: number): number {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: PACIFIC,
     hour: "numeric",

@@ -1,152 +1,94 @@
 import crypto from "crypto";
+import { readVoiceDemoConfig } from "@/lib/voice-demo/config";
+import { getVoiceDemoStore } from "@/lib/voice-demo/server";
+import { createMemoryStore, type VoiceDemoStore } from "@/lib/voice-demo/store";
+import { verifyTurnstile } from "@/lib/voice-demo/turnstile";
 import type { ChatSessionPayload } from "./types";
 
-const SITEVERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+export { getClientIp } from "@/lib/voice-demo/client-ip";
+
 const SESSION_TTL_MS = 60 * 60 * 1000; // 1 hour
 
-/**
- * Extracts client IP securely.
- */
-export function getClientIp(headers: Headers): string {
-  if (process.env.VERCEL !== "1") return "local";
-  const ip = headers.get("x-real-ip")?.trim() || headers.get("x-vercel-forwarded-for")?.split(",")[0]?.trim();
-  return ip || "unknown";
+/** Signs chat session tokens. Production needs a real secret; dev and tests get a fixed one. */
+function getSigningSecret(): string | null {
+  const secret = process.env.CHAT_SESSION_SECRET || process.env.TURNSTILE_SECRET_KEY;
+  if (secret) return secret;
+  return process.env.NODE_ENV === "production" ? null : "deptloy-dev-only-chat-secret";
 }
 
-function getSigningSecret(): string {
-  return (
-    process.env.TURNSTILE_SECRET_KEY ||
-    process.env.GEMINI_CHAT_API_KEY ||
-    "deptloy-internal-chat-secret-fallback"
-  );
+export function chatSessionsConfigured(): boolean {
+  return getSigningSecret() !== null;
+}
+
+function sign(payloadStr: string, secret: string): string {
+  return crypto.createHmac("sha256", secret).update(payloadStr).digest("base64url");
 }
 
 /**
- * Verifies a single-use Cloudflare Turnstile token.
+ * Asks Cloudflare whether the Turnstile token is real. Without a secret
+ * (local dev only) every visitor passes.
  */
-export async function verifyTurnstileToken(token: string, ip?: string): Promise<boolean> {
+export async function verifyTurnstileToken(token: string, ip: string): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET_KEY;
-  // If no secret is configured and we're not in production, permit testing
-  if (!secret) {
-    if (process.env.NODE_ENV !== "production") return true;
-    return false;
-  }
-
-  // Cloudflare mock / test dummy tokens
-  if (secret.startsWith("1x0000") || token === "test-turnstile-token") {
-    return true;
-  }
-
-  try {
-    const body: Record<string, string> = { secret, response: token };
-    if (ip && ip !== "local" && ip !== "unknown" && ip !== "127.0.0.1" && ip !== "::1") {
-      body.remoteip = ip;
-    }
-
-    const res = await fetch(SITEVERIFY_URL, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(body),
-      signal: AbortSignal.timeout(6000),
-    });
-
-    if (!res.ok) return false;
-    const data = (await res.json()) as { success?: boolean };
-    return data.success === true;
-  } catch {
-    return false;
-  }
+  if (!secret) return process.env.NODE_ENV !== "production";
+  if (!token) return false;
+  return verifyTurnstile({ secret, token, ip });
 }
 
 /**
  * Creates a signed short-lived session token (1 hour) for a verified visitor.
  */
 export function signChatSessionToken(ip: string): { token: string; expiresAt: number } {
+  const secret = getSigningSecret();
+  if (!secret) throw new Error("Chat sessions need TURNSTILE_SECRET_KEY or CHAT_SESSION_SECRET");
+
   const iat = Date.now();
   const exp = iat + SESSION_TTL_MS;
-  const sid = crypto.randomUUID();
-
-  const payload: ChatSessionPayload = { sid, ip, iat, exp };
+  const payload: ChatSessionPayload = { sid: crypto.randomUUID(), ip, iat, exp };
   const payloadStr = Buffer.from(JSON.stringify(payload)).toString("base64url");
 
-  const hmac = crypto.createHmac("sha256", getSigningSecret());
-  hmac.update(payloadStr);
-  const signature = hmac.digest("base64url");
-
-  return {
-    token: `${payloadStr}.${signature}`,
-    expiresAt: exp,
-  };
+  return { token: `${payloadStr}.${sign(payloadStr, secret)}`, expiresAt: exp };
 }
 
 /**
- * Verifies a signed session token. Returns the payload if valid and unexpired, or null if invalid.
+ * Verifies a signed session token. Returns the payload if it's valid, unexpired
+ * and (when `ip` is given) was issued to that same IP. Otherwise null.
  */
-export function verifyChatSessionToken(token: string): ChatSessionPayload | null {
-  if (!token || typeof token !== "string") return null;
+export function verifyChatSessionToken(token: unknown, ip?: string): ChatSessionPayload | null {
+  const secret = getSigningSecret();
+  if (!secret || !token || typeof token !== "string") return null;
 
   const parts = token.split(".");
   if (parts.length !== 2) return null;
-
   const [payloadStr, signature] = parts;
 
   try {
-    const hmac = crypto.createHmac("sha256", getSigningSecret());
-    hmac.update(payloadStr);
-    const expectedSignature = hmac.digest("base64url");
-
-    if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
-      return null;
-    }
+    const expected = Buffer.from(sign(payloadStr, secret));
+    const given = Buffer.from(signature);
+    if (given.length !== expected.length || !crypto.timingSafeEqual(given, expected)) return null;
 
     const payload = JSON.parse(Buffer.from(payloadStr, "base64url").toString("utf8")) as ChatSessionPayload;
-
-    if (!payload.exp || Date.now() > payload.exp) {
-      return null; // Expired
-    }
-
+    if (!payload.exp || Date.now() > payload.exp) return null;
+    if (ip !== undefined && payload.ip !== ip) return null;
     return payload;
   } catch {
     return null;
   }
 }
 
+const devGlobal = globalThis as typeof globalThis & { __chatFallbackStore?: VoiceDemoStore };
+
 /**
- * In-memory sliding rate limiter per IP / session ID.
- * Limits users to maxRequests per minute.
+ * Where the chat's counters live: the voice demo's Upstash Redis when it's set up
+ * (and its in-memory store in `next dev`). Without Redis the counters fall back to
+ * this server instance's memory, which still works but is weak on serverless.
  */
-interface RateRecord {
-  timestamps: number[];
-}
-
-const rateLimitMap = new Map<string, RateRecord>();
-
-export function checkChatRateLimit(identifier: string, maxRequests = 25, windowMs = 60_000): { allowed: boolean; remaining: number } {
-  const now = Date.now();
-  let record = rateLimitMap.get(identifier);
-
-  if (!record) {
-    record = { timestamps: [] };
-    rateLimitMap.set(identifier, record);
+export function getChatStore(): VoiceDemoStore {
+  const store = getVoiceDemoStore(readVoiceDemoConfig());
+  if (store) return store;
+  if (!devGlobal.__chatFallbackStore) {
+    console.warn("[chat] No Redis configured. Chat rate limits are per server instance only.");
+    devGlobal.__chatFallbackStore = createMemoryStore();
   }
-
-  // Filter timestamps within the window
-  record.timestamps = record.timestamps.filter((ts) => now - ts < windowMs);
-
-  if (record.timestamps.length >= maxRequests) {
-    return { allowed: false, remaining: 0 };
-  }
-
-  record.timestamps.push(now);
-
-  // Periodically clean up old map keys
-  if (rateLimitMap.size > 2000) {
-    for (const [key, val] of rateLimitMap.entries()) {
-      if (val.timestamps.every((ts) => now - ts >= windowMs)) {
-        rateLimitMap.delete(key);
-      }
-    }
-  }
-
-  return { allowed: true, remaining: maxRequests - record.timestamps.length };
+  return devGlobal.__chatFallbackStore;
 }

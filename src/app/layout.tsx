@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Archivo, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/JsonLd";
 import "./globals.css";
@@ -87,6 +88,23 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${archivo.variable} ${plexSans.variable} ${plexMono.variable}`}
     >
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtm.js?id=GTM-WTFWG6G5"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="gtm-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+            `,
+          }}
+        />
+      </head>
       <body>
         <OrganizationJsonLd />
         <WebSiteJsonLd />
@@ -126,6 +144,7 @@ export default function RootLayout({
         </svg>
 
         {children}
+
       </body>
     </html>
   );

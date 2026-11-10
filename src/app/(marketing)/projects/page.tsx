@@ -1,125 +1,51 @@
-import type * as React from "react";
+import * as React from "react";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { BuildWalkthrough } from "@/components/marketing/deliver/BuildWalkthrough";
-import { ServiceShowcase } from "@/components/marketing/deliver/ServiceShowcase";
-import {
-  ArchitectPicture,
-  AutomationScreen,
-  CrmScreen,
-  DiscoverPicture,
-  EngineerPicture,
-  EvolvePicture,
-  LaunchPicture,
-  ReceptionistScreen,
-  WebScreen,
-} from "@/components/marketing/deliver/screens";
-import { projectBlueprints } from "@/lib/project-blueprints";
-import { services } from "@/lib/site";
-import { buildSteps, EXAMPLE_BUSINESS, serviceShowcases } from "@/lib/solutions";
-import type { ServiceSlug } from "@/types";
-
-/** How each service looks on this page: its colour, example screen, and what it's doing in the hero card. */
-const LOOK: Record<ServiceSlug, { color: string; screen: React.ReactNode; doing: string }> = {
-  "ai-receptionist": { color: "var(--lav)", screen: <ReceptionistScreen />, doing: "Answering calls" },
-  automation: { color: "var(--or)", screen: <AutomationScreen />, doing: "Sending reminders" },
-  crm: { color: "var(--pur)", screen: <CrmScreen />, doing: "Keeping track of customers" },
-  development: { color: "var(--co)", screen: <WebScreen />, doing: "Taking bookings online" },
-};
-
-const STEP_PICTURES = [DiscoverPicture, ArchitectPicture, EngineerPicture, LaunchPicture, EvolvePicture];
+import { ArrowRight } from "lucide-react";
+import { projects } from "@/lib/projects";
+import { ProjectsGrid } from "@/components/marketing/projects/ProjectsGrid";
 
 export default function ProjectsPage() {
-  const items = serviceShowcases.map((showcase) => {
-    const service = services.find((s) => s.slug === showcase.slug);
-    if (!service) throw new Error(`No service for ${showcase.slug}`);
-    return { ...showcase, title: service.title, href: service.href, ...LOOK[showcase.slug] };
-  });
-  const steps = buildSteps.map((step, i) => {
-    const Picture = STEP_PICTURES[i];
-    return { ...step, picture: <Picture /> };
-  });
-
   return (
-    <div className="wd">
+    <div className="pt-24 sm:pt-28 lg:pt-32 pb-16 sm:pb-24">
       <div className="wrap">
-        <div className="wd-hero">
-          <div>
-            <span className="k">What we deliver</span>
-            <h1>See exactly what you&apos;ll get.</h1>
-            <p className="wd-intro">
-              Four services that fit together into one system for your business. Here&apos;s what each one looks like,
-              and how we build it with you.
-            </p>
-            <div className="wd-cta">
-              <Link className="btn" href="/contact#form">
-                Discuss your project
-                <ArrowRight aria-hidden="true" />
-              </Link>
-              <Link className="btn ghost" href="/demo">
-                Try our AI receptionist
-              </Link>
-            </div>
-            <p className="wd-small">Screens on this page are examples, not client work.</p>
-          </div>
-
-          <div className="wd-hero-card wd-surface">
-            <p className="wd-hero-head">
-              <b>Your business, connected</b>
-              <span className="wd-chip green">All running</span>
-            </p>
-            {items.map((item) => (
-              <a key={item.slug} href={`#service-${item.slug}`} className="wd-hero-row">
-                <span className="wd-dot" style={{ "--c": item.color } as React.CSSProperties} aria-hidden="true" />
-                <span>
-                  <b>{item.title}</b>
-                  <span className="wd-muted">{item.doing}</span>
-                </span>
-                <ArrowRight aria-hidden="true" />
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div className="wd-part">
-          <span className="k">Our services</span>
-          <h2>Four services. One team behind all of them.</h2>
-          <p className="wd-intro">Pick one to see what you&apos;d get. Use one on its own, or let them work together.</p>
-          <ServiceShowcase items={items} />
-        </div>
-
-        <div className="wd-part">
-          <span className="k">How it&apos;s built</span>
-          <h2>Watch a project come together.</h2>
-          <p className="wd-intro">
-            {EXAMPLE_BUSINESS} is a made-up dental clinic that misses calls after hours. Here&apos;s how we&apos;d build
-            its system, one step at a time.
+        {/* Page Header */}
+        <div className="max-w-4xl mb-12 sm:mb-16">
+          <span className="k">Studio Projects &amp; Products</span>
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[var(--deep)] tracking-tight leading-[1.05]">
+            What we build, ship, and stand behind.
+          </h1>
+          <p className="mt-4 text-base sm:text-lg text-[var(--mute)] leading-relaxed max-w-2xl">
+            A focused collection of applications, voice agents, and digital products we have
+            engineered and are actively bringing to market. Click any project to inspect its
+            architecture or join the early access list.
           </p>
-          <BuildWalkthrough steps={steps} />
         </div>
 
-        <div className="wd-others">
-          <p>The same pieces fit other businesses too:</p>
-          <div className="wd-links">
-            {projectBlueprints.map((blueprint) => (
-              <Link key={blueprint.slug} href={`/projects/${blueprint.slug}`} className="wd-link">
-                {blueprint.categoryLabel}
-                <ArrowUpRight aria-hidden="true" />
-              </Link>
-            ))}
+        {/* Interactive Projects Grid */}
+        <ProjectsGrid projects={projects} />
+
+        {/* Bottom Callout / Discussion Section */}
+        <div className="mt-20 sm:mt-28 p-8 sm:p-12 rounded-2xl bg-white border border-[rgba(21,19,74,0.12)] shadow-[0_16px_40px_rgba(87,80,168,0.06)] flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="max-w-xl">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--pur)]">
+              Build With Deptloy
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--deep)] tracking-tight mt-1">
+              Have an app, system, or custom platform in mind?
+            </h2>
+            <p className="text-sm sm:text-base text-[var(--mute)] mt-2 leading-relaxed">
+              We design and engineer bespoke software from clean architecture to production deployment.
+              Let&apos;s map your idea and see what it takes to build.
+            </p>
           </div>
-        </div>
 
-        <div className="wd-final">
-          <h2>Tell us how your business works.</h2>
-          <p>Tell us what slows your team down. We&apos;ll show you what we&apos;d build for you, in plain words.</p>
-          <div className="wd-cta">
-            <Link className="btn" href="/contact#form">
-              Discuss your project
-              <ArrowRight aria-hidden="true" />
+          <div className="shrink-0 flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <Link href="/contact#form" className="btn w-full sm:w-auto justify-center font-bold">
+              <span>Discuss your project</span>
+              <ArrowRight className="w-4 h-4 ml-1.5" />
             </Link>
-            <Link className="btn ghost" href="/demo">
-              Try our AI receptionist
+            <Link href="/solutions" className="btn ghost w-full sm:w-auto justify-center">
+              <span>Explore solutions</span>
             </Link>
           </div>
         </div>
@@ -127,3 +53,4 @@ export default function ProjectsPage() {
     </div>
   );
 }
+

@@ -6,6 +6,7 @@ export function OrganizationJsonLd() {
     "@type": "Organization",
     "@id": "https://www.deptloy.com/#organization",
     name: "Deptloy",
+    legalName: "Deptloy",
     url: "https://www.deptloy.com",
     logo: {
       "@type": "ImageObject",
@@ -41,11 +42,69 @@ export function WebSiteJsonLd() {
     "@id": "https://www.deptloy.com/#website",
     url: "https://www.deptloy.com",
     name: "Deptloy",
+    alternateName: ["Deptloy Studio", "Deptloy Software"],
     description:
       "Deptloy builds custom software, AI receptionists, CRM systems, and intelligent business automation tailored to the way your company works.",
     publisher: {
       "@id": "https://www.deptloy.com/#organization",
     },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function SiteNavigationJsonLd() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SiteNavigationElement",
+        name: "Projects",
+        description: "Studio projects, applications, and tools we build and launch.",
+        url: "https://www.deptloy.com/projects",
+      },
+      {
+        "@type": "SiteNavigationElement",
+        name: "Solutions",
+        description: "Explore custom software platforms and engineering blueprints.",
+        url: "https://www.deptloy.com/solutions",
+      },
+      {
+        "@type": "SiteNavigationElement",
+        name: "How It Works",
+        description: "Our rapid 5-stage engineering and deployment journey.",
+        url: "https://www.deptloy.com/how-it-works",
+      },
+      {
+        "@type": "SiteNavigationElement",
+        name: "AI Receptionist Demo",
+        description: "Interactive simulator for custom AI receptionists and voice callers.",
+        url: "https://www.deptloy.com/demo",
+      },
+      {
+        "@type": "SiteNavigationElement",
+        name: "About",
+        description: "About Deptloy software engineering studio and team.",
+        url: "https://www.deptloy.com/about",
+      },
+      {
+        "@type": "SiteNavigationElement",
+        name: "Let's Connect",
+        description: "Discuss and scope your custom software project with our engineers.",
+        url: "https://www.deptloy.com/contact",
+      },
+      {
+        "@type": "SiteNavigationElement",
+        name: "Engineering Blogs",
+        description: "Technical articles on architecture, AI, and workflow automation.",
+        url: "https://www.deptloy.com/blogs",
+      },
+    ],
   };
 
   return (

@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Archivo, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
-import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/JsonLd";
+import { OrganizationJsonLd, WebSiteJsonLd, SiteNavigationJsonLd } from "@/components/seo/JsonLd";
 import "./globals.css";
 import "./design.css";
 
@@ -108,6 +108,7 @@ export default function RootLayout({
       <body>
         <OrganizationJsonLd />
         <WebSiteJsonLd />
+        <SiteNavigationJsonLd />
         {/* Global SVG Symbol & Gradient Definitions */}
         <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
           <defs>

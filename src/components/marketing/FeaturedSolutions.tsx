@@ -180,7 +180,7 @@ export function FeaturedSolutions() {
                 EMR sync · Staff scheduling · Patient intake
               </span>
               <Link
-                href="/projects/care-network"
+                href="/solutions/care-network"
                 className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[var(--pur)] group-hover:text-[var(--deep)] transition-colors shrink-0"
               >
                 <span>Explore Healthcare Solution</span>
@@ -325,7 +325,7 @@ export function FeaturedSolutions() {
                 Live dispatch · Telemetry · Driver updates
               </span>
               <Link
-                href="/projects/field-operations"
+                href="/solutions/field-operations"
                 className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[var(--or)] group-hover:text-[var(--deep)] transition-colors shrink-0"
               >
                 <span>Explore Logistics Solution</span>

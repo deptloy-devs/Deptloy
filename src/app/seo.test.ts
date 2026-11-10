@@ -30,6 +30,7 @@ describe("SEO, Metadata & Appearance Verification", () => {
     const urls = map.map((e) => e.url);
     expect(urls).toContain("https://www.deptloy.com");
     expect(urls).toContain("https://www.deptloy.com/how-it-works");
+    expect(urls).toContain("https://www.deptloy.com/solutions");
     expect(urls).toContain("https://www.deptloy.com/projects");
     expect(urls).toContain("https://www.deptloy.com/demo");
     expect(urls).toContain("https://www.deptloy.com/about");

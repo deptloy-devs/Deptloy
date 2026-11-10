@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blogs";
 import { projectBlueprints } from "@/lib/project-blueprints";
+import { projects } from "@/lib/projects";
 
 const base = "https://www.deptloy.com";
 
@@ -9,8 +10,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const corePages = [
     { path: "", priority: 1.0, changeFrequency: "weekly" as const },
+    { path: "/projects", priority: 0.95, changeFrequency: "weekly" as const },
+    { path: "/solutions", priority: 0.9, changeFrequency: "weekly" as const },
     { path: "/how-it-works", priority: 0.9, changeFrequency: "weekly" as const },
-    { path: "/projects", priority: 0.9, changeFrequency: "weekly" as const },
     { path: "/demo", priority: 0.85, changeFrequency: "weekly" as const },
     { path: "/about", priority: 0.8, changeFrequency: "monthly" as const },
     { path: "/blogs", priority: 0.8, changeFrequency: "daily" as const },
@@ -26,8 +28,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: page.changeFrequency,
       priority: page.priority,
     })),
-    ...projectBlueprints.map((project) => ({
+    ...projects.map((project) => ({
       url: `${base}/projects/${project.slug}`,
+      lastModified: lastMod,
+      changeFrequency: "weekly" as const,
+      priority: 0.85,
+    })),
+    ...projectBlueprints.map((project) => ({
+      url: `${base}/solutions/${project.slug}`,
       lastModified: lastMod,
       changeFrequency: "weekly" as const,
       priority: 0.75,

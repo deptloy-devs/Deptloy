@@ -83,7 +83,7 @@ export default function HowItWorksPage() {
                 <ArrowRight aria-hidden="true" />
               </Link>
 
-              <Link href="/projects" className="btn ghost">
+              <Link href="/solutions" className="btn ghost">
                 Explore solutions
               </Link>
             </div>

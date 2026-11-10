@@ -80,9 +80,14 @@ export function Navbar() {
                 How it works
               </Link>
 
-              {/* Solutions (the page itself still lives at /projects) */}
-              <Link href="/projects" className={pathname === "/projects" ? "cur" : ""}>
+              {/* Solutions */}
+              <Link href="/solutions" className={pathname.startsWith("/solutions") ? "cur" : ""}>
                 Solutions
+              </Link>
+
+              {/* Projects */}
+              <Link href="/projects" className={pathname.startsWith("/projects") ? "cur" : ""}>
+                Projects
               </Link>
 
               {/* About */}
@@ -129,8 +134,11 @@ export function Navbar() {
         <Link href="/how-it-works" onClick={closeMenu}>
           How it works
         </Link>
-        <Link href="/projects" onClick={closeMenu}>
+        <Link href="/solutions" onClick={closeMenu}>
           Solutions
+        </Link>
+        <Link href="/projects" onClick={closeMenu}>
+          Projects
         </Link>
         <Link href="/about" onClick={closeMenu}>
           About

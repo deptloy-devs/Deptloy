@@ -23,7 +23,7 @@ export function FeaturedProjectsSection() {
             </p>
           </div>
 
-          <Link href="/projects" className="btn ghost shrink-0 inline-flex items-center gap-2">
+          <Link href="/solutions" className="btn ghost shrink-0 inline-flex items-center gap-2">
             <span>View all 4 blueprints</span>
             <ArrowRight size={15} />
           </Link>
@@ -121,7 +121,7 @@ export function FeaturedProjectsSection() {
                   Architecture &amp; Data Flow
                 </span>
                 <Link
-                  href={`/projects/${project.slug}`}
+                  href={`/solutions/${project.slug}`}
                   className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[var(--deep)] hover:text-[var(--or)] transition-colors"
                 >
                   <span>Explore Blueprint</span>

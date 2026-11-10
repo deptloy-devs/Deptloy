@@ -1,0 +1,103 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArchitectureStage } from "@/components/marketing/ArchitectureStage";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { projectBlueprints } from "@/lib/project-blueprints";
+
+interface PageProps { params: Promise<{ slug: string }> }
+
+export const instant = false;
+
+export function generateStaticParams() {
+  return projectBlueprints.map(({ slug }) => ({ slug }));
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const blueprint = projectBlueprints.find((item) => item.slug === slug);
+  return {
+    // The solutions layout sets its own title, so the site's " | Deptloy" template doesn't reach here.
+    title: blueprint ? `${blueprint.title.replace(/\.$/, "")} | Deptloy` : "Solution blueprint | Deptloy",
+    description: blueprint?.solution,
+    alternates: { canonical: `/solutions/${slug}` },
+  };
+}
+
+export default async function BlueprintPage({ params }: PageProps) {
+  const { slug } = await params;
+  const project = projectBlueprints.find((item) => item.slug === slug);
+  if (!project) notFound();
+
+  return (
+    <div className="pt-24 sm:pt-28 lg:pt-32 pb-14 sm:pb-20">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", item: "/" },
+          { name: "Solutions", item: "/solutions" },
+          { name: project.title, item: `/solutions/${project.slug}` },
+        ]}
+      />
+      <div className="wrap">
+        <Link href="/solutions" className="inline-flex items-center gap-2 text-xs font-mono uppercase font-bold text-[var(--pur)] hover:text-[var(--deep)] mb-6">
+          <ArrowLeft size={14} /> All blueprints
+        </Link>
+        <span className="k">{project.categoryLabel} / Engineering concept</span>
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-[var(--deep)] leading-tight max-w-5xl mt-1">{project.title}</h1>
+        <p className="lead2 max-w-3xl text-sm sm:text-base mt-2">{project.solution}</p>
+        <div className="mt-5 mb-8 bg-white border-l-4 border-[var(--or)] p-3.5 text-xs sm:text-sm text-[var(--mute)] shadow-sm">
+          <strong>Illustrative Solution Blueprint:</strong> This is a conceptual product architecture demonstrating how specialized applications communicate. It is not a completed client case study or statement of measured outcomes.
+        </div>
+        <ArchitectureStage modules={project.modules} title="One connected product" accent={project.accent} eyebrow="INTERACTIVE ARCHITECTURE" />
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-14 mt-12">
+          <div className="bg-white p-6 sm:p-8 border border-[rgba(21,19,74,0.12)] rounded-xl">
+            <span className="k">The problem to solve</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--deep)] mt-1 mb-3">Software should follow the work.</h2>
+            <p className="text-sm text-[var(--mute)] leading-relaxed">{project.challenge}</p>
+          </div>
+          <div className="bg-white p-6 sm:p-8 border border-[rgba(21,19,74,0.12)] rounded-xl">
+            <span className="k">The connected approach</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--deep)] mt-1 mb-3">One product. Clear handoffs.</h2>
+            <p className="text-sm text-[var(--mute)] leading-relaxed">{project.solution}</p>
+          </div>
+        </div>
+        <div className="mt-14">
+          <span className="k">A possible workflow</span>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--deep)] mt-1 mb-6">From first action to finished outcome.</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {project.journey.map((step, index) => (
+              <div key={step} className="bg-white border border-[var(--peri)] p-6 rounded-xl">
+                <span className="font-mono text-[var(--or)] font-bold text-lg">0{index + 1}</span>
+                <h3 className="text-lg font-bold mt-7 text-[var(--deep)] leading-snug">{step}</h3>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="mt-20 grid lg:grid-cols-2 gap-10 items-center bg-[var(--mist)] p-8 sm:p-12 rounded-2xl border border-[var(--peri)]/50">
+          <div>
+            <span className="k">Designed outcomes</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--deep)] mt-2">What this product would aim to improve.</h2>
+          </div>
+          <ul className="space-y-4">
+            {project.possibilities.map((outcome) => (
+              <li key={outcome} className="flex items-start gap-3 text-[var(--deep)] font-semibold">
+                <CheckCircle2 className="w-5 h-5 shrink-0 text-[var(--pur)]" /> {outcome}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="bl-cta mt-16 border border-[rgba(87,80,168,0.14)]">
+          <div>
+            <span className="k">Build something different</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold mt-2 text-[var(--deep)]">Let&apos;s map your idea.</h2>
+            <p className="text-sm text-[var(--mute)] mt-1">Tell us how your business runs. We&apos;ll explore where custom software fits.</p>
+          </div>
+          <div className="bl-cta-buttons">
+            <Link href="/contact#form" className="btn">Discuss your project <ArrowRight size={16}/></Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

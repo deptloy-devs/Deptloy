@@ -57,7 +57,7 @@ export default function AboutPage() {
                 Discuss your project
                 <ArrowRight aria-hidden="true" />
               </Link>
-              <Link className="btn ghost" href="/projects">
+              <Link className="btn ghost" href="/solutions">
                 See what we build
               </Link>
             </div>

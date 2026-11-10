@@ -22,7 +22,7 @@ export function Footer() {
           <h2>How It Works</h2>
           <Link href="/how-it-works">Our Approach</Link>
           <Link href="/how-it-works#process">The Five Stages</Link>
-          <Link href="/projects">Solution Blueprints</Link>
+          <Link href="/solutions">Solution Blueprints</Link>
           <Link href="/demo">AI Receptionist Demo</Link>
           <Link href="/how-it-works" className="footer-accent">
             Explore Methodology →
@@ -31,7 +31,8 @@ export function Footer() {
 
         <div>
           <h2>Company</h2>
-          <Link href="/projects">Solutions</Link>
+          <Link href="/solutions">Solutions</Link>
+          <Link href="/projects">Projects</Link>
           <Link href="/about">About Studio</Link>
           <Link href="/blogs">Engineering Blogs</Link>
           <Link href="/contact#form">Let&apos;s Connect</Link>

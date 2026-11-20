@@ -27,6 +27,30 @@ export function checkCallClock(input: ClockInput): { remaining: number; action: 
   return { remaining, action: "none" };
 }
 
+/** Whether the caller is mid-speech, and when their mic was last loud. */
+export type SpeechGate = { talking: boolean; lastLoudAt: number };
+
+export const QUIET_GATE: SpeechGate = { talking: false, lastLoudAt: 0 };
+
+/**
+ * Gemini decides on its own when the caller has stopped talking, but on real mics that can
+ * lag by many seconds or never happen, so the agent just waits. This watches the mic level
+ * and says when to send `audioStreamEnd`, which makes Gemini finish the caller's turn now.
+ * Audio sent afterwards opens the stream again.
+ */
+export function nextSpeechGate(
+  gate: SpeechGate,
+  level: number,
+  now: number,
+  { speechLevel, quietMs }: { speechLevel: number; quietMs: number },
+): { gate: SpeechGate; streamEnd: boolean } {
+  if (level > speechLevel) return { gate: { talking: true, lastLoudAt: now }, streamEnd: false };
+  if (gate.talking && now - gate.lastLoudAt >= quietMs) {
+    return { gate: { ...gate, talking: false }, streamEnd: true };
+  }
+  return { gate, streamEnd: false };
+}
+
 export type TranscriptLine = { id: number; role: "agent" | "caller"; text: string };
 
 /**

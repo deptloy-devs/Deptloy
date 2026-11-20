@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { addTranscript, captionTail, checkCallClock, formatClock, type TranscriptLine } from "./call-state";
+import {
+  addTranscript,
+  captionTail,
+  checkCallClock,
+  formatClock,
+  nextSpeechGate,
+  QUIET_GATE,
+  type TranscriptLine,
+} from "./call-state";
 
 describe("checkCallClock", () => {
   const base = { startedAt: 0, maxCallSeconds: 180, silenceSeconds: 20, wrapUpSent: false };
@@ -73,5 +81,32 @@ describe("captionTail", () => {
     expect(captionTail("We build AI receptionists and custom software for growing teams", 30)).toBe(
       "…software for growing teams",
     );
+  });
+});
+
+describe("nextSpeechGate", () => {
+  const opts = { speechLevel: 0.02, quietMs: 800 };
+
+  it("does nothing while the caller has not spoken", () => {
+    expect(nextSpeechGate(QUIET_GATE, 0.005, 1_000, opts)).toEqual({ gate: QUIET_GATE, streamEnd: false });
+  });
+
+  it("ends the audio stream once the caller has been quiet long enough after talking", () => {
+    let { gate } = nextSpeechGate(QUIET_GATE, 0.2, 1_000, opts);
+    let step = nextSpeechGate(gate, 0.004, 1_500, opts);
+    expect(step.streamEnd).toBe(false);
+    step = nextSpeechGate(step.gate, 0.004, 1_800, opts);
+    expect(step.streamEnd).toBe(true);
+    gate = step.gate;
+    // Only once per stretch of speech.
+    expect(nextSpeechGate(gate, 0.004, 3_000, opts).streamEnd).toBe(false);
+  });
+
+  it("keeps waiting through short pauses between words", () => {
+    let { gate } = nextSpeechGate(QUIET_GATE, 0.2, 1_000, opts);
+    gate = nextSpeechGate(gate, 0.004, 1_500, opts).gate;
+    gate = nextSpeechGate(gate, 0.15, 1_600, opts).gate;
+    expect(nextSpeechGate(gate, 0.004, 2_300, opts).streamEnd).toBe(false);
+    expect(nextSpeechGate(gate, 0.004, 2_400, opts).streamEnd).toBe(true);
   });
 });

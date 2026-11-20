@@ -1,6 +1,13 @@
 import type { FunctionCall, LiveServerMessage, Session } from "@google/genai";
 import { base64ToFloat32, downsampleToPcm16, pcm16ToBase64, rmsLevel } from "@/lib/voice-demo/audio";
-import { addTranscript, checkCallClock, type TranscriptLine } from "@/lib/voice-demo/call-state";
+import {
+  addTranscript,
+  checkCallClock,
+  nextSpeechGate,
+  QUIET_GATE,
+  type SpeechGate,
+  type TranscriptLine,
+} from "@/lib/voice-demo/call-state";
 import type { IssuedSession } from "@/lib/voice-demo/gatekeeper";
 import { CALL_CONNECTED_NOTE, WRAP_UP_NOTE } from "@/lib/voice-demo/prompts";
 import type { ToolCall, ToolResult } from "@/lib/voice-demo/tools";
@@ -36,6 +43,11 @@ const INPUT_MIME = "audio/pcm;rate=16000";
 const OUTPUT_RATE = 24000;
 /** Mic loudness that counts as the caller talking (for the silence timeout and Dep's listening look). */
 const SPEECH_LEVEL = 0.02;
+/**
+ * This much quiet after the caller talks ends their turn (see nextSpeechGate). A backup for
+ * Gemini's own detection, so it waits past normal pauses between sentences.
+ */
+const END_OF_SPEECH_MS = 1200;
 const TICK_MS = 250;
 
 /**
@@ -56,6 +68,7 @@ export class LiveCall {
   /** The agent finished a turn, so its next words start a new transcript line. */
   private agentTurnDone = false;
   private muted = false;
+  private speech: SpeechGate = QUIET_GATE;
   private ended = false;
   private status: CallStatus = "connecting";
   private frame = new Float32Array(1024);
@@ -126,6 +139,7 @@ export class LiveCall {
 
   setMuted(muted: boolean) {
     this.muted = muted;
+    this.speech = QUIET_GATE;
     if (muted) this.session?.sendRealtimeInput({ audioStreamEnd: true });
   }
 
@@ -185,6 +199,13 @@ export class LiveCall {
     if (this.ended || this.muted || !this.session) return;
     const pcm = downsampleToPcm16(samples, sampleRate);
     this.session.sendRealtimeInput({ audio: { data: pcm16ToBase64(pcm), mimeType: INPUT_MIME } });
+
+    const { gate, streamEnd } = nextSpeechGate(this.speech, rmsLevel(samples), Date.now(), {
+      speechLevel: SPEECH_LEVEL,
+      quietMs: END_OF_SPEECH_MS,
+    });
+    this.speech = gate;
+    if (streamEnd) this.session.sendRealtimeInput({ audioStreamEnd: true });
   }
 
   private handleMessage(msg: LiveServerMessage) {
